@@ -127,7 +127,7 @@ namespace ExtraRolesMod
         //renderer for the shield indicator
         public static SpriteRenderer shieldRenderer = null;
         //medic settings and values
-        public static string versionString = "v1.3.1";
+        public static string versionString = "v1.0.0";
         public static class ModdedPalette
         {
             public static Color medicColor = new Color(36f / 255f, 183f / 255f, 32f / 255f, 1);
@@ -208,6 +208,7 @@ namespace ExtraRolesMod
         {
             public static PlayerControl Joker;
             public static bool showJoker = false;
+            public static bool showImpostorToJoker = false;
             public static bool jokerCanDieToOfficer = false;
 
             public static void ClearSettings()
@@ -228,6 +229,7 @@ namespace ExtraRolesMod
             public static void SetConfigSettings()
             {
                 showJoker = HarmonyMain.showJoker.GetValue();
+                showImpostorToJoker = HarmonyMain.showImpostorToJoker.GetValue();
                 jokerCanDieToOfficer = HarmonyMain.jokerCanDieToOfficer.GetValue();
             }
         }

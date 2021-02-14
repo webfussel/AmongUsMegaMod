@@ -38,6 +38,7 @@ namespace ExtraRolesMod
         public static CustomNumberOption OfficerKillCooldown = CustomOption.AddNumber("Officer Kill Cooldown", 30f, 10f, 60f, 2.5f);
         public static CustomToggleOption showEngineer = CustomOption.AddToggle("Show Engineer", false);
         public static CustomToggleOption showJoker = CustomOption.AddToggle("Show Joker", false);
+        public static CustomToggleOption showImpostorToJoker = CustomOption.AddToggle("Show Impostor to Joker", false);
         public static CustomToggleOption jokerCanDieToOfficer = CustomOption.AddToggle("Joker Can Die To Officer", true);
         public static CustomToggleOption medicReportSwitch = CustomOption.AddToggle("Show Medic Reports", true);
         public static CustomNumberOption medicReportNameDuration = CustomOption.AddNumber("Time Where Medic Reports Will Have Name", 5, 0, 60, 2.5f);

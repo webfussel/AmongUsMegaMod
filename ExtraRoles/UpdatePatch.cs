@@ -127,7 +127,7 @@ namespace ExtraRolesMod
                     BreakShield(true);
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                     player.nameText.Color = Color.white;
-                if (PlayerControl.LocalPlayer.Data.IsImpostor)
+                if (PlayerControl.LocalPlayer.Data.IsImpostor || JokerSettings.Joker == PlayerControl.LocalPlayer && JokerSettings.showImpostorToJoker)
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         if (player.Data.IsImpostor)
                             player.nameText.Color = Color.red;
@@ -175,6 +175,7 @@ namespace ExtraRolesMod
                                     player.NameText.Color = ModdedPalette.jokerColor;
                     }
                 }
+                    
                 if (MedicSettings.Protected != null)
                 {
                     int showShielded = MedicSettings.showProtected;
