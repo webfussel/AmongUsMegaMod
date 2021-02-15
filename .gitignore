@@ -4,3 +4,14 @@
 MegaMod/.vs
 .vs/MegaMod/DesignTimeBuild/.dtbcache.v2
 MegaMod/Assembly-CSharp.dll
+.vs/ExtraRoles/v16/.suo
+ExtraRoles/obj/Debug/netstandard2.1/.NETStandard,Version=v2.1.AssemblyAttributes.cs
+ExtraRoles/obj/Debug/netstandard2.1/ExtraRoles.AssemblyInfo.cs
+ExtraRoles/obj/Debug/netstandard2.1/ExtraRoles.AssemblyInfoInputs.cache
+ExtraRoles/obj/Debug/netstandard2.1/ExtraRoles.assets.cache
+ExtraRoles/obj/Debug/netstandard2.1/ExtraRoles.csprojAssemblyReference.cache
+ExtraRoles/obj/ExtraRoles.csproj.nuget.dgspec.json
+ExtraRoles/obj/ExtraRoles.csproj.nuget.g.props
+ExtraRoles/obj/ExtraRoles.csproj.nuget.g.targets
+ExtraRoles/obj/project.assets.json
+ExtraRoles/obj/project.nuget.cache

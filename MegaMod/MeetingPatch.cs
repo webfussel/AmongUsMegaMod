@@ -23,7 +23,7 @@ namespace MegaMod
                 {
                     if (ExileController.Instance.Field_10 != null && ExileController.Instance.Field_10.PlayerId == Jester.Joker.PlayerId)
                     {
-                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.JokerWin, Hazel.SendOption.None, -1);
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.JesterWin, Hazel.SendOption.None, -1);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
 
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)

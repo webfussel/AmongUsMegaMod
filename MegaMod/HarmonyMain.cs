@@ -35,7 +35,7 @@ namespace MegaMod
         public static CustomStringOption showShieldedPlayer = CustomOption.AddString("Show Shielded Player", new string[] { "Self", "Medic", "Self+Medic", "Everyone" });
         public static CustomToggleOption playerMurderIndicator = CustomOption.AddToggle("Murder Attempt Indicator for Shielded Player", true);
         public static CustomToggleOption showOfficer = CustomOption.AddToggle("Show Officer", false);
-        public static CustomNumberOption OfficerKillCooldown = CustomOption.AddNumber("Officer Kill Cooldown", 30f, 10f, 60f, 2.5f);
+        public static CustomNumberOption DetectiveKillCooldown = CustomOption.AddNumber("Officer Kill Cooldown", 30f, 10f, 60f, 2.5f);
         public static CustomToggleOption showJoker = CustomOption.AddToggle("Show Joker", false);
         public static CustomToggleOption showImpostorToJoker = CustomOption.AddToggle("Show Impostor to Joker", false);
         public static CustomToggleOption jokerCanDieToOfficer = CustomOption.AddToggle("Joker Can Die To Officer", true);

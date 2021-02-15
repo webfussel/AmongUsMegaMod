@@ -18,7 +18,6 @@ public class Engineer : Role
         this.startText = "Maintain important systems on the ship";
     }
 
-
     public static void ClearSettings()
     {
         this.player = null;
@@ -28,8 +27,7 @@ public class Engineer : Role
     public static void SetConfigSettings()
     {
         showEngineer = HarmonyMain.optShowEngineer.GetValue();
-    }
-    
+    }    
 
     [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.ShowInfectedMap))]
     class EngineerMapOpen

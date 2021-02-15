@@ -29,7 +29,7 @@ namespace MegaMod
 
             if (crewmates.Count > 0 && (rng.Next(1, 101) <= HarmonyMain.medicSpawnChance.GetValue()))
             {
-                writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetMedic, Hazel.SendOption.None, -1);
+                writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetDoctor, Hazel.SendOption.None, -1);
                 var MedicRandom = rng.Next(0, crewmates.Count);
                 Doctor.Medic = crewmates[MedicRandom];
                 crewmates.RemoveAt(MedicRandom);
@@ -41,7 +41,7 @@ namespace MegaMod
 
             if (crewmates.Count > 0 && (rng.Next(1, 101) <= HarmonyMain.officerSpawnChance.GetValue()))
             {
-                writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetOfficer, Hazel.SendOption.None, -1);
+                writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetDetective, Hazel.SendOption.None, -1);
 
                 var OfficerRandom = rng.Next(0, crewmates.Count);
                 Detective.Officer = crewmates[OfficerRandom];
@@ -66,7 +66,7 @@ namespace MegaMod
 
             if (crewmates.Count > 0 && (rng.Next(1, 101) <= HarmonyMain.jokerSpawnChance.GetValue()))
             {
-                writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetJoker, Hazel.SendOption.None, -1);
+                writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetJester, Hazel.SendOption.None, -1);
                 var JokerRandom = rng.Next(0, crewmates.Count);
                 ConsoleTools.Info(JokerRandom.ToString());
                 Jester.Joker = crewmates[JokerRandom];

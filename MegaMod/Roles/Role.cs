@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public abstract class Role {
+public class Role {
 
     public PlayerControl player;
     public string name {get; set;}

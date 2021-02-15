@@ -18,6 +18,6 @@ public class Detective
     public static void SetConfigSettings()
     {
         showOfficer = HarmonyMain.showOfficer.GetValue();
-        OfficerCD = HarmonyMain.OfficerKillCooldown.GetValue();
+        OfficerCD = HarmonyMain.DetectiveKillCooldown.GetValue();
     }
 }

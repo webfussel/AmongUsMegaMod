@@ -40,17 +40,17 @@ namespace MegaMod
     }
     enum CustomRPC
     {
-        SetMedic = 43,
+        SetDoctor = 43,
         SetProtected = 44,
         ShieldBreak = 45,
-        SetOfficer = 46,
-        OfficerKill = 47,
+        SetDetective = 46,
+        DetectiveKill = 47,
         SetEngineer = 48,
         FixLights = 49,
-        SetJoker = 50,
+        SetJester = 50,
         ResetVaribles = 51,
         SetLocalPlayers = 56,
-        JokerWin = 57,
+        JesterWin = 57,
     }
 
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
@@ -107,13 +107,14 @@ namespace MegaMod
                         killedPlayers.Clear();
                         break;
                     }
-                case (byte)CustomRPC.SetMedic:
+                case (byte)CustomRPC.SetDoctor:
                     {
-                        ConsoleTools.Info("Medic Set Through RPC!");
-                        byte MedicId = ALMCIJKELCP.ReadByte();
+                        
+                        ConsoleTools.Info("Doctor Set Through RPC!");
+                        byte doctorId = ALMCIJKELCP.ReadByte();
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         {
-                            if (player.PlayerId == MedicId)
+                            if (player.PlayerId == doctorId)
                             {
                                 Doctor.Medic = player;
                             }
@@ -132,20 +133,20 @@ namespace MegaMod
                         }
                         break;
                     }
-                case (byte)CustomRPC.SetOfficer:
+                case (byte)CustomRPC.SetDetective:
                     {
-                        ConsoleTools.Info("Officer Set Through RPC!");
-                        byte OfficerId = ALMCIJKELCP.ReadByte();
+                        ConsoleTools.Info("Detective Set Through RPC!");
+                        byte detectiveId = ALMCIJKELCP.ReadByte();
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         {
-                            if (player.PlayerId == OfficerId)
+                            if (player.PlayerId == detectiveId)
                             {
                                 Detective.Officer = player;
                             }
                         }
                         break;
                     }
-                case (byte)CustomRPC.OfficerKill:
+                case (byte)CustomRPC.DetectiveKill:
                     {
                         var killerid = ALMCIJKELCP.ReadByte();
                         var targetid = ALMCIJKELCP.ReadByte();
@@ -162,25 +163,25 @@ namespace MegaMod
                         {
                             if (player.PlayerId == EngineerId)
                             {
-                                Engineer.player = player;
+                                MegaMod.AddSpecialRole(new Engineer(player));
                             }
                         }
                         break;
                     }
-                case (byte)CustomRPC.SetJoker:
+                case (byte)CustomRPC.SetJester:
                     {
-                        ConsoleTools.Info("Joker Set Through RPC!");
-                        byte JokerId = ALMCIJKELCP.ReadByte();
+                        ConsoleTools.Info("Jester Set Through RPC!");
+                        byte jesterId = ALMCIJKELCP.ReadByte();
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         {
-                            if (player.PlayerId == JokerId)
+                            if (player.PlayerId == jesterId)
                             {
                                 Jester.Joker = player;
                             }
                         }
                         break;
                     }
-                case (byte)CustomRPC.JokerWin:
+                case (byte)CustomRPC.JesterWin:
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                     {
                         player.RemoveInfected();

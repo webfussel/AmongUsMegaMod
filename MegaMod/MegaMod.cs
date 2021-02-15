@@ -42,7 +42,6 @@ namespace MegaMod
             else if (br.DeathReason == (DeathReason)3)
             {
                 return $"Body Report (Officer): The cause of death appears to be suicide! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
-
             }
             else if (br.KillAge < MegaMod.Doctor.medicKillerNameDuration * 1000)
             {
@@ -81,15 +80,18 @@ namespace MegaMod
         public static Sprite shieldIco;
         public static Sprite smallShieldIco;
 
-        public static Color VecToColor(Vector3 vec)
-        {
-            return new Color(vec.x, vec.y, vec.z);
+        public static Dictionary<byte, Role> assignedSpecialRoles;
+
+        // Only the engineer gets added to the dictionary so far
+        public static void AddSpecialRole(Role specialRole){
+            if(assignedSpecialRoles == null)
+                assignedSpecialRoles = new Dictionary<byte, Role>();
+            assignedSpecialRoles.Add(specialRole.player.playerID, specialRole);
         }
 
-        public static Vector3 ColorToVec(Color color)
-        {
-            return new Vector3(color.r, color.g, color.b);
-        }
+        public static Color VecToColor(Vector3 vec) => new Color(vec.x, vec.y, vec.z);
+
+        public static Vector3 ColorToVec(Color color) => new Vector3(color.r, color.g, color.b);
 
         public static void BreakShield(bool flag)
         {
