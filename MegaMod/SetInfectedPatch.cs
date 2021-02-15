@@ -3,23 +3,23 @@ using Hazel;
 using System.Collections.Generic;
 using System.Linq;
 using UnhollowerBaseLib;
-using static ExtraRolesMod.ExtraRoles;
+using static MegaMod.MegaMod;
 
-namespace ExtraRolesMod
+namespace MegaMod
 {
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSetInfected))]
     class SetInfectedPatch
     {
         public static void Postfix(Il2CppReferenceArray<GameData.PlayerInfo> JPGEIBIBJPJ)
         {
-            MedicSettings.ClearSettings();
-            OfficerSettings.ClearSettings();
-            EngineerSettings.ClearSettings();
-            JokerSettings.ClearSettings();
-            MedicSettings.SetConfigSettings();
-            OfficerSettings.SetConfigSettings();
-            EngineerSettings.SetConfigSettings();
-            JokerSettings.SetConfigSettings();
+            Doctor.ClearSettings();
+            Detective.ClearSettings();
+            Engineer.ClearSettings();
+            Jester.ClearSettings();
+            Doctor.SetConfigSettings();
+            Detective.SetConfigSettings();
+            Engineer.SetConfigSettings();
+            Jester.SetConfigSettings();
             killedPlayers.Clear();
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ResetVaribles, Hazel.SendOption.None, -1);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -31,9 +31,9 @@ namespace ExtraRolesMod
             {
                 writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetMedic, Hazel.SendOption.None, -1);
                 var MedicRandom = rng.Next(0, crewmates.Count);
-                MedicSettings.Medic = crewmates[MedicRandom];
+                Doctor.Medic = crewmates[MedicRandom];
                 crewmates.RemoveAt(MedicRandom);
-                byte MedicId = MedicSettings.Medic.PlayerId;
+                byte MedicId = Doctor.Medic.PlayerId;
 
                 writer.Write(MedicId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -44,9 +44,9 @@ namespace ExtraRolesMod
                 writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetOfficer, Hazel.SendOption.None, -1);
 
                 var OfficerRandom = rng.Next(0, crewmates.Count);
-                OfficerSettings.Officer = crewmates[OfficerRandom];
+                Detective.Officer = crewmates[OfficerRandom];
                 crewmates.RemoveAt(OfficerRandom);
-                byte OfficerId = OfficerSettings.Officer.PlayerId;
+                byte OfficerId = Detective.Officer.PlayerId;
 
                 writer.Write(OfficerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -56,9 +56,9 @@ namespace ExtraRolesMod
             {
                 writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetEngineer, Hazel.SendOption.None, -1);
                 var EngineerRandom = rng.Next(0, crewmates.Count);
-                EngineerSettings.Engineer = crewmates[EngineerRandom];
+                Engineer.player = crewmates[EngineerRandom];
                 crewmates.RemoveAt(EngineerRandom);
-                byte EngineerId = EngineerSettings.Engineer.PlayerId;
+                byte EngineerId = Engineer.player.PlayerId;
 
                 writer.Write(EngineerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -69,9 +69,9 @@ namespace ExtraRolesMod
                 writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetJoker, Hazel.SendOption.None, -1);
                 var JokerRandom = rng.Next(0, crewmates.Count);
                 ConsoleTools.Info(JokerRandom.ToString());
-                JokerSettings.Joker = crewmates[JokerRandom];
+                Jester.Joker = crewmates[JokerRandom];
                 crewmates.RemoveAt(JokerRandom);
-                byte JokerId = JokerSettings.Joker.PlayerId;
+                byte JokerId = Jester.Joker.PlayerId;
 
                 writer.Write(JokerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -83,7 +83,7 @@ namespace ExtraRolesMod
             {
                 if (player.Data.IsImpostor)
                     continue;
-                if (JokerSettings.Joker != null && player.PlayerId == JokerSettings.Joker.PlayerId)
+                if (Jester.Joker != null && player.PlayerId == Jester.Joker.PlayerId)
                     continue;
                 else
                     localPlayers.Add(player);

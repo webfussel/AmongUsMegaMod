@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static ExtraRolesMod.ExtraRoles;
+using static MegaMod.MegaMod;
 
-namespace ExtraRolesMod
+namespace MegaMod
 {
     public static class PlayerVentTimeExtension
     {
@@ -34,8 +34,8 @@ namespace ExtraRolesMod
         {
             float num = float.MaxValue;
             PlayerControl localPlayer = pc.Object;
-            if (EngineerSettings.Engineer != null)
-                couldUse = (EngineerSettings.Engineer.PlayerId == PlayerControl.LocalPlayer.PlayerId || localPlayer.Data.IsImpostor) && !localPlayer.Data.IsDead;
+            if (Engineer.player != null)
+                couldUse = (Engineer.player.PlayerId == PlayerControl.LocalPlayer.PlayerId || localPlayer.Data.IsImpostor) && !localPlayer.Data.IsDead;
             else
                 couldUse = localPlayer.Data.IsImpostor && !localPlayer.Data.IsDead;
             canUse = couldUse;

@@ -1,10 +1,10 @@
-﻿using ExtraRolesMod;
+﻿using MegaMod;
 using HarmonyLib;
 using System;
 using System.Linq;
-using static ExtraRolesMod.ExtraRoles;
+using static MegaMod.MegaMod;
 
-namespace ExtraRoles
+namespace MegaMod
 {
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.LocalPlayer.CmdReportDeadBody))]
     class BodyReportPatch
@@ -17,10 +17,10 @@ namespace ExtraRoles
             if (killer != null)
             {
                 // If there is a Medic alive and Medic reported and reports are enabled
-                if (MedicSettings.Medic != null && reporterId == MedicSettings.Medic.PlayerId && MedicSettings.showReport)
+                if (Doctor.Medic != null && reporterId == Doctor.Medic.PlayerId && Doctor.showReport)
                 {
                     // If the user is the medic
-                    if (MedicSettings.Medic.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+                    if (Doctor.Medic.PlayerId == PlayerControl.LocalPlayer.PlayerId)
                     {
                         // Create Body Report
                         BodyReport br = new BodyReport();

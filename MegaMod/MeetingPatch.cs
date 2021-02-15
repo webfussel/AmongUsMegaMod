@@ -1,15 +1,15 @@
-using ExtraRolesMod;
+using MegaMod;
 using HarmonyLib;
 using Hazel;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using static ExtraRolesMod.ExtraRoles;
+using static MegaMod.MegaMod;
 using UnhollowerBaseLib;
 using System.Collections;
 
-namespace ExtraRoles
+namespace MegaMod
 {
 
     [HarmonyPatch(typeof(UnityEngine.Object), nameof(UnityEngine.Object.Destroy), new Type[] { typeof(UnityEngine.Object) })]
@@ -19,16 +19,16 @@ namespace ExtraRoles
         {
             if (ExileController.Instance != null && obj == ExileController.Instance.gameObject)
             {
-                if (JokerSettings.Joker != null)
+                if (Jester.Joker != null)
                 {
-                    if (ExileController.Instance.Field_10 != null && ExileController.Instance.Field_10.PlayerId == JokerSettings.Joker.PlayerId)
+                    if (ExileController.Instance.Field_10 != null && ExileController.Instance.Field_10.PlayerId == Jester.Joker.PlayerId)
                     {
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.JokerWin, Hazel.SendOption.None, -1);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
 
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         {
-                            if (player != JokerSettings.Joker)
+                            if (player != Jester.Joker)
                             {
                                 player.RemoveInfected();
                                 player.Die(DeathReason.Exile);
@@ -36,9 +36,9 @@ namespace ExtraRoles
                                 player.Data.IsImpostor = false;
                             }
                         }
-                        JokerSettings.Joker.Revive();
-                        JokerSettings.Joker.Data.IsDead = false;
-                        JokerSettings.Joker.Data.IsImpostor = true;
+                        Jester.Joker.Revive();
+                        Jester.Joker.Data.IsDead = false;
+                        Jester.Joker.Data.IsImpostor = true;
                     }
                 }
             }
@@ -50,7 +50,7 @@ namespace ExtraRoles
     {
         static void Postfix(ExileController __instance)
         {
-            OfficerSettings.lastKilled = DateTime.UtcNow.AddMilliseconds(__instance.Duration);
+            Detective.lastKilled = DateTime.UtcNow.AddMilliseconds(__instance.Duration);
         }
     }
 
@@ -61,22 +61,28 @@ namespace ExtraRoles
         {
             if (ExileController.Instance != null && ExileController.Instance.Field_10 != null)
             {
+                byte playerId = ExileController.Instance.Field_10.Object.PlayerId;
+
                 if (HKOIECMDOKL == StringNames.ExileTextPN || HKOIECMDOKL == StringNames.ExileTextSN)
                 {
-                    if (MedicSettings.Medic != null && ExileController.Instance.Field_10.Object.PlayerId == MedicSettings.Medic.PlayerId)
-                        __result = ExileController.Instance.Field_10.PlayerName + " was The Medic.";
-                    else if (EngineerSettings.Engineer != null && ExileController.Instance.Field_10.Object.PlayerId == EngineerSettings.Engineer.PlayerId)
-                        __result = ExileController.Instance.Field_10.PlayerName + " was The Engineer.";
-                    else if (OfficerSettings.Officer != null && ExileController.Instance.Field_10.Object.PlayerId == OfficerSettings.Officer.PlayerId)
-                        __result = ExileController.Instance.Field_10.PlayerName + " was The Officer.";
-                    else if (JokerSettings.Joker != null && ExileController.Instance.Field_10.Object.PlayerId == JokerSettings.Joker.PlayerId)
-                        __result = ExileController.Instance.Field_10.PlayerName + " was The Joker.";
+                    string playerName = ExileController.Instance.Field_10.PlayerName;
+
+                    
+
+                    if (Doctor.Medic != null && playerId == Doctor.Medic.PlayerId)
+                        __result = playerName + " was The Medic.";
+                    else if (Engineer.player != null && playerId == Engineer.player.PlayerId)
+                        __result = Engineer.ejectMessage(playerName);
+                    else if (Detective.Officer != null && playerId == Detective.Officer.PlayerId)
+                        __result = playerName + " was The Officer.";
+                    else if (Jester.Joker != null && playerId == Jester.Joker.PlayerId)
+                        __result = playerName + " was The Joker.";
                     else
-                        __result = ExileController.Instance.Field_10.PlayerName + " was not The Impostor.";
+                        __result = playerName + " was not The Impostor.";
                 }
                 if (HKOIECMDOKL == StringNames.ImpostorsRemainP || HKOIECMDOKL == StringNames.ImpostorsRemainS)
                 {
-                    if (JokerSettings.Joker != null && ExileController.Instance.Field_10.Object.PlayerId == JokerSettings.Joker.PlayerId)
+                    if (Jester.Joker != null && playerId == Jester.Joker.PlayerId)
                         __result = "";
                 }
             }

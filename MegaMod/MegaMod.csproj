@@ -5,7 +5,7 @@
         <GameVersion>2020.12.9s</GameVersion>
         <Mappings>NuclearPowered/Mappings:0.1.0-alpha.2</Mappings>
 
-        <Description>A Reactor Mod based on Hunter101's ExtraRoles Mod, that adds even more roles.</Description>
+        <Description>A Reactor Mod with more colors, roles and more.</Description>
         <Authors>webfussel and dacendaran</Authors>
     </PropertyGroup>
 

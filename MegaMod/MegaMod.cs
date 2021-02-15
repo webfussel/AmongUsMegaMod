@@ -10,12 +10,12 @@ using Reactor.Extensions;
 /*
 Hex colors for extra roles
 Engineer: 972e00
-Joker: 838383
-Medic: 24b720
-Officer: 0028c6
+Jester: 838383
+Doctor: 24b720
+Detective: 0028c6
 */
 
-namespace ExtraRolesMod
+namespace MegaMod
 {
     public class DeadPlayer
     {
@@ -35,7 +35,7 @@ namespace ExtraRolesMod
         public static string ParseBodyReport(BodyReport br)
         {
             System.Console.WriteLine(br.KillAge);
-            if (br.KillAge > ExtraRoles.MedicSettings.medicKillerColorDuration * 1000)
+            if (br.KillAge > MegaMod.Doctor.medicKillerColorDuration * 1000)
             {
                 return $"Body Report: The corpse is too old to gain information from. (Killed {Math.Round(br.KillAge / 1000)}s ago)";
             }
@@ -44,7 +44,7 @@ namespace ExtraRolesMod
                 return $"Body Report (Officer): The cause of death appears to be suicide! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
 
             }
-            else if (br.KillAge < ExtraRoles.MedicSettings.medicKillerNameDuration * 1000)
+            else if (br.KillAge < MegaMod.Doctor.medicKillerNameDuration * 1000)
             {
                 return $"Body Report: The killer appears to be {br.Killer.name}! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
             }
@@ -73,7 +73,7 @@ namespace ExtraRolesMod
     }
 
     [HarmonyPatch]
-    public static class ExtraRoles
+    public static class MegaMod
     {
         public static AssetBundle bundle;
         public static AudioClip breakClip;
@@ -97,9 +97,9 @@ namespace ExtraRolesMod
             {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShieldBreak, Hazel.SendOption.None, -1);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                MedicSettings.Protected.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
-                MedicSettings.Protected.myRend.material.SetFloat("_Outline", 0f);
-                MedicSettings.Protected = null;
+                Doctor.Protected.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
+                Doctor.Protected.myRend.material.SetFloat("_Outline", 0f);
+                Doctor.Protected = null;
             }
         }
 
@@ -127,112 +127,13 @@ namespace ExtraRolesMod
         //renderer for the shield indicator
         public static SpriteRenderer shieldRenderer = null;
         //medic settings and values
-        public static string versionString = "v1.0.0";
+        public static string versionString = "v0.0.1";
+
         public static class ModdedPalette
         {
-            public static Color medicColor = new Color(36f / 255f, 183f / 255f, 32f / 255f, 1);
-            public static Color officerColor = new Color(0, 40f / 255f, 198f / 255f, 1);
-            public static Color engineerColor = new Color(255f / 255f, 165f / 255f, 10f / 255f, 1);
-            public static Color jokerColor = new Color(138f / 255f, 138f / 255f, 138f / 255f, 1);
             public static Color protectedColor = new Color(0, 1, 1, 1);
         }
-        public static class MedicSettings 
-        {
-            public static PlayerControl Medic { get; set; }
-            public static PlayerControl Protected { get; set; }
-            public static bool shieldUsed { get; set; }
-            public static int medicKillerNameDuration { get; set; }
-            public static int medicKillerColorDuration { get; set; }
-            public static bool showMedic { get; set; }
-            public static bool showReport {get; set;}
-            public static int  showProtected { get; set; }
-            public static bool shieldKillAttemptIndicator { get; set; }
-            public static void ClearSettings()
-            {
-                Medic = null;
-                Protected = null;
-                shieldUsed = false;
-            }
-
-            public static void SetConfigSettings()
-            {
-                showMedic = HarmonyMain.showMedic.GetValue();
-                showProtected = HarmonyMain.showShieldedPlayer.GetValue();
-                showReport = HarmonyMain.medicReportSwitch.GetValue();
-                shieldKillAttemptIndicator = HarmonyMain.playerMurderIndicator.GetValue();
-                medicKillerNameDuration = (int)HarmonyMain.medicReportNameDuration.GetValue();
-                medicKillerColorDuration = (int)HarmonyMain.medicReportColorDuration.GetValue();
-            }
-        }
-        //officer settings and values
-        public static class OfficerSettings
-        {
-            public static PlayerControl Officer { get; set; }
-            public static float OfficerCD { get; set; }
-            public static bool showOfficer { get; set; }
-            public static DateTime? lastKilled { get; set; }
-
-            public static void ClearSettings()
-            {
-                Officer = null;
-                lastKilled = null;
-            }
-
-            public static void SetConfigSettings()
-            {
-                showOfficer = HarmonyMain.showOfficer.GetValue();
-                OfficerCD = HarmonyMain.OfficerKillCooldown.GetValue();
-            }
-        }
-        //engineer settings and values
-        public static class EngineerSettings
-        {
-            public static PlayerControl Engineer;
-            public static bool repairUsed = false;
-            public static bool showEngineer = false;
-            public static bool sabotageActive { get; set; }
-            public static void ClearSettings()
-            {
-                Engineer = null;
-                repairUsed = false;
-            }
-
-            public static void SetConfigSettings()
-            {
-                showEngineer = HarmonyMain.showEngineer.GetValue();
-            }
-        }
-
-        //joker settings and values
-        public static class JokerSettings
-        {
-            public static PlayerControl Joker;
-            public static bool showJoker = false;
-            public static bool showImpostorToJoker = false;
-            public static bool jokerCanDieToOfficer = false;
-
-            public static void ClearSettings()
-            {
-                Joker = null;
-            }
-
-            public static void ClearTasks()
-            {
-                var removeTask = new List<PlayerTask>();
-                foreach (PlayerTask task in JokerSettings.Joker.myTasks)
-                    if (task.TaskType != TaskTypes.FixComms && task.TaskType != TaskTypes.FixLights && task.TaskType != TaskTypes.ResetReactor && task.TaskType != TaskTypes.ResetSeismic && task.TaskType != TaskTypes.RestoreOxy)
-                        removeTask.Add(task);
-                foreach (PlayerTask task in removeTask)
-                    JokerSettings.Joker.RemoveTask(task);
-            }
-
-            public static void SetConfigSettings()
-            {
-                showJoker = HarmonyMain.showJoker.GetValue();
-                showImpostorToJoker = HarmonyMain.showImpostorToJoker.GetValue();
-                jokerCanDieToOfficer = HarmonyMain.jokerCanDieToOfficer.GetValue();
-            }
-        }
+        
 
         //function called on start of game. write version text on menu
         [HarmonyPatch(typeof(VersionShower), nameof(VersionShower.Start))]
@@ -240,7 +141,7 @@ namespace ExtraRolesMod
         {
             static void Postfix(VersionShower __instance)
             {
-                __instance.text.Text = __instance.text.Text + "   Extra Roles " + versionString + " Loaded. (http://www.extraroles.net/)";
+                __instance.text.Text += $"    MegaMod {versionString}";
             }
         }
 
@@ -258,8 +159,7 @@ namespace ExtraRolesMod
         {
             public static void Postfix(PingTracker __instance)
             {
-                __instance.text.Text += "\nextraroles.net";
-                __instance.text.Text += "\nExtraRoles " + versionString;
+                __instance.text.Text += $"\nMegaMod {versionString}";
             }
         }
 

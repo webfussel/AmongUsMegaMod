@@ -7,20 +7,20 @@ using System.Linq;
 using System.Net;
 using Reactor;
 using Essentials.CustomOptions;
-using static ExtraRolesMod.ExtraRoles;
+using static MegaMod.MegaMod;
 using Reactor.Unstrip;
 using UnityEngine;
 using System.IO;
 using Reactor.Extensions;
 
-namespace ExtraRolesMod
+namespace MegaMod
 {
     [BepInPlugin(Id)]
     [BepInProcess("Among Us.exe")]
     [BepInDependency(ReactorPlugin.Id)]
     public class HarmonyMain : BasePlugin
     {
-        public const string Id = "gg.reactor.extraroles";
+        public const string Id = "gg.reactor.betterroles";
 
         public Harmony Harmony { get; } = new Harmony(Id);
 
@@ -36,7 +36,6 @@ namespace ExtraRolesMod
         public static CustomToggleOption playerMurderIndicator = CustomOption.AddToggle("Murder Attempt Indicator for Shielded Player", true);
         public static CustomToggleOption showOfficer = CustomOption.AddToggle("Show Officer", false);
         public static CustomNumberOption OfficerKillCooldown = CustomOption.AddNumber("Officer Kill Cooldown", 30f, 10f, 60f, 2.5f);
-        public static CustomToggleOption showEngineer = CustomOption.AddToggle("Show Engineer", false);
         public static CustomToggleOption showJoker = CustomOption.AddToggle("Show Joker", false);
         public static CustomToggleOption showImpostorToJoker = CustomOption.AddToggle("Show Impostor to Joker", false);
         public static CustomToggleOption jokerCanDieToOfficer = CustomOption.AddToggle("Joker Can Die To Officer", true);
@@ -45,7 +44,6 @@ namespace ExtraRolesMod
         public static CustomNumberOption medicReportColorDuration = CustomOption.AddNumber("Time Where Medic Reports Will Have Color Type", 20, 0, 120, 2.5f);
         public static CustomNumberOption medicSpawnChance = CustomOption.AddNumber("Medic Spawn Chance", 100, 0, 100, 5);
         public static CustomNumberOption officerSpawnChance = CustomOption.AddNumber("Officer Spawn Chance", 100, 0, 100, 5);
-        public static CustomNumberOption engineerSpawnChance = CustomOption.AddNumber("Engineer Spawn Chance", 100, 0, 100, 5);
         public static CustomNumberOption jokerSpawnChance = CustomOption.AddNumber("Joker Spawn Chance", 100, 0, 100, 5);
         
         public ConfigEntry<string> Ip { get; set; }

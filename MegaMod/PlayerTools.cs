@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ExtraRolesMod
+namespace MegaMod
 {
     [HarmonyPatch]
     public static class PlayerTools
@@ -42,14 +42,14 @@ namespace ExtraRolesMod
 
         public static float GetOfficerKD()
         {
-            if (ExtraRoles.OfficerSettings.lastKilled == null)
+            if (MegaMod.Detective.lastKilled == null)
             {
-                return ExtraRoles.OfficerSettings.OfficerCD;
+                return MegaMod.Detective.OfficerCD;
             }
             DateTime now = DateTime.UtcNow;
-            TimeSpan diff = (TimeSpan)(now - ExtraRoles.OfficerSettings.lastKilled);
+            TimeSpan diff = (TimeSpan)(now - MegaMod.Detective.lastKilled);
 
-            var KillCoolDown = ExtraRoles.OfficerSettings.OfficerCD * 1000.0f;
+            var KillCoolDown = MegaMod.Detective.OfficerCD * 1000.0f;
             if (KillCoolDown - (float)diff.TotalMilliseconds < 0) return 0;
             else
             {

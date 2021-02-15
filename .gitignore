@@ -1,6 +1,6 @@
-/ExtraRoles/bin
-/ExtraRoles/obj
-.vs/ExtraRoles/v16/.suo
-ExtraRoles/.vs
-.vs/ExtraRoles/DesignTimeBuild/.dtbcache.v2
-ExtraRoles/Assembly-CSharp.dll
+/MegaMod/bin
+/MegaMod/obj
+.vs/MegaMod/v16/.suo
+MegaMod/.vs
+.vs/MegaMod/DesignTimeBuild/.dtbcache.v2
+MegaMod/Assembly-CSharp.dll

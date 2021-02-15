@@ -3,9 +3,9 @@ using System;
 using System.IO;
 using System.Net.Http;
 using UnityEngine;
-using static ExtraRolesMod.ExtraRoles;
+using static MegaMod.MegaMod;
 
-namespace ExtraRolesMod
+namespace MegaMod
 {
     [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.Method_24))]
     class GameOptionsData_ToHudString
@@ -86,7 +86,7 @@ namespace ExtraRolesMod
                 {
                     PerformKillPatch.Prefix();
                 }
-                if (MedicSettings.Protected != null && MedicSettings.Protected.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
+                if (Doctor.Protected != null && Doctor.Protected.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
                 {
                     if (rend == null)
                     {
@@ -101,7 +101,7 @@ namespace ExtraRolesMod
                     rend.transform.localPosition = Camera.main.ScreenToWorldPoint(new Vector3(0 + (25 * scale), 0 + (25 * scale), -50f));
                     rend.SetActive(true);
                 }
-                if (EngineerSettings.Engineer != null && EngineerSettings.Engineer.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
+                if (Engineer.player != null && Engineer.player.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
                 {
                     KillButton.gameObject.SetActive(true);
                     KillButton.isActive = true;
@@ -110,101 +110,101 @@ namespace ExtraRolesMod
                     KillButton.renderer.color = Palette.EnabledColor;
                     KillButton.renderer.material.SetFloat("_Desat", 0f);
                 }
-                if (JokerSettings.Joker != null)
-                    JokerSettings.ClearTasks();
+                if (Jester.Joker != null)
+                    Jester.ClearTasks();
                 if (rend != null)
                     rend.SetActive(false);
                 bool sabotageActive = false;
                 foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
                     if (task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor || task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms)
                         sabotageActive = true;
-                EngineerSettings.sabotageActive = sabotageActive;
-                if (MedicSettings.Protected != null && MedicSettings.Protected.Data.IsDead)
+                Engineer.sabotageActive = sabotageActive;
+                if (Doctor.Protected != null && Doctor.Protected.Data.IsDead)
                     BreakShield(true);
-                if (MedicSettings.Protected != null && MedicSettings.Medic != null && MedicSettings.Medic.Data.IsDead)
+                if (Doctor.Protected != null && Doctor.Medic != null && Doctor.Medic.Data.IsDead)
                     BreakShield(true);
-                if (MedicSettings.Medic == null && MedicSettings.Protected != null)
+                if (Doctor.Medic == null && Doctor.Protected != null)
                     BreakShield(true);
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                     player.nameText.Color = Color.white;
-                if (PlayerControl.LocalPlayer.Data.IsImpostor || JokerSettings.Joker == PlayerControl.LocalPlayer && JokerSettings.showImpostorToJoker)
+                if (PlayerControl.LocalPlayer.Data.IsImpostor || Jester.Joker == PlayerControl.LocalPlayer && Jester.showImpostorToJoker)
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         if (player.Data.IsImpostor)
                             player.nameText.Color = Color.red;
-                if (MedicSettings.Medic != null)
+                if (Doctor.Medic != null)
                 {
-                    if (MedicSettings.Medic == PlayerControl.LocalPlayer || MedicSettings.showMedic)
+                    if (Doctor.Medic == PlayerControl.LocalPlayer || Doctor.showMedic)
                     {
-                        MedicSettings.Medic.nameText.Color = ModdedPalette.medicColor;
+                        Doctor.Medic.nameText.Color = ModdedPalette.medicColor;
                         if (MeetingHud.Instance != null)
                             foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
-                                if (player.NameText != null && MedicSettings.Medic.PlayerId == player.TargetPlayerId)
+                                if (player.NameText != null && Doctor.Medic.PlayerId == player.TargetPlayerId)
                                     player.NameText.Color = ModdedPalette.medicColor;
                     }
                 }
-                if (OfficerSettings.Officer != null)
+                if (Detective.Officer != null)
                 {
-                    if (OfficerSettings.Officer == PlayerControl.LocalPlayer || OfficerSettings.showOfficer)
+                    if (Detective.Officer == PlayerControl.LocalPlayer || Detective.showOfficer)
                     {
-                        OfficerSettings.Officer.nameText.Color = ModdedPalette.officerColor;
+                        Detective.Officer.nameText.Color = ModdedPalette.officerColor;
                         if (MeetingHud.Instance != null)
                             foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
-                                if (player.NameText != null && OfficerSettings.Officer.PlayerId == player.TargetPlayerId)
+                                if (player.NameText != null && Detective.Officer.PlayerId == player.TargetPlayerId)
                                     player.NameText.Color = ModdedPalette.officerColor;
                     }
                 }
-                if (EngineerSettings.Engineer != null)
+                if (Engineer.player != null)
                 {
-                    if (EngineerSettings.Engineer == PlayerControl.LocalPlayer || EngineerSettings.showEngineer)
+                    if (Engineer.player == PlayerControl.LocalPlayer || Engineer.showEngineer)
                     {
-                        EngineerSettings.Engineer.nameText.Color = ModdedPalette.engineerColor;
+                        Engineer.player.nameText.Color = Engineer.color;
                         if (MeetingHud.Instance != null)
                             foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
-                                if (player.NameText != null && EngineerSettings.Engineer.PlayerId == player.TargetPlayerId)
+                                if (player.NameText != null && Engineer.player.PlayerId == player.TargetPlayerId)
                                     player.NameText.Color = ModdedPalette.engineerColor;
                     }
                 }
-                if (JokerSettings.Joker != null)
+                if (Jester.Joker != null)
                 {
-                    if (JokerSettings.Joker == PlayerControl.LocalPlayer || JokerSettings.showJoker)
+                    if (Jester.Joker == PlayerControl.LocalPlayer || Jester.showJoker)
                     {
-                        JokerSettings.Joker.nameText.Color = ModdedPalette.jokerColor;
+                        Jester.Joker.nameText.Color = ModdedPalette.jokerColor;
                         if (MeetingHud.Instance != null)
                             foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
-                                if (player.NameText != null && JokerSettings.Joker.PlayerId == player.TargetPlayerId)
+                                if (player.NameText != null && Jester.Joker.PlayerId == player.TargetPlayerId)
                                     player.NameText.Color = ModdedPalette.jokerColor;
                     }
                 }
                     
-                if (MedicSettings.Protected != null)
+                if (Doctor.Protected != null)
                 {
-                    int showShielded = MedicSettings.showProtected;
+                    int showShielded = Doctor.showProtected;
                     // If everyone can see shielded
                     if(showShielded == 3)
                     {
-                        MedicSettings.Protected.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);
-                        MedicSettings.Protected.myRend.material.SetFloat("_Outline", 1f);
-                        MedicSettings.Protected.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
+                        Doctor.Protected.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);
+                        Doctor.Protected.myRend.material.SetFloat("_Outline", 1f);
+                        Doctor.Protected.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
                     }
                     // If I am protected and should see the shield
-                    else if (PlayerControl.LocalPlayer == MedicSettings.Protected && (showShielded == 0 || showShielded == 2))
+                    else if (PlayerControl.LocalPlayer == Doctor.Protected && (showShielded == 0 || showShielded == 2))
                     {
-                        MedicSettings.Protected.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);
-                        MedicSettings.Protected.myRend.material.SetFloat("_Outline", 1f);
-                        MedicSettings.Protected.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
+                        Doctor.Protected.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);
+                        Doctor.Protected.myRend.material.SetFloat("_Outline", 1f);
+                        Doctor.Protected.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
                     }
                     // If I am Medic and should see the shield
-                    else if(PlayerControl.LocalPlayer == MedicSettings.Medic && (showShielded == 1 || showShielded == 2))
+                    else if(PlayerControl.LocalPlayer == Doctor.Medic && (showShielded == 1 || showShielded == 2))
                     {
-                        MedicSettings.Protected.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);
-                        MedicSettings.Protected.myRend.material.SetFloat("_Outline", 1f);
-                        MedicSettings.Protected.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
+                        Doctor.Protected.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);
+                        Doctor.Protected.myRend.material.SetFloat("_Outline", 1f);
+                        Doctor.Protected.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
                     }
                 }
                         
                 if (PlayerControl.LocalPlayer.Data.IsDead)
                 {
-                    if (EngineerSettings.Engineer == null || EngineerSettings.Engineer.PlayerId != PlayerControl.LocalPlayer.PlayerId)
+                    if (Engineer.player == null || Engineer.player.PlayerId != PlayerControl.LocalPlayer.PlayerId)
                     {
                         KillButton.gameObject.SetActive(false);
                         KillButton.renderer.enabled = false;
@@ -214,13 +214,13 @@ namespace ExtraRolesMod
                         return;
                     }
                 }
-                if (MedicSettings.Medic != null && __instance.UseButton != null && MedicSettings.Medic.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
+                if (Doctor.Medic != null && __instance.UseButton != null && Doctor.Medic.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
                 {
                     KillButton.renderer.sprite = shieldIco;
                     KillButton.gameObject.SetActive(true);
                     KillButton.isActive = true;
                     KillButton.SetCoolDown(0f, 1f);
-                    if (DistLocalClosest < GameOptionsData.KillDistances[PlayerControl.GameOptions.KillDistance] && MedicSettings.shieldUsed == false)
+                    if (DistLocalClosest < GameOptionsData.KillDistances[PlayerControl.GameOptions.KillDistance] && Doctor.shieldUsed == false)
                     {
                         KillButton.SetTarget(PlayerTools.closestPlayer);
                         CurrentTarget = PlayerTools.closestPlayer;
@@ -231,7 +231,7 @@ namespace ExtraRolesMod
                         CurrentTarget = null;
                     }
                 }
-                if (OfficerSettings.Officer != null && __instance.UseButton != null && OfficerSettings.Officer.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
+                if (Detective.Officer != null && __instance.UseButton != null && Detective.Officer.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
                 {
                     KillButton.gameObject.SetActive(true);
                     KillButton.isActive = true;

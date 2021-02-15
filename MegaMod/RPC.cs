@@ -1,8 +1,8 @@
 ﻿using HarmonyLib;
 using Hazel;
-using static ExtraRolesMod.ExtraRoles;
+using static MegaMod.MegaMod;
 
-namespace ExtraRolesMod
+namespace MegaMod
 {
     enum RPC
     {
@@ -63,12 +63,12 @@ namespace ExtraRolesMod
             switch (packetId)
             {
                 case (byte)CustomRPC.ShieldBreak:
-                    if (MedicSettings.Protected != null)
+                    if (Doctor.Protected != null)
                     {
-                        MedicSettings.Protected.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
-                        MedicSettings.Protected.myRend.material.SetFloat("_Outline", 0f);
+                        Doctor.Protected.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
+                        Doctor.Protected.myRend.material.SetFloat("_Outline", 0f);
                     }    
-                    MedicSettings.Protected = null;
+                    Doctor.Protected = null;
                     break;
                 case (byte)CustomRPC.FixLights:
                     SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
@@ -96,14 +96,14 @@ namespace ExtraRolesMod
                     }
                 case (byte)CustomRPC.ResetVaribles:
                     {
-                        MedicSettings.ClearSettings();
-                        OfficerSettings.ClearSettings();
-                        EngineerSettings.ClearSettings();
-                        JokerSettings.ClearSettings();
-                        MedicSettings.SetConfigSettings();
-                        OfficerSettings.SetConfigSettings();
-                        EngineerSettings.SetConfigSettings();
-                        JokerSettings.SetConfigSettings();
+                        Doctor.ClearSettings();
+                        Detective.ClearSettings();
+                        Engineer.ClearSettings();
+                        Jester.ClearSettings();
+                        Doctor.SetConfigSettings();
+                        Detective.SetConfigSettings();
+                        Engineer.SetConfigSettings();
+                        Jester.SetConfigSettings();
                         killedPlayers.Clear();
                         break;
                     }
@@ -115,7 +115,7 @@ namespace ExtraRolesMod
                         {
                             if (player.PlayerId == MedicId)
                             {
-                                MedicSettings.Medic = player;
+                                Doctor.Medic = player;
                             }
                         }
                         break;
@@ -127,7 +127,7 @@ namespace ExtraRolesMod
                         {
                             if (player.PlayerId == ProtectedId)
                             {
-                                MedicSettings.Protected = player;
+                                Doctor.Protected = player;
                             }
                         }
                         break;
@@ -140,7 +140,7 @@ namespace ExtraRolesMod
                         {
                             if (player.PlayerId == OfficerId)
                             {
-                                OfficerSettings.Officer = player;
+                                Detective.Officer = player;
                             }
                         }
                         break;
@@ -162,7 +162,7 @@ namespace ExtraRolesMod
                         {
                             if (player.PlayerId == EngineerId)
                             {
-                                EngineerSettings.Engineer = player;
+                                Engineer.player = player;
                             }
                         }
                         break;
@@ -175,7 +175,7 @@ namespace ExtraRolesMod
                         {
                             if (player.PlayerId == JokerId)
                             {
-                                JokerSettings.Joker = player;
+                                Jester.Joker = player;
                             }
                         }
                         break;
@@ -188,9 +188,9 @@ namespace ExtraRolesMod
                         player.Data.IsDead = true;
                         player.Data.IsImpostor = false;
                     }
-                    JokerSettings.Joker.Revive();
-                    JokerSettings.Joker.Data.IsDead = false;
-                    JokerSettings.Joker.Data.IsImpostor = true;
+                    Jester.Joker.Revive();
+                    Jester.Joker.Data.IsDead = false;
+                    Jester.Joker.Data.IsImpostor = true;
                     break;
             }
         }

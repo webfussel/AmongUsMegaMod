@@ -1,9 +1,9 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
 using UnityEngine;
-using static ExtraRolesMod.ExtraRoles;
+using static MegaMod.MegaMod;
 
-namespace ExtraRolesMod
+namespace MegaMod
 {
     [HarmonyPatch(typeof(EndGameManager), "SetEverythingUp")]
     public static class EndGamePatch

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ExtraRolesMod
+namespace MegaMod
 {
     class ConsoleTools
     {
