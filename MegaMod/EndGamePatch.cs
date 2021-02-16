@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
 using UnityEngine;
-using static MegaMod.MegaMod;
+using static MegaMod.MegaModManager;
 
 namespace MegaMod
 {

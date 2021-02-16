@@ -42,14 +42,14 @@ namespace MegaMod
 
         public static float GetOfficerKD()
         {
-            if (MegaMod.Detective.lastKilled == null)
+            if (MegaModManager.Detective.lastKilled == null)
             {
-                return MegaMod.Detective.OfficerCD;
+                return MegaModManager.Detective.OfficerCD;
             }
             DateTime now = DateTime.UtcNow;
-            TimeSpan diff = (TimeSpan)(now - MegaMod.Detective.lastKilled);
+            TimeSpan diff = (TimeSpan)(now - MegaModManager.Detective.lastKilled);
 
-            var KillCoolDown = MegaMod.Detective.OfficerCD * 1000.0f;
+            var KillCoolDown = MegaModManager.Detective.OfficerCD * 1000.0f;
             if (KillCoolDown - (float)diff.TotalMilliseconds < 0) return 0;
             else
             {

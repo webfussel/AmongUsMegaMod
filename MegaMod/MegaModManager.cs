@@ -3,6 +3,8 @@ using Hazel;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Il2CppSystem.Xml.Schema;
 using UnityEngine;
 using Reactor.Unstrip;
 using Reactor.Extensions;
@@ -35,7 +37,7 @@ namespace MegaMod
         public static string ParseBodyReport(BodyReport br)
         {
             System.Console.WriteLine(br.KillAge);
-            if (br.KillAge > MegaMod.Doctor.medicKillerColorDuration * 1000)
+            if (br.KillAge > MegaModManager.Doctor.medicKillerColorDuration * 1000)
             {
                 return $"Body Report: The corpse is too old to gain information from. (Killed {Math.Round(br.KillAge / 1000)}s ago)";
             }
@@ -43,7 +45,7 @@ namespace MegaMod
             {
                 return $"Body Report (Officer): The cause of death appears to be suicide! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
             }
-            else if (br.KillAge < MegaMod.Doctor.medicKillerNameDuration * 1000)
+            else if (br.KillAge < MegaModManager.Doctor.medicKillerNameDuration * 1000)
             {
                 return $"Body Report: The killer appears to be {br.Killer.name}! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
             }
@@ -72,7 +74,7 @@ namespace MegaMod
     }
 
     [HarmonyPatch]
-    public static class MegaMod
+    public static class MegaModManager
     {
         public static AssetBundle bundle;
         public static AudioClip breakClip;
@@ -86,24 +88,43 @@ namespace MegaMod
         public static void AddSpecialRole(Role specialRole){
             if(assignedSpecialRoles == null)
                 assignedSpecialRoles = new Dictionary<byte, Role>();
-            assignedSpecialRoles.Add(specialRole.player.playerID, specialRole);
+            assignedSpecialRoles.Add(specialRole.player.PlayerId, specialRole);
+        }
+
+        public static T GetSpecialRole<T>(byte playerId) where T : Role => (T) assignedSpecialRoles[playerId];
+
+        public static bool SpecialRoleIsAssigned<T>(out Role instance) where T : Role
+        {
+            List<Role> assignedRoles = assignedSpecialRoles.Values.ToList();
+            foreach(Role role in assignedRoles)
+            {
+                if (!(role is T)) continue;
+                instance = role;
+                return true;
+            }                
+            instance = null;
+            return false;
+        }
+
+        public static void WriteImmediately(object action)
+        {
+            MessageWriter writer = GetWriter(action);
+            CloseWriter(writer);
+        }
+
+        public static MessageWriter GetWriter(object action)
+        {
+           return AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte) action, Hazel.SendOption.None, -1);
+        }
+
+        public static void CloseWriter(MessageWriter writer)
+        {
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
 
         public static Color VecToColor(Vector3 vec) => new Color(vec.x, vec.y, vec.z);
 
         public static Vector3 ColorToVec(Color color) => new Vector3(color.r, color.g, color.b);
-
-        public static void BreakShield(bool flag)
-        {
-            if (flag)
-            {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShieldBreak, Hazel.SendOption.None, -1);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                Doctor.Protected.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
-                Doctor.Protected.myRend.material.SetFloat("_Outline", 0f);
-                Doctor.Protected = null;
-            }
-        }
 
         public static GameObject rend;
         //rudimentary array to convert a byte setting from config into true/false

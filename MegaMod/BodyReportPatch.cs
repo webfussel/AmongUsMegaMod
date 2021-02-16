@@ -2,7 +2,7 @@
 using HarmonyLib;
 using System;
 using System.Linq;
-using static MegaMod.MegaMod;
+using static MegaMod.MegaModManager;
 
 namespace MegaMod
 {
@@ -17,10 +17,10 @@ namespace MegaMod
             if (killer != null)
             {
                 // If there is a Medic alive and Medic reported and reports are enabled
-                if (Doctor.Medic != null && reporterId == Doctor.Medic.PlayerId && Doctor.showReport)
+                if (Doctor.player != null && reporterId == Doctor.player.PlayerId && Doctor.showReport)
                 {
                     // If the user is the medic
-                    if (Doctor.Medic.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+                    if (Doctor.player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
                     {
                         // Create Body Report
                         BodyReport br = new BodyReport();

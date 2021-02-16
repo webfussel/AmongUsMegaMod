@@ -1,57 +1,77 @@
+using System.Collections.Generic;
+using Essentials.CustomOptions;
 using HarmonyLib;
 using Hazel;
-using Essentials.CustomOptions;
+using MegaMod;
+using static MegaMod.MegaModManager; // TODO: wtf?
+using UnityEngine;
 
 public class Engineer : Role
 {
     public static CustomToggleOption optShowEngineer = CustomOption.AddToggle("Show Engineer", false);
-    public static CustomNumberOption optEngineerSpawnChance = CustomOption.AddNumber("Engineer Spawn Chance", 100, 0, 100, 5);
+    
+    public static CustomNumberOption optSpawnChance = CustomOption.AddNumber("Engineer Spawn Chance", 100, 0, 100, 5);
 
-    public bool repairUsed = false;
-    public bool showEngineer = false;
+    public bool repairUsed;
+    public bool showEngineer;
     public bool sabotageActive { get; set; }
 
-    public Engineer(PlayerControl player) {
+    public Engineer(PlayerControl player)
+    {
         this.player = player;
-        this.name = "Engineer";
-        this.color = new Color(255f / 255f, 165f / 255f, 10f / 255f, 1);
-        this.startText = "Maintain important systems on the ship";
+        name = "Engineer";
+        color = new Color(255f / 255f, 165f / 255f, 10f / 255f, 1);
+        startText = "Maintain important systems on the ship";
     }
 
-    public static void ClearSettings()
+    public override void ClearSettings()
     {
-        this.player = null;
+        player = null;
         repairUsed = false;
     }
 
-    public static void SetConfigSettings()
+    public override void SetConfigSettings()
     {
-        showEngineer = HarmonyMain.optShowEngineer.GetValue();
-    }    
+        showEngineer = optShowEngineer.GetValue();
+    }
+
+    /**
+     * Sets the Role if spawn chance is reached.
+     * Can only set Role if crew still has space for Role.
+     * Removes crew free space on successful assignment.
+     */
+    public static void SetRole(List<PlayerControl> crew)
+    {
+        bool spawnChanceAchieved = rng.Next(1, 101) <= optSpawnChance.GetValue();
+        if ((crew.Count > 0  && spawnChanceAchieved))
+        {
+            Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+            int random = rng.Next(0, crew.Count);
+            engineer.player = crew[random];
+            crew.RemoveAt(random);
+            
+            MessageWriter writer = GetWriter(CustomRPC.SetEngineer);
+            writer.Write(engineer.player.PlayerId);
+            CloseWriter(writer);
+        }
+    }
 
     [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.ShowInfectedMap))]
     class EngineerMapOpen
     {
         static void Postfix(MapBehaviour __instance)
         {
-            if (player != null)
+            Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+            if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId || !__instance.IsOpen) return;
+
+            __instance.ColorControl.baseColor = engi.color;
+            foreach (MapRoom room in __instance.infectedOverlay.rooms)
             {
-                if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
-                {
-                    if (__instance.IsOpen)
-                    {
-                        __instance.ColorControl.baseColor = Engineer.color;
-                        foreach (MapRoom room in __instance.infectedOverlay.rooms)
-                        {
-                            if (room.door != null)
-                            {
-                                room.door.enabled = false;
-                                room.door.gameObject.SetActive(false);
-                                room.door.gameObject.active = false;
-                            }
-                        }
-                    }
-                }
+                if (room.door == null) continue;
+                
+                room.door.enabled = false;
+                room.door.gameObject.SetActive(false);
+                // here was room.door.gameObject.active = false
             }
         }
     }
@@ -61,36 +81,21 @@ public class Engineer : Role
     {
         static void Postfix(MapBehaviour __instance)
         {
-            if (player != null)
+            Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+            if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId || !__instance.IsOpen || !__instance.infectedOverlay.gameObject.active) return;
+
+            __instance.ColorControl.baseColor = !engi.sabotageActive ? Color.gray : engi.color;
+            float perc = engi.repairUsed ? 1f : 0f;
+            
+            foreach (MapRoom room in __instance.infectedOverlay.rooms)
             {
-                if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
-                {
-                    if (__instance.IsOpen && __instance.infectedOverlay.gameObject.active)
-                    {
-                        if (!sabotageActive)
-                            __instance.ColorControl.baseColor = Color.gray;
-                        else
-                            __instance.ColorControl.baseColor = color;
-                        float perc = repairUsed ? 1f : 0f;
-                        foreach (MapRoom room in __instance.infectedOverlay.rooms)
-                        {
-                            if (room.special != null)
-                            {
-                                if (!sabotageActive)
-                                    room.special.material.SetFloat("_Desat", 1f);
-                                else
-                                    room.special.material.SetFloat("_Desat", 0f);
-                                room.special.enabled = true;
-                                room.special.gameObject.SetActive(true);
-                                room.special.gameObject.active = true;
-                                if (!PlayerControl.LocalPlayer.Data.IsDead)
-                                    room.special.material.SetFloat("_Percent", perc);
-                                else
-                                    room.special.material.SetFloat("_Percent", 1f);
-                            }
-                        }
-                    }
-                }
+                if (room.special == null) continue;
+                
+                room.special.material.SetFloat("_Desat", !engi.sabotageActive ? 1f : 0f);
+                room.special.enabled = true;
+                room.special.gameObject.SetActive(true);
+                // here was room.special.gameObject.active = true;
+                room.special.material.SetFloat("_Percent", !PlayerControl.LocalPlayer.Data.IsDead ? perc : 1f);
             }
         }
     }
@@ -100,14 +105,9 @@ public class Engineer : Role
     {
         static bool Prefix(MapRoom __instance, float DCEFKAOFGOG)
         {
-            if (player != null)
-            {
-                if (player != null && player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
-                {
-                    return false;
-                }
-            }
-            return true;
+            Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+            if (engi.player == null) return true;
+            return engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId;
         }
     }
 
@@ -116,16 +116,13 @@ public class Engineer : Role
     {
         static bool Prefix(MapRoom __instance)
         {
-            if (player != null && player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
-            {
-                if (!repairUsed && sabotageActive && !PlayerControl.LocalPlayer.Data.IsDead)
-                {
-                    repairUsed = true;
-                    ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 16);
-                }
-                return false;
-            }
-            return true;
+            Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+            if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
+            if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
+            
+            engi.repairUsed = true;
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 16);
+            return false;
         }
     }
 
@@ -134,19 +131,15 @@ public class Engineer : Role
     {
         static bool Prefix(MapRoom __instance)
         {
-            if (player != null && player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
-            {
-                if (!repairUsed && sabotageActive && !PlayerControl.LocalPlayer.Data.IsDead)
-                {
-                    repairUsed = true;
-                    SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
-                    switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.FixLights, Hazel.SendOption.None, -1);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                }
-                return false;
-            }
-            return true;
+            Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+            if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
+            if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
+            
+            engi.repairUsed = true;
+            SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
+            switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
+            WriteImmediately(CustomRPC.FixLights);
+            return false;
         }
     }
 
@@ -155,17 +148,14 @@ public class Engineer : Role
     {
         static bool Prefix(MapRoom __instance)
         {
-            if (player != null && player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
-            {
-                if (!repairUsed && sabotageActive && !PlayerControl.LocalPlayer.Data.IsDead)
-                {
-                    repairUsed = true;
-                    ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16 | 0);
-                    ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16 | 1);
-                }
-                return false;
-            }
-            return true;
+            Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+            if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
+            if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
+            
+            engi.repairUsed = true;
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16 | 0);
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16 | 1);
+            return false;
         }
     }
 
@@ -174,17 +164,14 @@ public class Engineer : Role
     {
         static bool Prefix(MapRoom __instance)
         {
-            if (player != null && player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
-            {
-                if (!repairUsed && sabotageActive && !PlayerControl.LocalPlayer.Data.IsDead)
-                {
-                    repairUsed = true;
-                    ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 0 | 64);
-                    ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 1 | 64);
-                }
-                return false;
-            }
-            return true;
+            Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+            if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
+            if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
+            
+            engi.repairUsed = true;
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 0 | 64);
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 1 | 64);
+            return false;
         }
     }
 
@@ -193,27 +180,13 @@ public class Engineer : Role
     {
         static bool Prefix(MapRoom __instance)
         {
-            if (player != null && player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
-            {
-                if (!repairUsed && sabotageActive && !PlayerControl.LocalPlayer.Data.IsDead)
-                {
-                    repairUsed = true;
-                    ShipStatus.Instance.RpcRepairSystem(SystemTypes.Laboratory, 16);
-                }
-                return false;
-            }
-            return true;
-        }
-    }
-
-    public void setIntro(IntroCutscene.CoBegin__d __instance)
-    {
-        if (PlayerControl.LocalPlayer == this.player)
-        {
-            __instance.__this.Title.Text = this.name;
-            __instance.__this.Title.Color = this.color;
-            __instance.__this.ImpostorText.Text = "Maintain important systems on the ship";
-            __instance.__this.BackgroundBar.material.color = this.color;
+            Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+            if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
+            if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
+            
+            engi.repairUsed = true;
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Laboratory, 16);
+            return false;
         }
     }
 }

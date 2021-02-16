@@ -2,7 +2,7 @@
 using Hazel;
 using System;
 using UnityEngine;
-using static MegaMod.MegaMod;
+using static MegaMod.MegaModManager;
 
 namespace MegaMod
 {
@@ -26,12 +26,12 @@ namespace MegaMod
             {
                 PlayerControl target = CurrentTarget;
                 //code that handles the ability button presses
-                if (Detective.Officer != null && PlayerControl.LocalPlayer.PlayerId == Detective.Officer.PlayerId)
+                if (Detective.player != null && PlayerControl.LocalPlayer.PlayerId == Detective.player.PlayerId)
                 {
                     if (PlayerTools.GetOfficerKD() == 0)
                     {
                         //check if they're shielded by medic
-                        if (Doctor.Protected != null && target.PlayerId == Doctor.Protected.PlayerId)
+                        if (Doctor.protectedPlayer != null && target.PlayerId == Doctor.protectedPlayer.PlayerId)
                         {
                             //officer suicide packet
                             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DetectiveKill, Hazel.SendOption.None, -1);
@@ -43,7 +43,7 @@ namespace MegaMod
                             return false;
                         }
                         //check if they're joker and the setting is configured
-                        else if (Jester.jokerCanDieToOfficer && (Jester.Joker != null && target.PlayerId == Jester.Joker.PlayerId))
+                        else if (Jester.jokerCanDieToOfficer && (Jester.player != null && target.PlayerId == Jester.player.PlayerId))
                         {
                             //officer joker murder packet
                             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DetectiveKill, Hazel.SendOption.None, -1);
@@ -81,19 +81,19 @@ namespace MegaMod
                     }
                     return false;
                 }
-                else if (Doctor.Medic != null && PlayerControl.LocalPlayer == Doctor.Medic)
+                else if (Doctor.player != null && PlayerControl.LocalPlayer == Doctor.player)
                 {
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetProtected, Hazel.SendOption.None, -1);
-                    Doctor.Protected = target;
+                    Doctor.protectedPlayer = target;
                     Doctor.shieldUsed = true;
-                    byte ProtectedId = Doctor.Protected.PlayerId;
+                    byte ProtectedId = Doctor.protectedPlayer.PlayerId;
                     writer.Write(ProtectedId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                     return false;
                 }
             }
 
-            if (Doctor.Protected != null && PlayerTools.closestPlayer.PlayerId == Doctor.Protected.PlayerId)
+            if (Doctor.protectedPlayer != null && PlayerTools.closestPlayer.PlayerId == Doctor.protectedPlayer.PlayerId)
             {
                 //cancel the kill
                 return false;
@@ -108,10 +108,10 @@ namespace MegaMod
         {
             public static bool Prefix(PlayerControl __instance, PlayerControl CAKODNGLPDF)
             {
-                if (Detective.Officer != null)
+                if (Detective.player != null)
                 {
                     //check if the player is an officer
-                    if (__instance == Detective.Officer)
+                    if (__instance == Detective.player)
                     {
                         //if so, set them to impostor for one frame so they aren't banned for anti-cheat
                         __instance.Data.IsImpostor = true;
@@ -128,10 +128,10 @@ namespace MegaMod
                 deadBody.KillerId = __instance.PlayerId;
                 deadBody.KillTime = DateTime.UtcNow;
                 deadBody.DeathReason = DeathReason.Kill;
-                if (Detective.Officer != null)
+                if (Detective.player != null)
                 {
                     //check if killer is officer
-                    if (__instance == Detective.Officer)
+                    if (__instance == Detective.player)
                     {
                         //finally, set them back to normal
                         __instance.Data.IsImpostor = false;

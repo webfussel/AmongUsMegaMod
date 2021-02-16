@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Net.Http;
 using UnityEngine;
-using static MegaMod.MegaMod;
+using static MegaMod.MegaModManager;
 
 namespace MegaMod
 {
@@ -86,7 +86,7 @@ namespace MegaMod
                 {
                     PerformKillPatch.Prefix();
                 }
-                if (Doctor.Protected != null && Doctor.Protected.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
+                if (Doctor.protectedPlayer != null && Doctor.protectedPlayer.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
                 {
                     if (rend == null)
                     {
@@ -110,7 +110,7 @@ namespace MegaMod
                     KillButton.renderer.color = Palette.EnabledColor;
                     KillButton.renderer.material.SetFloat("_Desat", 0f);
                 }
-                if (Jester.Joker != null)
+                if (Jester.player != null)
                     Jester.ClearTasks();
                 if (rend != null)
                     rend.SetActive(false);
@@ -119,37 +119,37 @@ namespace MegaMod
                     if (task.TaskType == TaskTypes.FixLights || task.TaskType == TaskTypes.RestoreOxy || task.TaskType == TaskTypes.ResetReactor || task.TaskType == TaskTypes.ResetSeismic || task.TaskType == TaskTypes.FixComms)
                         sabotageActive = true;
                 Engineer.sabotageActive = sabotageActive;
-                if (Doctor.Protected != null && Doctor.Protected.Data.IsDead)
+                if (Doctor.protectedPlayer != null && Doctor.protectedPlayer.Data.IsDead)
                     BreakShield(true);
-                if (Doctor.Protected != null && Doctor.Medic != null && Doctor.Medic.Data.IsDead)
+                if (Doctor.protectedPlayer != null && Doctor.player != null && Doctor.player.Data.IsDead)
                     BreakShield(true);
-                if (Doctor.Medic == null && Doctor.Protected != null)
+                if (Doctor.player == null && Doctor.protectedPlayer != null)
                     BreakShield(true);
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                     player.nameText.Color = Color.white;
-                if (PlayerControl.LocalPlayer.Data.IsImpostor || Jester.Joker == PlayerControl.LocalPlayer && Jester.showImpostorToJoker)
+                if (PlayerControl.LocalPlayer.Data.IsImpostor || Jester.player == PlayerControl.LocalPlayer && Jester.showImpostorToJoker)
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         if (player.Data.IsImpostor)
                             player.nameText.Color = Color.red;
-                if (Doctor.Medic != null)
+                if (Doctor.player != null)
                 {
-                    if (Doctor.Medic == PlayerControl.LocalPlayer || Doctor.showMedic)
+                    if (Doctor.player == PlayerControl.LocalPlayer || Doctor.showDoctor)
                     {
-                        Doctor.Medic.nameText.Color = ModdedPalette.medicColor;
+                        Doctor.player.nameText.Color = ModdedPalette.medicColor;
                         if (MeetingHud.Instance != null)
                             foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
-                                if (player.NameText != null && Doctor.Medic.PlayerId == player.TargetPlayerId)
+                                if (player.NameText != null && Doctor.player.PlayerId == player.TargetPlayerId)
                                     player.NameText.Color = ModdedPalette.medicColor;
                     }
                 }
-                if (Detective.Officer != null)
+                if (Detective.player != null)
                 {
-                    if (Detective.Officer == PlayerControl.LocalPlayer || Detective.showOfficer)
+                    if (Detective.player == PlayerControl.LocalPlayer || Detective.showOfficer)
                     {
-                        Detective.Officer.nameText.Color = ModdedPalette.officerColor;
+                        Detective.player.nameText.Color = ModdedPalette.officerColor;
                         if (MeetingHud.Instance != null)
                             foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
-                                if (player.NameText != null && Detective.Officer.PlayerId == player.TargetPlayerId)
+                                if (player.NameText != null && Detective.player.PlayerId == player.TargetPlayerId)
                                     player.NameText.Color = ModdedPalette.officerColor;
                     }
                 }
@@ -164,41 +164,41 @@ namespace MegaMod
                                     player.NameText.Color = ModdedPalette.engineerColor;
                     }
                 }
-                if (Jester.Joker != null)
+                if (Jester.player != null)
                 {
-                    if (Jester.Joker == PlayerControl.LocalPlayer || Jester.showJoker)
+                    if (Jester.player == PlayerControl.LocalPlayer || Jester.showJoker)
                     {
-                        Jester.Joker.nameText.Color = ModdedPalette.jokerColor;
+                        Jester.player.nameText.Color = ModdedPalette.jokerColor;
                         if (MeetingHud.Instance != null)
                             foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
-                                if (player.NameText != null && Jester.Joker.PlayerId == player.TargetPlayerId)
+                                if (player.NameText != null && Jester.player.PlayerId == player.TargetPlayerId)
                                     player.NameText.Color = ModdedPalette.jokerColor;
                     }
                 }
                     
-                if (Doctor.Protected != null)
+                if (Doctor.protectedPlayer != null)
                 {
-                    int showShielded = Doctor.showProtected;
+                    int showShielded = Doctor.showProtectedPlayer;
                     // If everyone can see shielded
                     if(showShielded == 3)
                     {
-                        Doctor.Protected.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);
-                        Doctor.Protected.myRend.material.SetFloat("_Outline", 1f);
-                        Doctor.Protected.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
+                        Doctor.protectedPlayer.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);
+                        Doctor.protectedPlayer.myRend.material.SetFloat("_Outline", 1f);
+                        Doctor.protectedPlayer.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
                     }
                     // If I am protected and should see the shield
-                    else if (PlayerControl.LocalPlayer == Doctor.Protected && (showShielded == 0 || showShielded == 2))
+                    else if (PlayerControl.LocalPlayer == Doctor.protectedPlayer && (showShielded == 0 || showShielded == 2))
                     {
-                        Doctor.Protected.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);
-                        Doctor.Protected.myRend.material.SetFloat("_Outline", 1f);
-                        Doctor.Protected.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
+                        Doctor.protectedPlayer.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);
+                        Doctor.protectedPlayer.myRend.material.SetFloat("_Outline", 1f);
+                        Doctor.protectedPlayer.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
                     }
                     // If I am Medic and should see the shield
-                    else if(PlayerControl.LocalPlayer == Doctor.Medic && (showShielded == 1 || showShielded == 2))
+                    else if(PlayerControl.LocalPlayer == Doctor.player && (showShielded == 1 || showShielded == 2))
                     {
-                        Doctor.Protected.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);
-                        Doctor.Protected.myRend.material.SetFloat("_Outline", 1f);
-                        Doctor.Protected.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
+                        Doctor.protectedPlayer.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);
+                        Doctor.protectedPlayer.myRend.material.SetFloat("_Outline", 1f);
+                        Doctor.protectedPlayer.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
                     }
                 }
                         
@@ -214,7 +214,7 @@ namespace MegaMod
                         return;
                     }
                 }
-                if (Doctor.Medic != null && __instance.UseButton != null && Doctor.Medic.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
+                if (Doctor.player != null && __instance.UseButton != null && Doctor.player.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
                 {
                     KillButton.renderer.sprite = shieldIco;
                     KillButton.gameObject.SetActive(true);
@@ -231,7 +231,7 @@ namespace MegaMod
                         CurrentTarget = null;
                     }
                 }
-                if (Detective.Officer != null && __instance.UseButton != null && Detective.Officer.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
+                if (Detective.player != null && __instance.UseButton != null && Detective.player.PlayerId == PlayerControl.LocalPlayer.PlayerId && __instance.UseButton.isActiveAndEnabled)
                 {
                     KillButton.gameObject.SetActive(true);
                     KillButton.isActive = true;

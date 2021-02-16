@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 using Hazel;
-using static MegaMod.MegaMod;
+using static MegaMod.MegaModManager;
 
 namespace MegaMod
 {
@@ -63,12 +63,12 @@ namespace MegaMod
             switch (packetId)
             {
                 case (byte)CustomRPC.ShieldBreak:
-                    if (Doctor.Protected != null)
+                    if (Doctor.protectedPlayer != null)
                     {
-                        Doctor.Protected.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
-                        Doctor.Protected.myRend.material.SetFloat("_Outline", 0f);
+                        Doctor.protectedPlayer.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
+                        Doctor.protectedPlayer.myRend.material.SetFloat("_Outline", 0f);
                     }    
-                    Doctor.Protected = null;
+                    Doctor.protectedPlayer = null;
                     break;
                 case (byte)CustomRPC.FixLights:
                     SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
@@ -116,7 +116,7 @@ namespace MegaMod
                         {
                             if (player.PlayerId == doctorId)
                             {
-                                Doctor.Medic = player;
+                                Doctor.player = player;
                             }
                         }
                         break;
@@ -128,7 +128,7 @@ namespace MegaMod
                         {
                             if (player.PlayerId == ProtectedId)
                             {
-                                Doctor.Protected = player;
+                                Doctor.protectedPlayer = player;
                             }
                         }
                         break;
@@ -141,7 +141,7 @@ namespace MegaMod
                         {
                             if (player.PlayerId == detectiveId)
                             {
-                                Detective.Officer = player;
+                                Detective.player = player;
                             }
                         }
                         break;
@@ -163,7 +163,7 @@ namespace MegaMod
                         {
                             if (player.PlayerId == EngineerId)
                             {
-                                MegaMod.AddSpecialRole(new Engineer(player));
+                                AddSpecialRole(new Engineer(player));
                             }
                         }
                         break;
@@ -176,7 +176,7 @@ namespace MegaMod
                         {
                             if (player.PlayerId == jesterId)
                             {
-                                Jester.Joker = player;
+                                Jester.player = player;
                             }
                         }
                         break;
@@ -189,9 +189,9 @@ namespace MegaMod
                         player.Data.IsDead = true;
                         player.Data.IsImpostor = false;
                     }
-                    Jester.Joker.Revive();
-                    Jester.Joker.Data.IsDead = false;
-                    Jester.Joker.Data.IsImpostor = true;
+                    Jester.player.Revive();
+                    Jester.player.Data.IsDead = false;
+                    Jester.player.Data.IsImpostor = true;
                     break;
             }
         }
