@@ -51,7 +51,7 @@ public class Doctor : Role
     }
     
     
-    public static void BreakShield(bool flag)
+    public void BreakShield(bool flag)
     {
         if (flag)
         {

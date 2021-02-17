@@ -62,7 +62,7 @@ namespace MegaMod
                         (SpecialRoleIsAssigned<Detective>(out instance) && playerId == playerId) ||
                         (SpecialRoleIsAssigned<Doctor>(out instance)    && playerId == playerId) ||
                         (SpecialRoleIsAssigned<Engineer>(out instance)  && playerId == playerId) ||
-                        (SpecialRoleIsAssigned<Jester>(out instance)    && playerId == playerId) ||
+                        (SpecialRoleIsAssigned<Jester>(out instance)    && playerId == playerId)
                     )
                         __result = roleInstance.EjectMessage(playerName);
                     else
