@@ -56,15 +56,9 @@ namespace MegaMod
                 if (HKOIECMDOKL == StringNames.ExileTextPN || HKOIECMDOKL == StringNames.ExileTextSN)
                 {
                     string playerName = ExileController.Instance.Field_10.PlayerName;
-                    Role roleInstance = null;
 
-                    if (
-                        (SpecialRoleIsAssigned<Detective>(out instance) && playerId == playerId) ||
-                        (SpecialRoleIsAssigned<Doctor>(out instance)    && playerId == playerId) ||
-                        (SpecialRoleIsAssigned<Engineer>(out instance)  && playerId == playerId) ||
-                        (SpecialRoleIsAssigned<Jester>(out instance)    && playerId == playerId)
-                    )
-                        __result = roleInstance.EjectMessage(playerName);
+                    if (TryGetSpecialRole(playerId, out Role role))
+                        __result = role.EjectMessage(playerName);
                     else
                         __result = playerName + " was not The Impostor.";
                 }

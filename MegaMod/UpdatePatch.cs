@@ -80,8 +80,8 @@ namespace MegaMod
                 }
                 lastQ = Input.GetKeyUp(KeyCode.Q);
                 KillButton = __instance.KillButton;
-                PlayerTools.closestPlayer = PlayerTools.getClosestPlayer(PlayerControl.LocalPlayer);
-                DistLocalClosest = PlayerTools.getDistBetweenPlayers(PlayerControl.LocalPlayer, PlayerTools.closestPlayer);
+                PlayerTools.closestPlayer = PlayerTools.GetClosestPlayer(PlayerControl.LocalPlayer, out DistLocalClosest);
+                
                 if (!PlayerControl.LocalPlayer.Data.IsImpostor && Input.GetKeyDown(KeyCode.Q) && !lastQ && __instance.UseButton.isActiveAndEnabled)
                 {
                     PerformKillPatch.Prefix();

@@ -93,6 +93,12 @@ namespace MegaMod
 
         public static T GetSpecialRole<T>(byte playerId) where T : Role => (T) assignedSpecialRoles[playerId];
 
+        public static bool TryGetSpecialRole(byte playerId, out Role role)
+        {
+            return assignedSpecialRoles.TryGetValue(playerId, out role);
+        }
+
+        // TODO: Wird momentan nicht gebraucht. Bitte löschen, falls das so bleibt x)
         public static bool SpecialRoleIsAssigned<T>(out Role instance) where T : Role
         {
             List<Role> assignedRoles = assignedSpecialRoles.Values.ToList();
