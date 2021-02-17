@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Essentials.CustomOptions;
 using HarmonyLib;
@@ -8,12 +9,9 @@ using UnityEngine;
 
 public class Engineer : Role
 {
-    public static CustomToggleOption optShowEngineer = CustomOption.AddToggle("Show Engineer", false);
-    
     public static CustomNumberOption optSpawnChance = CustomOption.AddNumber("Engineer Spawn Chance", 100, 0, 100, 5);
 
     public bool repairUsed;
-    public bool showEngineer;
     public bool sabotageActive { get; set; }
 
     public Engineer(PlayerControl player)
@@ -32,7 +30,43 @@ public class Engineer : Role
 
     public override void SetConfigSettings()
     {
-        showEngineer = optShowEngineer.GetValue();
+        // do nothing
+    }
+
+    public void SetRepairButton(HudManager instance)
+    {
+        if (player == null || player.PlayerId != PlayerControl.LocalPlayer.PlayerId ||
+            !instance.UseButton.isActiveAndEnabled) return;
+        
+        KillButtonManager killButton = instance.KillButton;
+        killButton.gameObject.SetActive(true);
+        killButton.isActive = true;
+        killButton.SetCoolDown(0f, 1f);
+        killButton.renderer.sprite = repairIco;
+        killButton.renderer.color = Palette.EnabledColor;
+        killButton.renderer.material.SetFloat("_Desat", 0f);
+    }
+
+    public bool ShowRepairMap()
+    {
+        DestroyableSingleton<HudManager>.Instance.ShowMap((Action<MapBehaviour>)delegate (MapBehaviour m)
+        {
+            m.ShowInfectedMap();
+            m.ColorControl.baseColor = sabotageActive ? Color.gray : color;
+        });
+        return false;
+    }
+
+    public override void CheckDead(HudManager instance)
+    {
+        if (!player.Data.IsDead) return;
+        // Should Engineer really be unable to solve an emergency when dead?
+        KillButtonManager killButton = instance.KillButton;
+        killButton.gameObject.SetActive(false);
+        killButton.renderer.enabled = false;
+        killButton.isActive = false;
+        killButton.SetTarget(null);
+        killButton.enabled = false;
     }
 
     /**

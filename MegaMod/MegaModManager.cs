@@ -27,51 +27,6 @@ namespace MegaMod
         public DeathReason DeathReason { get; set; }
     }
     //body report class for when medic reports a body
-    public class BodyReport
-    {
-        public DeathReason DeathReason { get; set; }
-        public PlayerControl Killer { get; set; }
-        public PlayerControl Reporter { get; set; }
-        public float KillAge { get; set; }
-
-        public static string ParseBodyReport(BodyReport br)
-        {
-            System.Console.WriteLine(br.KillAge);
-            if (br.KillAge > MegaModManager.Doctor.medicKillerColorDuration * 1000)
-            {
-                return $"Body Report: The corpse is too old to gain information from. (Killed {Math.Round(br.KillAge / 1000)}s ago)";
-            }
-            else if (br.DeathReason == (DeathReason)3)
-            {
-                return $"Body Report (Officer): The cause of death appears to be suicide! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
-            }
-            else if (br.KillAge < MegaModManager.Doctor.medicKillerNameDuration * 1000)
-            {
-                return $"Body Report: The killer appears to be {br.Killer.name}! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
-            }
-            else
-            {
-                //TODO (make the type of color be written to chat
-                var colors = new Dictionary<byte, string>()
-                {
-                    {0, "darker"},
-                    {1, "darker"},
-                    {2, "darker"},
-                    {3, "lighter"},
-                    {4, "lighter"},
-                    {5, "lighter"},
-                    {6, "darker"},
-                    {7, "lighter"},
-                    {8, "darker"},
-                    {9, "darker"},
-                    {10, "lighter"},
-                    {11, "lighter"},
-                };
-                var typeOfColor = colors[br.Killer.Data.ColorId];
-                return $"Body Report: The killer appears to be a {typeOfColor} color. (Killed {Math.Round(br.KillAge / 1000)}s ago)";
-            }
-        }
-    }
 
     [HarmonyPatch]
     public static class MegaModManager
@@ -80,7 +35,6 @@ namespace MegaMod
         public static AudioClip breakClip;
         public static Sprite repairIco;
         public static Sprite shieldIco;
-        public static Sprite smallShieldIco;
 
         public static Dictionary<byte, Role> assignedSpecialRoles;
 
@@ -91,24 +45,31 @@ namespace MegaMod
             assignedSpecialRoles.Add(specialRole.player.PlayerId, specialRole);
         }
 
-        public static T GetSpecialRole<T>(byte playerId) where T : Role => (T) assignedSpecialRoles[playerId];
-
-        public static bool TryGetSpecialRole(byte playerId, out Role role)
+        public static T GetSpecialRole<T>(byte playerId) where T : Role
         {
-            return assignedSpecialRoles.TryGetValue(playerId, out role);
+            return assignedSpecialRoles.TryGetValue(playerId, out Role role) ? (T) role : null;
         }
 
-        // TODO: Wird momentan nicht gebraucht. Bitte löschen, falls das so bleibt x)
-        public static bool SpecialRoleIsAssigned<T>(out Role instance) where T : Role
+        public static bool TryGetSpecialRole<T>(byte playerId, out T role) where T : Role
         {
-            List<Role> assignedRoles = assignedSpecialRoles.Values.ToList();
-            foreach(Role role in assignedRoles)
+            if(assignedSpecialRoles.TryGetValue(playerId, out Role tempRole))
             {
-                if (!(role is T)) continue;
-                instance = role;
+                role = (T) tempRole;
                 return true;
-            }                
-            instance = null;
+            }
+            role  = null;
+            return false;
+        }
+
+        public static bool SpecialRoleIsAssigned<T>(out KeyValuePair<byte, T> keyValuePair) where T : Role
+        {
+            foreach(KeyValuePair<byte, Role> kvp in assignedSpecialRoles)
+            {
+                if(!(kvp.Value is T)) continue;
+                keyValuePair = new KeyValuePair<byte, T>(kvp.Key, (T) kvp.Value);
+                return true;
+            }
+            keyValuePair = default;
             return false;
         }
 
@@ -145,8 +106,6 @@ namespace MegaMod
         public static List<PlayerControl> localPlayers = new List<PlayerControl>();
         //global rng
         public static System.Random rng = new System.Random();
-        //the kill button in the bottom right
-        public static KillButtonManager KillButton;
         //the id of the targeted player
         public static int KBTarget;
         //distance between the local player and closest player

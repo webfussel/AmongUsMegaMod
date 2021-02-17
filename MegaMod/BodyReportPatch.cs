@@ -13,7 +13,7 @@ namespace MegaMod
         {
             System.Console.WriteLine("Report Body!");
             byte reporterId = __instance.PlayerId;
-            DeadPlayer killer = killedPlayers.Where(x => x.PlayerId == CAKODNGLPDF.PlayerId).FirstOrDefault();
+            DeadPlayer killer = killedPlayers.FirstOrDefault(x => x.PlayerId == CAKODNGLPDF.PlayerId);
             if (killer != null)
             {
                 // If there is a Medic alive and Medic reported and reports are enabled

@@ -58,9 +58,9 @@ namespace MegaMod
     {
         static void Postfix(byte HKHMBLJFLMC, MessageReader ALMCIJKELCP)
         {
-            byte packetId = HKHMBLJFLMC;
             MessageReader reader = ALMCIJKELCP;
-            switch (packetId)
+            
+            switch (HKHMBLJFLMC /*Packet ID*/)
             {
                 case (byte)CustomRPC.ShieldBreak:
                     if (Doctor.protectedPlayer != null)
@@ -78,7 +78,7 @@ namespace MegaMod
                     ConsoleTools.Info("Setting Local Players...");
                     localPlayers.Clear();
                     localPlayer = PlayerControl.LocalPlayer;
-                    var localPlayerBytes = ALMCIJKELCP.ReadBytesAndSize();
+                    var localPlayerBytes = reader.ReadBytesAndSize();
 
                     foreach (byte id in localPlayerBytes)
                     {
@@ -111,7 +111,7 @@ namespace MegaMod
                     {
                         
                         ConsoleTools.Info("Doctor Set Through RPC!");
-                        byte doctorId = ALMCIJKELCP.ReadByte();
+                        byte doctorId = reader.ReadByte();
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         {
                             if (player.PlayerId == doctorId)
@@ -123,7 +123,7 @@ namespace MegaMod
                     }
                 case (byte)CustomRPC.SetProtected:
                     {
-                        byte ProtectedId = ALMCIJKELCP.ReadByte();
+                        byte ProtectedId = reader.ReadByte();
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         {
                             if (player.PlayerId == ProtectedId)
@@ -136,7 +136,7 @@ namespace MegaMod
                 case (byte)CustomRPC.SetDetective:
                     {
                         ConsoleTools.Info("Detective Set Through RPC!");
-                        byte detectiveId = ALMCIJKELCP.ReadByte();
+                        byte detectiveId = reader.ReadByte();
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         {
                             if (player.PlayerId == detectiveId)
@@ -146,10 +146,10 @@ namespace MegaMod
                         }
                         break;
                     }
-                case (byte)CustomRPC.DetectiveKill:
+                case (byte) CustomRPC.DetectiveKill:
                     {
-                        var killerid = ALMCIJKELCP.ReadByte();
-                        var targetid = ALMCIJKELCP.ReadByte();
+                        var killerid = reader.ReadByte();
+                        var targetid = reader.ReadByte();
                         PlayerControl killer = PlayerTools.getPlayerById(killerid);
                         PlayerControl target = PlayerTools.getPlayerById(targetid);
                         killer.MurderPlayer(target);
@@ -158,7 +158,7 @@ namespace MegaMod
                 case (byte)CustomRPC.SetEngineer:
                     {
                         ConsoleTools.Info("Engineer Set Through RPC!");
-                        byte EngineerId = ALMCIJKELCP.ReadByte();
+                        byte EngineerId = reader.ReadByte();
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         {
                             if (player.PlayerId == EngineerId)
@@ -171,7 +171,7 @@ namespace MegaMod
                 case (byte)CustomRPC.SetJester:
                     {
                         ConsoleTools.Info("Jester Set Through RPC!");
-                        byte jesterId = ALMCIJKELCP.ReadByte();
+                        byte jesterId = reader.ReadByte();
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         {
                             if (player.PlayerId == jesterId)

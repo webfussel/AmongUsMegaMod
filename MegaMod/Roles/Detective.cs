@@ -5,34 +5,75 @@ using MegaMod;
 using static MegaMod.MegaModManager;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class Detective : Role
 {
     public static CustomNumberOption optDetectiveKillCooldown = CustomOption.AddNumber("Detective Kill Cooldown", 30f, 10f, 60f, 2.5f);
-    public static CustomToggleOption optShowDetective = CustomOption.AddToggle("Show Detective", false);
     public static CustomNumberOption optDetectiveSpawnChance = CustomOption.AddNumber("Detective Spawn Chance", 100, 0, 100, 5);
 
-    public bool showOfficer { get; set; }
     public DateTime? lastKilled { get; set; }
+    public float cooldown { get; set; }
 
     public Detective(PlayerControl player) {
         this.player = player;
         name = "Detective";
         color = new Color(0, 40f / 255f, 198f / 255f, 1);
         startText = "Shoot the [FF0000FF]Impostor";
+        cooldown = optDetectiveKillCooldown.GetValue();
     }
 
 
-    public static void ClearSettings()
+    public override void ClearSettings()
     {
         player = null;
         lastKilled = null;
     }
 
-    public static void SetConfigSettings()
+    public override void SetConfigSettings()
     {
-        showOfficer = HarmonyMain.showOfficer.GetValue();
-        OfficerCD = HarmonyMain.DetectiveKillCooldown.GetValue();
+        cooldown = optDetectiveKillCooldown.GetValue();
+    }
+
+    public void CheckKillButton(HudManager instance)
+    {
+        if (instance.UseButton == null || !instance.UseButton.isActiveAndEnabled) return;
+        
+        KillButtonManager killButton = instance.KillButton;
+        killButton.gameObject.SetActive(true);
+        killButton.isActive = true;
+        killButton.SetCoolDown(PlayerTools.GetOfficerKD(), PlayerControl.GameOptions.KillCooldown + 15.0f);
+        if (DistLocalClosest < GameOptionsData.KillDistances[PlayerControl.GameOptions.KillDistance])
+        {
+            killButton.SetTarget(PlayerTools.closestPlayer);
+            CurrentTarget = PlayerTools.closestPlayer;
+        }
+        else
+        {
+            killButton.SetTarget(null);
+            CurrentTarget = null;
+        }
+    }
+
+    private void KillPlayer(PlayerControl player)
+    {
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DetectiveKill, Hazel.SendOption.None, -1);
+        writer.Write(PlayerControl.LocalPlayer.PlayerId);
+        writer.Write(player.PlayerId);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        PlayerControl.LocalPlayer.MurderPlayer(player);
+        lastKilled = DateTime.UtcNow;
+    }
+
+    public float GetCurrentCooldown()
+    {
+        if (lastKilled == null) return cooldown;
+        
+        TimeSpan diff = (TimeSpan) (DateTime.UtcNow - lastKilled);
+
+        float cooldownMS = cooldown * 1000.0f;
+        if (diff.TotalMilliseconds > cooldownMS) return 0;
+        return (float) (cooldownMS - diff.TotalMilliseconds) / 1000.0f;
     }
 
     [HarmonyPatch(typeof(IntroCutscene.CoBegin__d), nameof(IntroCutscene.CoBegin__d.MoveNext))]
@@ -44,7 +85,7 @@ public class Detective : Role
             detective.setIntro(__instance);
             
             // TODO: Wieso zur Hölle???
-            lastKilled = DateTime.UtcNow.AddSeconds((player.playerId * -1) + 10 + __instance.timer_0);
+            detective.lastKilled = DateTime.UtcNow.AddSeconds((player.playerId * -1) + 10 + __instance.timer_0);
         }
     }
 
@@ -54,7 +95,24 @@ public class Detective : Role
         static void Postfix(ExileController __instance)
         {
             Detective detective = GetSpecialRole<Detective>(PlayerControl.LocalPlayer.PlayerId);
-            detectivelastKilled = DateTime.UtcNow.AddMilliseconds(__instance.Duration);
+            detective.lastKilled = DateTime.UtcNow.AddMilliseconds(__instance.Duration);
         }
+    }
+
+    public bool KillOrCommitSuicide(PlayerControl target)
+    {
+        if (target == null || GetCurrentCooldown() != 0) return false;
+        
+        if (
+            //check if they're jester and the setting is configured
+            (SpecialRoleIsAssigned<Jester>(out KeyValuePair<byte, Jester> jesterKvp) && target.PlayerId == jesterKvp.Key && jesterKvp.Value.jesterCanDieToDetective)
+            //or if they're an impostor
+            || target.Data.IsImpostor
+        )
+            KillPlayer(target);
+        //else, they're innocent or shielded by the doctor
+        else
+            KillPlayer(player);
+        return false;
     }
 }

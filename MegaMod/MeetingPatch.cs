@@ -17,30 +17,25 @@ namespace MegaMod
     {
         static void Prefix(UnityEngine.Object obj)
         {
-            if (ExileController.Instance != null && obj == ExileController.Instance.gameObject)
-            {
-                if (Jester.player != null)
-                {
-                    if (ExileController.Instance.Field_10 != null && ExileController.Instance.Field_10.PlayerId == Jester.player.PlayerId)
-                    {
-                        WriteImmediately(CustomRPC.JesterWin);
+            if (ExileController.Instance == null || obj != ExileController.Instance.gameObject) return;
+            if (!SpecialRoleIsAssigned<Jester>(out var jester)) return;
+            if (ExileController.Instance.exiled?.PlayerId != jester.Key) return;
 
-                        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        {
-                            if (player != Jester.player)
-                            {
-                                player.RemoveInfected();
-                                player.Die(DeathReason.Exile);
-                                player.Data.IsDead = true;
-                                player.Data.IsImpostor = false;
-                            }
-                        }
-                        Jester.player.Revive();
-                        Jester.player.Data.IsDead = false;
-                        Jester.player.Data.IsImpostor = true;
-                    }
-                }
+            Jester jesterInstance = GetSpecialRole<Jester>(jester.Key);
+            
+            WriteImmediately(CustomRPC.JesterWin);
+
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            {
+                if (player == jesterInstance.player) continue;
+                player.RemoveInfected();
+                player.Die(DeathReason.Exile);
+                player.Data.IsDead = true;
+                player.Data.IsImpostor = false;
             }
+            jesterInstance.player.Revive();
+            jesterInstance.player.Data.IsDead = false;
+            jesterInstance.player.Data.IsImpostor = true;
         }
     }
 
@@ -49,23 +44,29 @@ namespace MegaMod
     {
         static void Postfix(ref string __result, StringNames HKOIECMDOKL, Il2CppReferenceArray<Il2CppSystem.Object> EBKIKEILMLF)
         {
-            if (ExileController.Instance != null && ExileController.Instance.Field_10 != null)
+            if (ExileController.Instance == null || ExileController.Instance.exiled == null) return;
+            
+            byte playerId = ExileController.Instance.exiled.Object.PlayerId;
+            Role role = GetSpecialRole<Role>(playerId);
+
+            switch (HKOIECMDOKL)
             {
-                byte playerId = ExileController.Instance.Field_10.Object.PlayerId;
-
-                if (HKOIECMDOKL == StringNames.ExileTextPN || HKOIECMDOKL == StringNames.ExileTextSN)
+                case StringNames.ExileTextPN:
+                case StringNames.ExileTextSN:
                 {
-                    string playerName = ExileController.Instance.Field_10.PlayerName;
-
-                    if (TryGetSpecialRole(playerId, out Role role))
+                    string playerName = ExileController.Instance.exiled.PlayerName;
+                    if (role != null)
                         __result = role.EjectMessage(playerName);
                     else
                         __result = playerName + " was not The Impostor.";
+                    break;
                 }
-                if (HKOIECMDOKL == StringNames.ImpostorsRemainP || HKOIECMDOKL == StringNames.ImpostorsRemainS)
+                case StringNames.ImpostorsRemainP:
+                case StringNames.ImpostorsRemainS:
                 {
-                    if (Jester.player != null && playerId == Jester.player.PlayerId)
+                    if (role is Jester)
                         __result = "";
+                    break;
                 }
             }
         }

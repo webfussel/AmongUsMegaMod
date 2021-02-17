@@ -9,8 +9,17 @@ public abstract class Role {
 
     public abstract void ClearSettings();
     public abstract void SetConfigSettings();
+    public abstract void CheckDead(HudManager instance);
     public string EjectMessage(string playerName) {
         return $"{playerName} was the {name}";
+    }
+
+    public void SetNameColor()
+    {
+        if (PlayerControl.LocalPlayer == player)
+        {
+            player.nameText.Color = color;
+        }
     }
     public void setIntro(IntroCutscene.CoBegin__d __instance)
     {

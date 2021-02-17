@@ -32,11 +32,6 @@ namespace MegaMod
         //Hunter101#1337
 
         // TODO: Schauen, ob Optionen aus Klassen da sind, sobald wieder gbeaut werden kann
-
-        public static CustomToggleOption showJoker = CustomOption.AddToggle("Show Joker", false);
-        public static CustomToggleOption showImpostorToJoker = CustomOption.AddToggle("Show Impostor to Joker", false);
-        public static CustomToggleOption jokerCanDieToOfficer = CustomOption.AddToggle("Joker Can Die To Officer", true);
-        public static CustomNumberOption jokerSpawnChance = CustomOption.AddNumber("Joker Spawn Chance", 100, 0, 100, 5);
         
         public ConfigEntry<string> Ip { get; set; }
         public ConfigEntry<ushort> Port { get; set; }
@@ -50,7 +45,6 @@ namespace MegaMod
             breakClip = bundle.LoadAsset<AudioClip>("SB").DontUnload();
             repairIco = bundle.LoadAsset<Sprite>("RE").DontUnload();
             shieldIco = bundle.LoadAsset<Sprite>("SA").DontUnload();
-            smallShieldIco = bundle.LoadAsset<Sprite>("RESmall").DontUnload();
 
             var defaultRegions = ServerManager.DefaultRegions.ToList();
             var ip = Ip.Value;
