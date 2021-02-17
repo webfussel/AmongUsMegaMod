@@ -62,14 +62,79 @@ namespace MegaMod
             
             switch (HKHMBLJFLMC /*Packet ID*/)
             {
-                case (byte)CustomRPC.ShieldBreak:
-                    if (Doctor.protectedPlayer != null)
-                    {
-                        Doctor.protectedPlayer.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
-                        Doctor.protectedPlayer.myRend.material.SetFloat("_Outline", 0f);
-                    }    
-                    Doctor.protectedPlayer = null;
+                // ---------------------- Set special roles ----------------------
+                
+                case (byte)CustomRPC.SetDetective:
+                    ConsoleTools.Info("Detective Set Through RPC!");
+                    byte detectiveId = reader.ReadByte();
+                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                        if (player.PlayerId == detectiveId)
+                            AddSpecialRole(new Detective(player));
                     break;
+                case (byte)CustomRPC.SetDoctor:
+                    ConsoleTools.Info("Doctor Set Through RPC!");
+                    byte doctorId = reader.ReadByte();
+                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                        if (player.PlayerId == doctorId)
+                            AddSpecialRole(new Doctor(player));
+                    break;
+                case (byte)CustomRPC.SetEngineer:
+                    ConsoleTools.Info("Engineer Set Through RPC!");
+                    byte engineerId = reader.ReadByte();
+                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                        if (player.PlayerId == engineerId)
+                            AddSpecialRole(new Engineer(player));
+                    break;
+                case (byte)CustomRPC.SetJester:
+                    ConsoleTools.Info("Jester Set Through RPC!");
+                    byte jesterId = reader.ReadByte();
+                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                        if (player.PlayerId == jesterId)
+                            AddSpecialRole(new Jester(player));
+                    break;
+                
+                // -------------- Happenings related to special roles --------------
+                
+                case (byte)CustomRPC.SetProtected:
+                    byte protectedId = reader.ReadByte();
+                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                        if (player.PlayerId == protectedId)
+                            GetSpecialRole<Doctor>().protectedPlayer = player;
+                    break;
+                case (byte)CustomRPC.ShieldBreak:
+                    Doctor doctor = GetSpecialRole<Doctor>();
+                    PlayerControl protectedPlayer = doctor.protectedPlayer;
+                    if (protectedPlayer != null)
+                    {
+                        protectedPlayer.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
+                        protectedPlayer.myRend.material.SetFloat("_Outline", 0f);
+                    }    
+                    doctor.protectedPlayer = null;
+                    break;
+                case (byte) CustomRPC.DetectiveKill:
+                    var killerid = reader.ReadByte();
+                    var targetid = reader.ReadByte();
+                    PlayerControl killer = PlayerTools.getPlayerById(killerid);
+                    PlayerControl target = PlayerTools.getPlayerById(targetid);
+                    killer.MurderPlayer(target);
+                    break;
+                case (byte)CustomRPC.JesterWin:
+                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                    {
+                        player.RemoveInfected();
+                        player.Die(DeathReason.Exile);
+                        player.Data.IsDead = true;
+                        player.Data.IsImpostor = false;
+                    }
+
+                    Jester jester = GetSpecialRole<Jester>();
+                    jester.player.Revive();
+                    jester.player.Data.IsDead = false;
+                    jester.player.Data.IsImpostor = true;
+                    break;
+                
+                // --------------------------- Other ---------------------------
+                
                 case (byte)CustomRPC.FixLights:
                     SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
                     switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
@@ -81,117 +146,23 @@ namespace MegaMod
                     var localPlayerBytes = reader.ReadBytesAndSize();
 
                     foreach (byte id in localPlayerBytes)
-                    {
-                        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        {
-                            if (player.PlayerId == id)
-                                localPlayers.Add(player);
-                        }
-                    }
+                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                        if (player.PlayerId == id)
+                            localPlayers.Add(player);
                     break;
                 case (byte)RPC.SetInfected:
-                    {
-                        ConsoleTools.Info("set infected.");
-                        break;
-                    }
+                    ConsoleTools.Info("set infected.");
+                    break;
                 case (byte)CustomRPC.ResetVaribles:
-                    {
-                        Doctor.ClearSettings();
-                        Detective.ClearSettings();
-                        Engineer.ClearSettings();
-                        Jester.ClearSettings();
-                        Doctor.SetConfigSettings();
-                        Detective.SetConfigSettings();
-                        Engineer.SetConfigSettings();
-                        Jester.SetConfigSettings();
-                        killedPlayers.Clear();
-                        break;
-                    }
-                case (byte)CustomRPC.SetDoctor:
-                    {
-                        
-                        ConsoleTools.Info("Doctor Set Through RPC!");
-                        byte doctorId = reader.ReadByte();
-                        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        {
-                            if (player.PlayerId == doctorId)
-                            {
-                                Doctor.player = player;
-                            }
-                        }
-                        break;
-                    }
-                case (byte)CustomRPC.SetProtected:
-                    {
-                        byte ProtectedId = reader.ReadByte();
-                        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        {
-                            if (player.PlayerId == ProtectedId)
-                            {
-                                Doctor.protectedPlayer = player;
-                            }
-                        }
-                        break;
-                    }
-                case (byte)CustomRPC.SetDetective:
-                    {
-                        ConsoleTools.Info("Detective Set Through RPC!");
-                        byte detectiveId = reader.ReadByte();
-                        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        {
-                            if (player.PlayerId == detectiveId)
-                            {
-                                Detective.player = player;
-                            }
-                        }
-                        break;
-                    }
-                case (byte) CustomRPC.DetectiveKill:
-                    {
-                        var killerid = reader.ReadByte();
-                        var targetid = reader.ReadByte();
-                        PlayerControl killer = PlayerTools.getPlayerById(killerid);
-                        PlayerControl target = PlayerTools.getPlayerById(targetid);
-                        killer.MurderPlayer(target);
-                        break;
-                    }
-                case (byte)CustomRPC.SetEngineer:
-                    {
-                        ConsoleTools.Info("Engineer Set Through RPC!");
-                        byte EngineerId = reader.ReadByte();
-                        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        {
-                            if (player.PlayerId == EngineerId)
-                            {
-                                AddSpecialRole(new Engineer(player));
-                            }
-                        }
-                        break;
-                    }
-                case (byte)CustomRPC.SetJester:
-                    {
-                        ConsoleTools.Info("Jester Set Through RPC!");
-                        byte jesterId = reader.ReadByte();
-                        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        {
-                            if (player.PlayerId == jesterId)
-                            {
-                                Jester.player = player;
-                            }
-                        }
-                        break;
-                    }
-                case (byte)CustomRPC.JesterWin:
-                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                    {
-                        player.RemoveInfected();
-                        player.Die(DeathReason.Exile);
-                        player.Data.IsDead = true;
-                        player.Data.IsImpostor = false;
-                    }
-                    Jester.player.Revive();
-                    Jester.player.Data.IsDead = false;
-                    Jester.player.Data.IsImpostor = true;
+                    Doctor.ClearSettings();
+                    Detective.ClearSettings();
+                    Engineer.ClearSettings();
+                    Jester.ClearSettings();
+                    Doctor.SetConfigSettings();
+                    Detective.SetConfigSettings();
+                    Engineer.SetConfigSettings();
+                    Jester.SetConfigSettings();
+                    killedPlayers.Clear();
                     break;
             }
         }

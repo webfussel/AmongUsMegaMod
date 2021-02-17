@@ -25,6 +25,14 @@ namespace MegaMod
         public byte PlayerId { get; set; }
         public DateTime KillTime { get; set; }
         public DeathReason DeathReason { get; set; }
+
+        public DeadPlayer(byte killerId, byte playerId, DateTime killTime, DeathReason deathReason)
+        {
+            KillerId = killerId;
+            PlayerId = playerId;
+            KillTime = killTime;
+            DeathReason = deathReason;
+        }
     }
     //body report class for when medic reports a body
 
@@ -48,6 +56,15 @@ namespace MegaMod
         public static T GetSpecialRole<T>(byte playerId) where T : Role
         {
             return assignedSpecialRoles.TryGetValue(playerId, out Role role) ? (T) role : null;
+        }
+
+        public static T GetSpecialRole<T>() where T : Role
+        {
+            List<Role> specialRoles = assignedSpecialRoles.Values.ToList();
+            foreach(Role role in specialRoles)
+                if (role is T)
+                    return (T) role;
+            return null;
         }
 
         public static bool TryGetSpecialRole<T>(byte playerId, out T role) where T : Role

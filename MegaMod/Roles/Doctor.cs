@@ -31,6 +31,8 @@ public class Doctor : Role
         color = new Color(36f / 255f, 183f / 255f, 32f / 255f, 1);
         startText = "Create a shield to protect a [8DFFFF]Crewmate";
     }
+    
+    // TODO: Hier fehlt noch die SetRole-Funktion!!!
 
     public override void ClearSettings()
     {
