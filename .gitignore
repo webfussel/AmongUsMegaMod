@@ -1,11 +1,5 @@
 /MegaMod/bin
 /MegaMod/obj
-.vs/MegaMod/v16/.suo
-MegaMod/.vs
-.vs/MegaMod/DesignTimeBuild/.dtbcache.v2
 MegaMod/Assembly-CSharp.dll
-.vs/ExtraRoles/v16/.suo
-.idea/.idea.MegaMod/.idea/contentModel.xml
-.idea/.idea.MegaMod/.idea/modules.xml
-.idea/.idea.MegaMod/.idea/projectSettingsUpdater.xml
-.idea/.idea.MegaMod/.idea/workspace.xml
+.vs
+.idea
