@@ -31,8 +31,27 @@ public class Doctor : Role
         color = new Color(36f / 255f, 183f / 255f, 32f / 255f, 1);
         startText = "Create a shield to protect a [8DFFFF]Crewmate";
     }
-    
-    // TODO: Hier fehlt noch die SetRole-Funktion!!!
+
+    /**
+     * Sets the Role if spawn chance is reached.
+     * Can only set Role if crew still has space for Role.
+     * Removes crew free space on successful assignment.
+     */
+    public static void SetRole(List<PlayerControl> crew)
+    {
+        bool spawnChanceAchieved = rng.Next(1, 101) <= optSpawnChance.GetValue();
+        if ((crew.Count > 0  && spawnChanceAchieved))
+        {
+            Doctor doctor = GetSpecialRole<Doctor>(PlayerControl.LocalPlayer.PlayerId);
+            int random = rng.Next(0, crew.Count);
+            doctor.player = crew[random];
+            crew.RemoveAt(random);
+            
+            MessageWriter writer = GetWriter(CustomRPC.SetDoctor);
+            writer.Write(doctor.player.PlayerId);
+            CloseWriter(writer);
+        }
+    }
 
     public override void ClearSettings()
     {
@@ -149,26 +168,5 @@ public class Doctor : Role
         if (protectedPlayer == null || (!protectedPlayer.Data.IsDead && !player.Data.IsDead)) return;
         BreakShield(true);
     
-    }
-
-    /**
-     * Sets the Role if spawn chance is reached.
-     * Can only set Role if crew still has space for Role.
-     * Removes crew free space on successful assignment.
-     */
-    public static void SetRole(List<PlayerControl> crew)
-    {
-        bool spawnChanceAchieved = rng.Next(1, 101) <= optSpawnChance.GetValue();
-        if ((crew.Count > 0  && spawnChanceAchieved))
-        {
-            Doctor doctor = GetSpecialRole<Doctor>(PlayerControl.LocalPlayer.PlayerId);
-            int random = rng.Next(0, crew.Count);
-            doctor.player = crew[random];
-            crew.RemoveAt(random);
-            
-            MessageWriter writer = GetWriter(CustomRPC.SetDoctor);
-            writer.Write(doctor.player.PlayerId);
-            CloseWriter(writer);
-        }
     }
 }
