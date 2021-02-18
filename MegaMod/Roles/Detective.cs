@@ -10,7 +10,7 @@ using System.Collections.Generic;
 public class Detective : Role
 {
     public static CustomNumberOption optDetectiveKillCooldown = CustomOption.AddNumber("Detective Kill Cooldown", 30f, 10f, 60f, 2.5f);
-    public static CustomNumberOption optDetectiveSpawnChance = CustomOption.AddNumber("Detective Spawn Chance", 100, 0, 100, 5);
+    public static CustomNumberOption optSpawnChance = CustomOption.AddNumber("Detective Spawn Chance", 100, 0, 100, 5);
 
     public DateTime? lastKilled { get; set; }
     public float cooldown { get; set; }
@@ -23,6 +23,27 @@ public class Detective : Role
         cooldown = optDetectiveKillCooldown.GetValue();
     }
 
+    /**
+     * Sets the Role if spawn chance is reached.
+     * Can only set Role if crew still has space for Role.
+     * Removes crew free space on successful assignment.
+     */
+    public static void SetRole(List<PlayerControl> crew)
+    {
+        bool spawnChanceAchieved = rng.Next(1, 101) <= optSpawnChance.GetValue();
+        if ((crew.Count > 0  && spawnChanceAchieved))
+        {
+            Detective detective = GetSpecialRole<Detective>(PlayerControl.LocalPlayer.PlayerId);
+            int random = rng.Next(0, crew.Count);
+            detective.player = crew[random];
+            crew.RemoveAt(random);
+            
+            MessageWriter writer = GetWriter(CustomRPC.SetDetective);
+            writer.Write(detective.player.PlayerId);
+            CloseWriter(writer);
+        }
+    }
+
 
     public override void ClearSettings()
     {
@@ -33,6 +54,11 @@ public class Detective : Role
     public override void SetConfigSettings()
     {
         cooldown = optDetectiveKillCooldown.GetValue();
+    }
+
+    public override void CheckDead(HudManager instance)
+    {
+        return; // Do nothing for now. Maybe Detective will get some skill that breaks on death or something like that
     }
 
     public void CheckKillButton(HudManager instance)
@@ -85,7 +111,8 @@ public class Detective : Role
             detective.setIntro(__instance);
             
             // TODO: Wieso zur Hölle???
-            detective.lastKilled = DateTime.UtcNow.AddSeconds((player.playerId * -1) + 10 + __instance.timer_0);
+            // TODO: Liest sich für mich so, als ob man dann echt scheiße gefressen hat, wenn man eine der frühen playerIDs hat, weil die differenz so unterschiedlich ist
+            detective.lastKilled = DateTime.UtcNow.AddSeconds((detective.player.PlayerId * -1) + 10 + __instance.timer);
         }
     }
 

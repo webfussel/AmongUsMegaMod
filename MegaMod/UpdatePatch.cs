@@ -46,7 +46,6 @@ namespace MegaMod
             
             // TODO: Check if null
             bool showImpostorToJester = false;
-            bool isJester = false;
             if (current != null)
             {
                 current.SetNameColor();
@@ -64,7 +63,6 @@ namespace MegaMod
                         break;
                     case Jester jester:
                         jester.ClearTasks();
-                        isJester = true;
                         showImpostorToJester = jester.showImpostorToJester;
                         break;
                     case Detective detective:
@@ -74,15 +72,14 @@ namespace MegaMod
             }
             
             rend.SetActive(rend == false);
-            
-            
+
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 player.nameText.Color = Color.white;
-            
-            if (PlayerControl.LocalPlayer.Data.IsImpostor || isJester && showImpostorToJester)
-                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                    if (player.Data.IsImpostor)
-                        player.nameText.Color = Palette.ImpostorRed;
+
+            if (!PlayerControl.LocalPlayer.Data.IsImpostor && !showImpostorToJester) return;
+
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                player.nameText.Color = player.Data.IsImpostor ? Palette.ImpostorRed : player.nameText.Color;
         }
     }
 }

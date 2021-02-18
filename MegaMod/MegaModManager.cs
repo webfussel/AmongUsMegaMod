@@ -19,23 +19,6 @@ Detective: 0028c6
 
 namespace MegaMod
 {
-    public class DeadPlayer
-    {
-        public byte KillerId { get; set; }
-        public byte PlayerId { get; set; }
-        public DateTime KillTime { get; set; }
-        public DeathReason DeathReason { get; set; }
-
-        public DeadPlayer(byte killerId, byte playerId, DateTime killTime, DeathReason deathReason)
-        {
-            KillerId = killerId;
-            PlayerId = playerId;
-            KillTime = killTime;
-            DeathReason = deathReason;
-        }
-    }
-    //body report class for when medic reports a body
-
     [HarmonyPatch]
     public static class MegaModManager
     {
