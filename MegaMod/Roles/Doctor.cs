@@ -9,13 +9,7 @@ using UnityEngine;
 
 public class Doctor : Role
 {
-    public static CustomStringOption optShowShieldedPlayer = CustomOption.AddString("Show Shielded Player", new[] { "Self", "Medic", "Self+Medic", "Everyone" });
-    public static CustomToggleOption optPlayerMurderIndicator = CustomOption.AddToggle("Murder Attempt Indicator for Shielded Player", true);
-    public static CustomToggleOption optDoctorReportSwitch = CustomOption.AddToggle("Show Medic Reports", true);
-    public static CustomNumberOption optDoctorReportNameDuration = CustomOption.AddNumber("Time Where Medic Reports Will Have Name", 5, 0, 60, 2.5f);
-    public static CustomNumberOption optDoctorReportColorDuration = CustomOption.AddNumber("Time Where Medic Reports Will Have Color Type", 20, 0, 120, 2.5f);
     
-    public static CustomNumberOption optSpawnChance = CustomOption.AddNumber("Medic Spawn Chance", 100, 0, 100, 5);
     public PlayerControl protectedPlayer { get; set; }
     public bool shieldUsed { get; set; }
     public int doctorKillerNameDuration { get; set; }
@@ -39,12 +33,12 @@ public class Doctor : Role
      */
     public static void SetRole(List<PlayerControl> crew)
     {
-        bool spawnChanceAchieved = rng.Next(1, 101) <= optSpawnChance.GetValue();
+        bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optDoctorSpawnChance.GetValue();
         if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         
-        Doctor doctor = GetSpecialRole<Doctor>(PlayerControl.LocalPlayer.PlayerId);
         int random = rng.Next(0, crew.Count);
-        doctor.player = crew[random];
+        Doctor doctor = new Doctor(crew[random]);
+        AddSpecialRole(doctor);
         crew.RemoveAt(random);
             
         MessageWriter writer = GetWriter(CustomRPC.SetDoctor);
@@ -61,11 +55,11 @@ public class Doctor : Role
 
     public override void SetConfigSettings()
     {
-        showProtectedPlayer = optShowShieldedPlayer.GetValue();
-        showReport = optDoctorReportSwitch.GetValue();
-        shieldKillAttemptIndicator = optPlayerMurderIndicator.GetValue();
-        doctorKillerNameDuration = (int) optDoctorReportNameDuration.GetValue();
-        doctorKillerColorDuration = (int) optDoctorReportColorDuration.GetValue();
+        showProtectedPlayer = HarmonyMain.optDoctorShowShieldedPlayer.GetValue();
+        showReport = HarmonyMain.optDoctorReportSwitch.GetValue();
+        shieldKillAttemptIndicator = HarmonyMain.optDoctorPlayerMurderIndicator.GetValue();
+        doctorKillerNameDuration = (int) HarmonyMain.optDoctorReportNameDuration.GetValue();
+        doctorKillerColorDuration = (int) HarmonyMain.optDoctorReportColorDuration.GetValue();
     }
 
     public bool SetProtectedPlayer(PlayerControl target)

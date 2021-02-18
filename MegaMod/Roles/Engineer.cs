@@ -19,6 +19,26 @@ public class Engineer : Role
         startText = "Maintain important systems on the ship";
     }
 
+    /**
+     * Sets the Role if spawn chance is reached.
+     * Can only set Role if crew still has space for Role.
+     * Removes crew free space on successful assignment.
+     */
+    public static void SetRole(List<PlayerControl> crew)
+    {
+        bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optEngineerSpawnChance.GetValue();
+        if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
+
+        int random = rng.Next(0, crew.Count);
+        Engineer engineer = new Engineer(crew[random]);
+        AddSpecialRole(engineer);
+        crew.RemoveAt(random);
+            
+        MessageWriter writer = GetWriter(CustomRPC.SetEngineer);
+        writer.Write(engineer.player.PlayerId);
+        CloseWriter(writer);
+    }
+
     public override void ClearSettings()
     {
         player = null;
@@ -64,25 +84,6 @@ public class Engineer : Role
         killButton.isActive = false;
         killButton.SetTarget(null);
         killButton.enabled = false;
-    }
-
-    /**
-     * Sets the Role if spawn chance is reached.
-     * Can only set Role if crew still has space for Role.
-     * Removes crew free space on successful assignment.
-     */
-    public static void SetRole(List<PlayerControl> crew)
-    {
-        bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optEngineerSpawnChance.GetValue();
-        if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
-
-        int random = rng.Next(0, crew.Count);
-        Engineer engineer = new Engineer(crew[random]);
-        crew.RemoveAt(random);
-            
-        MessageWriter writer = GetWriter(CustomRPC.SetEngineer);
-        writer.Write(engineer.player.PlayerId);
-        CloseWriter(writer);
     }
 
     [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.ShowInfectedMap))]

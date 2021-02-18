@@ -9,8 +9,6 @@ using System.Collections.Generic;
 
 public class Detective : Role
 {
-    public static CustomNumberOption optDetectiveKillCooldown = CustomOption.AddNumber("Detective Kill Cooldown", 30f, 10f, 60f, 2.5f);
-    public static CustomNumberOption optSpawnChance = CustomOption.AddNumber("Detective Spawn Chance", 100, 0, 100, 5);
 
     public DateTime? lastKilled { get; set; }
     public float cooldown { get; set; }
@@ -20,7 +18,7 @@ public class Detective : Role
         name = "Detective";
         color = new Color(0, 40f / 255f, 198f / 255f, 1);
         startText = "Shoot the [FF0000FF]Impostor";
-        cooldown = optDetectiveKillCooldown.GetValue();
+        cooldown = HarmonyMain.optDetectiveKillCooldown.GetValue();
     }
 
     /**
@@ -30,12 +28,12 @@ public class Detective : Role
      */
     public static void SetRole(List<PlayerControl> crew)
     {
-        bool spawnChanceAchieved = rng.Next(1, 101) <= optSpawnChance.GetValue();
+        bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optDetectiveSpawnChance.GetValue();
         if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         
-        Detective detective = GetSpecialRole<Detective>(PlayerControl.LocalPlayer.PlayerId);
         int random = rng.Next(0, crew.Count);
-        detective.player = crew[random];
+        Detective detective = new Detective(crew[random]);
+        AddSpecialRole(detective);
         crew.RemoveAt(random);
             
         MessageWriter writer = GetWriter(CustomRPC.SetDetective);
@@ -51,7 +49,7 @@ public class Detective : Role
 
     public override void SetConfigSettings()
     {
-        cooldown = optDetectiveKillCooldown.GetValue();
+        cooldown = HarmonyMain.optDetectiveKillCooldown.GetValue();
     }
 
     public override void CheckDead(HudManager instance)

@@ -8,11 +8,6 @@ using UnityEngine;
 
 public class Jester : Role
 {
-
-    public static CustomToggleOption optShowImpostorToJoker = CustomOption.AddToggle("Show Impostor to Joker", false);
-    public static CustomToggleOption optJesterCanDieToOfficer = CustomOption.AddToggle("Jester Can Die To Officer", true);
-    public static CustomNumberOption optSpawnChance = CustomOption.AddNumber("Jester Spawn Chance", 100, 0, 100, 5);
-    
     public bool showImpostorToJester = false;
     public bool jesterCanDieToDetective = false;
 
@@ -41,8 +36,8 @@ public class Jester : Role
 
     public override void SetConfigSettings()
     {
-        showImpostorToJester = optShowImpostorToJoker.GetValue();
-        jesterCanDieToDetective = optJesterCanDieToOfficer.GetValue();
+        showImpostorToJester = HarmonyMain.optJesterShowImpostor.GetValue();
+        jesterCanDieToDetective = HarmonyMain.optJesterCanDieToOfficer.GetValue();
     }
 
     public override void CheckDead(HudManager instance)
@@ -52,12 +47,11 @@ public class Jester : Role
     
     public static void SetRole(List<PlayerControl> crew)
     {
-        bool spawnChanceAchieved = rng.Next(1, 101) <= optSpawnChance.GetValue();
+        bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optJesterSpawnChance.GetValue();
         if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         
-        Jester jester = GetSpecialRole<Jester>(PlayerControl.LocalPlayer.PlayerId);
         int random = rng.Next(0, crew.Count);
-        jester.player = crew[random];
+        Jester jester = new Jester(crew[random]);
         crew.RemoveAt(random);
 
         MessageWriter writer = GetWriter(CustomRPC.SetJester);

@@ -23,8 +23,25 @@ namespace MegaMod
         public const string Id = "gg.reactor.megamod";
         public Harmony Harmony { get; } = new Harmony(Id);
 
-        // TODO: Optionen wieder nach hier verschieben
+        // Engineer
         public static CustomNumberOption optEngineerSpawnChance = CustomOption.AddNumber("Engineer Spawn Chance", 100, 0, 100, 5);
+        
+        // Detective
+        public static CustomNumberOption optDetectiveSpawnChance = CustomOption.AddNumber("Detective Spawn Chance", 100, 0, 100, 5);
+        public static CustomNumberOption optDetectiveKillCooldown = CustomOption.AddNumber("Detective Kill Cooldown", 30f, 10f, 60f, 2.5f);
+        
+        // Doctor
+        public static CustomNumberOption optDoctorSpawnChance = CustomOption.AddNumber("Medic Spawn Chance", 100, 0, 100, 5);
+        public static CustomStringOption optDoctorShowShieldedPlayer = CustomOption.AddString("Show Shielded Player", new[] { "Self", "Medic", "Self+Medic", "Everyone" });
+        public static CustomToggleOption optDoctorPlayerMurderIndicator = CustomOption.AddToggle("Murder Attempt Indicator for Shielded Player", true);
+        public static CustomToggleOption optDoctorReportSwitch = CustomOption.AddToggle("Show Medic Reports", true);
+        public static CustomNumberOption optDoctorReportNameDuration = CustomOption.AddNumber("Time Where Medic Reports Will Have Name", 5, 0, 60, 2.5f);
+        public static CustomNumberOption optDoctorReportColorDuration = CustomOption.AddNumber("Time Where Medic Reports Will Have Color Type", 20, 0, 120, 2.5f);
+        
+        // Jester
+        public static CustomNumberOption optJesterSpawnChance = CustomOption.AddNumber("Jester Spawn Chance", 100, 0, 100, 5);
+        public static CustomToggleOption optJesterShowImpostor = CustomOption.AddToggle("Show Impostor to Joker", false);
+        public static CustomToggleOption optJesterCanDieToOfficer = CustomOption.AddToggle("Jester Can Die To Officer", true);
         
         public ConfigEntry<string> Ip { get; set; }
         public ConfigEntry<ushort> Port { get; set; }
