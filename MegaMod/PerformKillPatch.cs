@@ -67,8 +67,7 @@ namespace MegaMod
                     if (current == detectiveKvp.Value.player)
                         current.Data.IsImpostor = false;
                     if (current.PlayerId == target.PlayerId)
-                        // TODO: Was zum Fick?! DeathReason hat gar keinen Index 3?!?!?! What?!?!?!?!?!?!?!?! Und wieso würde man hier nen Integer casten statt einfach zu schreiben DeathReason.Irgendwas?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!
-                        deadPlayer.DeathReason = (DeathReason)3;
+                        deadPlayer.DeathReason = DEATH_REASON_SUICIDE;
                 }
                 killedPlayers.Add(deadPlayer);
             }

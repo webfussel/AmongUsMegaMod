@@ -7,7 +7,7 @@ namespace MegaMod
         public byte KillerId { get; }
         public byte PlayerId { get; }
         public DateTime KillTime { get; }
-        public DeathReason DeathReason { get; }
+        public DeathReason DeathReason { get; set;  }
 
         public DeadPlayer(byte killerId, byte playerId, DateTime killTime, DeathReason deathReason)
         {

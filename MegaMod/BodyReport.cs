@@ -21,7 +21,7 @@ namespace MegaMod
                 return $"Body Report: The corpse is too old to gain information from. (Killed {Math.Round(br.KillAge / 1000)}s ago)";
             }
             
-            if (br.DeathReason == (DeathReason)3)
+            if (br.DeathReason == DEATH_REASON_SUICIDE)
             {
                 return $"Body Report (Officer): The cause of death appears to be suicide! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
             }

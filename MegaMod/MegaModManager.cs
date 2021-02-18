@@ -26,6 +26,13 @@ namespace MegaMod
         public static AudioClip breakClip;
         public static Sprite repairIco;
         public static Sprite shieldIco;
+        
+        /* To cast into Deathreason, which are:
+        Exile, (0)
+        Kill, (1)
+        Disconnect (2)
+         */
+        public static readonly DeathReason DEATH_REASON_SUICIDE = (DeathReason) 3;
 
         public static Dictionary<byte, Role> assignedSpecialRoles;
 
