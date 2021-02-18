@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Hazel;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using static MegaMod.MegaModManager;
 
@@ -57,12 +58,10 @@ namespace MegaMod
             {
                 DeadPlayer deadPlayer = new DeadPlayer(__instance.PlayerId, CAKODNGLPDF.PlayerId, DateTime.UtcNow, DeathReason.Kill);
                 
-                // TODO: Multiple Choice for KeyValuePair from Generic or ll2CPPSystem
-                // __instance (also das vom framework) erwartet die von ll2CPP, aber wir nutzen die generic. Denke das müssen wir umbauen.
                 if (SpecialRoleIsAssigned<Detective>(out KeyValuePair<byte, Detective> detectiveKvp))
                 {
                     // If the killer is the detective, set him back to crewmate
-                    if (__instance == detectiveKvp.Value)
+                    if (__instance == detectiveKvp.Value.player)
                         __instance.Data.IsImpostor = false;
                     if (__instance.PlayerId == CAKODNGLPDF.PlayerId)
                         // TODO: Was zum Fick?! DeathReason hat gar keinen Index 3?!?!?! What?!?!?!?!?!?!?!?! Und wieso würde man hier nen Integer casten statt einfach zu schreiben DeathReason.Irgendwas?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!
