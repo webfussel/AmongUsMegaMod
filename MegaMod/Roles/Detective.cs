@@ -53,20 +53,6 @@ public class Detective : Role
     {
         cooldown = optDetectiveKillCooldown.GetValue();
     }
-    
-    // Same fucking thing as GetCurrentCooldown?
-    public float GetOfficerKD()
-    {
-        float cd = GetCurrentCooldown();
-        if (lastKilled == null) return cd;
-        
-        DateTime now = DateTime.UtcNow;
-        TimeSpan diff = (TimeSpan)(now - lastKilled);
-
-        var killCoolDown = cd * 1000.0f;
-        if (killCoolDown - (float) diff.TotalMilliseconds < 0) return 0;
-        return (killCoolDown - (float) diff.TotalMilliseconds) / 1000.0f;
-    }
 
     public override void CheckDead(HudManager instance)
     {
@@ -80,7 +66,7 @@ public class Detective : Role
         KillButtonManager killButton = instance.KillButton;
         killButton.gameObject.SetActive(true);
         killButton.isActive = true;
-        killButton.SetCoolDown(GetOfficerKD(), PlayerControl.GameOptions.KillCooldown + 15.0f);
+        killButton.SetCoolDown(GetCurrentCooldown(), PlayerControl.GameOptions.KillCooldown + 15.0f);
         if (DistLocalClosest < GameOptionsData.KillDistances[PlayerControl.GameOptions.KillDistance])
         {
             killButton.SetTarget(PlayerTools.closestPlayer);
