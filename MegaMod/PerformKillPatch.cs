@@ -56,14 +56,17 @@ namespace MegaMod
             //handle the murder after it's ran
             public static void Postfix(PlayerControl __instance, PlayerControl CAKODNGLPDF)
             {
-                DeadPlayer deadPlayer = new DeadPlayer(__instance.PlayerId, CAKODNGLPDF.PlayerId, DateTime.UtcNow, DeathReason.Kill);
+                PlayerControl current = __instance;
+                PlayerControl target = CAKODNGLPDF;
+                
+                DeadPlayer deadPlayer = new DeadPlayer(current.PlayerId, target.PlayerId, DateTime.UtcNow, DeathReason.Kill);
                 
                 if (SpecialRoleIsAssigned<Detective>(out KeyValuePair<byte, Detective> detectiveKvp))
                 {
                     // If the killer is the detective, set him back to crewmate
-                    if (__instance == detectiveKvp.Value.player)
-                        __instance.Data.IsImpostor = false;
-                    if (__instance.PlayerId == CAKODNGLPDF.PlayerId)
+                    if (current == detectiveKvp.Value.player)
+                        current.Data.IsImpostor = false;
+                    if (current.PlayerId == target.PlayerId)
                         // TODO: Was zum Fick?! DeathReason hat gar keinen Index 3?!?!?! What?!?!?!?!?!?!?!?! Und wieso würde man hier nen Integer casten statt einfach zu schreiben DeathReason.Irgendwas?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!
                         deadPlayer.DeathReason = (DeathReason)3;
                 }
