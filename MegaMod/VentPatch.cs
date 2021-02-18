@@ -34,7 +34,7 @@ namespace MegaMod
         {
             float num = float.MaxValue;
             PlayerControl localPlayer = pc.Object;
-            if (SpecialRoleIsAssigned<Engineer>(out KeyValuePair<byte, Engineer> engineerKvp))
+            if (SpecialRoleIsAssigned(out KeyValuePair<byte, Engineer> engineerKvp))
                 couldUse = (engineerKvp.Value.player.PlayerId == PlayerControl.LocalPlayer.PlayerId || localPlayer.Data.IsImpostor) && !localPlayer.Data.IsDead;
             else
                 couldUse = localPlayer.Data.IsImpostor && !localPlayer.Data.IsDead;
