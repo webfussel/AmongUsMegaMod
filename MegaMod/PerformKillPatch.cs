@@ -56,6 +56,9 @@ namespace MegaMod
             public static void Postfix(PlayerControl __instance, PlayerControl CAKODNGLPDF)
             {
                 DeadPlayer deadPlayer = new DeadPlayer(__instance.PlayerId, CAKODNGLPDF.PlayerId, DateTime.UtcNow, DeathReason.Kill);
+                
+                // TODO: Multiple Choice for KeyValuePair from Generic or ll2CPPSystem
+                // __instance (also das vom framework) erwartet die von ll2CPP, aber wir nutzen die generic. Denke das müssen wir umbauen.
                 if (SpecialRoleIsAssigned<Detective>(out KeyValuePair<byte, Detective> detectiveKvp))
                 {
                     // If the killer is the detective, set him back to crewmate

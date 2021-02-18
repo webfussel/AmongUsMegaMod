@@ -40,17 +40,16 @@ public class Doctor : Role
     public static void SetRole(List<PlayerControl> crew)
     {
         bool spawnChanceAchieved = rng.Next(1, 101) <= optSpawnChance.GetValue();
-        if ((crew.Count > 0  && spawnChanceAchieved))
-        {
-            Doctor doctor = GetSpecialRole<Doctor>(PlayerControl.LocalPlayer.PlayerId);
-            int random = rng.Next(0, crew.Count);
-            doctor.player = crew[random];
-            crew.RemoveAt(random);
+        if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
+        
+        Doctor doctor = GetSpecialRole<Doctor>(PlayerControl.LocalPlayer.PlayerId);
+        int random = rng.Next(0, crew.Count);
+        doctor.player = crew[random];
+        crew.RemoveAt(random);
             
-            MessageWriter writer = GetWriter(CustomRPC.SetDoctor);
-            writer.Write(doctor.player.PlayerId);
-            CloseWriter(writer);
-        }
+        MessageWriter writer = GetWriter(CustomRPC.SetDoctor);
+        writer.Write(doctor.player.PlayerId);
+        CloseWriter(writer);
     }
 
     public override void ClearSettings()

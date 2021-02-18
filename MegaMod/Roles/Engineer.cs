@@ -77,17 +77,16 @@ public class Engineer : Role
     public static void SetRole(List<PlayerControl> crew)
     {
         bool spawnChanceAchieved = rng.Next(1, 101) <= optSpawnChance.GetValue();
-        if ((crew.Count > 0  && spawnChanceAchieved))
-        {
-            Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-            int random = rng.Next(0, crew.Count);
-            engineer.player = crew[random];
-            crew.RemoveAt(random);
+        if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
+        
+        Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+        int random = rng.Next(0, crew.Count);
+        engineer.player = crew[random];
+        crew.RemoveAt(random);
             
-            MessageWriter writer = GetWriter(CustomRPC.SetEngineer);
-            writer.Write(engineer.player.PlayerId);
-            CloseWriter(writer);
-        }
+        MessageWriter writer = GetWriter(CustomRPC.SetEngineer);
+        writer.Write(engineer.player.PlayerId);
+        CloseWriter(writer);
     }
 
     [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.ShowInfectedMap))]

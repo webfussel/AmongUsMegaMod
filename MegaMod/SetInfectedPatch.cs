@@ -30,54 +30,26 @@ namespace MegaMod
             crewmates.RemoveAll(x => x.Data.IsImpostor);
 
             Doctor.SetRole(crewmates);
-
-            if (crewmates.Count > 0 && (rng.Next(1, 101) <= HarmonyMain.officerSpawnChance.GetValue()))
-            {
-
-                var OfficerRandom = rng.Next(0, crewmates.Count);
-                Detective.player = crewmates[OfficerRandom];
-                crewmates.RemoveAt(OfficerRandom);
-                byte OfficerId = Detective.player.PlayerId;
-
-                MessageWriter writer = GetWriter(CustomRPC.SetDetective);
-                writer.Write(OfficerId);
-                CloseWriter(writer);
-            }
-            
+            Detective.SetRole(crewmates);
             Engineer.SetRole(crewmates);
-
-            if (crewmates.Count > 0 && (rng.Next(1, 101) <= HarmonyMain.jokerSpawnChance.GetValue()))
-            {
-                writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetJester, Hazel.SendOption.None, -1);
-                var JokerRandom = rng.Next(0, crewmates.Count);
-                ConsoleTools.Info(JokerRandom.ToString());
-                Jester.player = crewmates[JokerRandom];
-                crewmates.RemoveAt(JokerRandom);
-                byte JokerId = Jester.player.PlayerId;
-
-                writer.Write(JokerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-            }
+            Jester.SetRole(crewmates);
 
             localPlayers.Clear();
             localPlayer = PlayerControl.LocalPlayer;
+            
+            bool jesterExists = SpecialRoleIsAssigned<Jester>(out var jesterKv);
+            Jester jesterInstance = jesterKv.Value;
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
-                if (player.Data.IsImpostor)
-                    continue;
-                if (Jester.player != null && player.PlayerId == Jester.player.PlayerId)
-                    continue;
-                else
-                    localPlayers.Add(player);
+                if (player.Data.IsImpostor) continue;
+                if (jesterExists && jesterInstance.player.PlayerId == player.PlayerId) continue;
+                
+                localPlayers.Add(player);
             }
-            var localPlayerBytes = new List<byte>();
-            foreach (PlayerControl player in localPlayers)
-            {
-                localPlayerBytes.Add(player.PlayerId);
-            }
-            writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetLocalPlayers, Hazel.SendOption.None, -1);
-            writer.WriteBytesAndSize(localPlayerBytes.ToArray());
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+
+            MessageWriter writer = GetWriter(CustomRPC.SetLocalPlayers);
+            writer.WriteBytesAndSize(localPlayers.Select(player => player.PlayerId).ToArray());
+            CloseWriter(writer);
         }
     }
 }

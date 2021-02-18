@@ -31,20 +31,18 @@ public class Detective : Role
     public static void SetRole(List<PlayerControl> crew)
     {
         bool spawnChanceAchieved = rng.Next(1, 101) <= optSpawnChance.GetValue();
-        if ((crew.Count > 0  && spawnChanceAchieved))
-        {
-            Detective detective = GetSpecialRole<Detective>(PlayerControl.LocalPlayer.PlayerId);
-            int random = rng.Next(0, crew.Count);
-            detective.player = crew[random];
-            crew.RemoveAt(random);
+        if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
+        
+        Detective detective = GetSpecialRole<Detective>(PlayerControl.LocalPlayer.PlayerId);
+        int random = rng.Next(0, crew.Count);
+        detective.player = crew[random];
+        crew.RemoveAt(random);
             
-            MessageWriter writer = GetWriter(CustomRPC.SetDetective);
-            writer.Write(detective.player.PlayerId);
-            CloseWriter(writer);
-        }
+        MessageWriter writer = GetWriter(CustomRPC.SetDetective);
+        writer.Write(detective.player.PlayerId);
+        CloseWriter(writer);
     }
-
-
+    
     public override void ClearSettings()
     {
         player = null;
@@ -54,6 +52,20 @@ public class Detective : Role
     public override void SetConfigSettings()
     {
         cooldown = optDetectiveKillCooldown.GetValue();
+    }
+    
+    // Same fucking thing as GetCurrentCooldown?
+    public float GetOfficerKD()
+    {
+        float cd = GetCurrentCooldown();
+        if (lastKilled == null) return cd;
+        
+        DateTime now = DateTime.UtcNow;
+        TimeSpan diff = (TimeSpan)(now - lastKilled);
+
+        var killCoolDown = cd * 1000.0f;
+        if (killCoolDown - (float) diff.TotalMilliseconds < 0) return 0;
+        return (killCoolDown - (float) diff.TotalMilliseconds) / 1000.0f;
     }
 
     public override void CheckDead(HudManager instance)
@@ -68,7 +80,7 @@ public class Detective : Role
         KillButtonManager killButton = instance.KillButton;
         killButton.gameObject.SetActive(true);
         killButton.isActive = true;
-        killButton.SetCoolDown(PlayerTools.GetOfficerKD(), PlayerControl.GameOptions.KillCooldown + 15.0f);
+        killButton.SetCoolDown(GetOfficerKD(), PlayerControl.GameOptions.KillCooldown + 15.0f);
         if (DistLocalClosest < GameOptionsData.KillDistances[PlayerControl.GameOptions.KillDistance])
         {
             killButton.SetTarget(PlayerTools.closestPlayer);

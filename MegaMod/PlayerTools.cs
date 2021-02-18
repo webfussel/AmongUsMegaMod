@@ -10,53 +10,25 @@ namespace MegaMod
     {
         public static PlayerControl closestPlayer = null;
         
-        public static List<PlayerControl> getCrewMates()
+        // TODO: Momentan ungenutzt.
+        public static List<PlayerControl> GetCrewMates()
         {
-            List<PlayerControl> CrewmateIds = new List<PlayerControl>();
+            List<PlayerControl> crewmateIds = new List<PlayerControl>();
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
-                bool isInfected = false;
-                if (player.Data.IsImpostor)
-                {
-                    isInfected = true;
-                    break;
-                }
-                if (!isInfected)
-                {
-                    CrewmateIds.Add(player);
-                }
+                bool isInfected = player.Data.IsImpostor;
+                if (!isInfected) crewmateIds.Add(player);
             }
-            return CrewmateIds;
+            return crewmateIds;
         }
 
         public static PlayerControl getPlayerById(byte id)
         {
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-            {
-                if (player.PlayerId == id)
-                {
-                    return player;
-                }
-            }
+                if (player.PlayerId == id) return player;
             return null;
         }
 
-        public static float GetOfficerKD()
-        {
-            if (MegaModManager.Detective.lastKilled == null)
-            {
-                return MegaModManager.Detective.OfficerCD;
-            }
-            DateTime now = DateTime.UtcNow;
-            TimeSpan diff = (TimeSpan)(now - MegaModManager.Detective.lastKilled);
-
-            var KillCoolDown = MegaModManager.Detective.OfficerCD * 1000.0f;
-            if (KillCoolDown - (float)diff.TotalMilliseconds < 0) return 0;
-            else
-            {
-                return (KillCoolDown - (float)diff.TotalMilliseconds) / 1000.0f;
-            }
-        }
 
         public static PlayerControl GetClosestPlayer(PlayerControl refPlayer, out double distance)
         {

@@ -1,4 +1,6 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
+using System.Linq;
+using HarmonyLib;
 using Hazel;
 using static MegaMod.MegaModManager;
 
@@ -154,14 +156,12 @@ namespace MegaMod
                     ConsoleTools.Info("set infected.");
                     break;
                 case (byte)CustomRPC.ResetVaribles:
-                    Doctor.ClearSettings();
-                    Detective.ClearSettings();
-                    Engineer.ClearSettings();
-                    Jester.ClearSettings();
-                    Doctor.SetConfigSettings();
-                    Detective.SetConfigSettings();
-                    Engineer.SetConfigSettings();
-                    Jester.SetConfigSettings();
+                    List<Role> assignedRoles = assignedSpecialRoles.Values.ToList();
+                    foreach (Role r in assignedRoles)
+                    {
+                        r.ClearSettings();
+                        r.SetConfigSettings();
+                    }
                     killedPlayers.Clear();
                     break;
             }
