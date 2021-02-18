@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System;
+using Il2CppSystem.Collections.Generic;
 using static MegaMod.MegaModManager;
 
 namespace MegaMod
@@ -9,13 +10,12 @@ namespace MegaMod
     {
         static bool Prefix(IntroCutscene.CoBegin__d __instance)
         {
-            if (PlayerControl.LocalPlayer == Jester.player)
-            {
-                var jokerTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
-                jokerTeam.Add(PlayerControl.LocalPlayer);
-                __instance.yourTeam = jokerTeam;
-                return true;
-            }
+            Jester local = GetSpecialRole<Jester>(PlayerControl.LocalPlayer.PlayerId);
+            if (local == null) return true;
+            
+            var jokerTeam = new List<PlayerControl>();
+            jokerTeam.Add(PlayerControl.LocalPlayer);
+            __instance.yourTeam = jokerTeam;
             return true;
         }
     }
