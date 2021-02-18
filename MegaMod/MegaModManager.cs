@@ -23,6 +23,53 @@ namespace MegaMod
     [HarmonyPatch]
     public static class MegaModManager
     {
+        public enum RPC
+        {
+            PlayAnimation = 0,
+            CompleteTask = 1,
+            SyncSettings = 2,
+            SetInfected = 3,
+            Exiled = 4,
+            CheckName = 5,
+            SetName = 6,
+            CheckColor = 7,
+            SetColor = 8,
+            SetHat = 9,
+            SetSkin = 10,
+            ReportDeadBody = 11,
+            MurderPlayer = 12,
+            SendChat = 13,
+            StartMeeting = 14,
+            SetScanner = 15,
+            SendChatNote = 16,
+            SetPet = 17,
+            SetStartCounter = 18,
+            EnterVent = 19,
+            ExitVent = 20,
+            SnapTo = 21,
+            Close = 22,
+            VotingComplete = 23,
+            CastVote = 24,
+            ClearVote = 25,
+            AddVote = 26,
+            CloseDoorsOfType = 27,
+            RepairSystem = 28,
+            SetTasks = 29,
+            UpdateGameData = 30,
+            // --- Custom RPCs ---
+            SetDoctor = 43,
+            SetProtected = 44,
+            ShieldBreak = 45,
+            SetDetective = 46,
+            DetectiveKill = 47,
+            SetEngineer = 48,
+            FixLights = 49,
+            SetJester = 50,
+            ResetVariables = 51,
+            SetLocalPlayers = 56,
+            JesterWin = 57,
+        }
+        
         public static AssetBundle bundle;
         public static AudioClip breakClip;
         public static Sprite repairIco;
@@ -35,12 +82,11 @@ namespace MegaMod
          */
         public static readonly DeathReason DEATH_REASON_SUICIDE = (DeathReason) 3;
 
-        public static Dictionary<byte, Role> assignedSpecialRoles;
+        public static Dictionary<byte, Role> assignedSpecialRoles = new Dictionary<byte, Role>();
 
         // Only the engineer gets added to the dictionary so far
         public static void AddSpecialRole(Role specialRole)
         {
-            assignedSpecialRoles ??= new Dictionary<byte, Role>();
             assignedSpecialRoles.Add(specialRole.player.PlayerId, specialRole);
         }
 
@@ -49,10 +95,18 @@ namespace MegaMod
             return assignedSpecialRoles.TryGetValue(playerId, out Role role) ? (T) role : null;
         }
 
+        public static Role GetSpecialRole(byte playerId)
+        {
+            return assignedSpecialRoles.TryGetValue(playerId, out Role role) ? role : null;
+        }
+
         public static T GetSpecialRole<T>() where T : Role
         {
             List<Role> specialRoles = assignedSpecialRoles.Values.ToList();
-            return specialRoles.OfType<T>().FirstOrDefault();
+            foreach(Role role in specialRoles)
+                if (role is T)
+                    return (T) role;
+            return null;
         }
 
         public static bool TryGetSpecialRole<T>(byte playerId, out T role) where T : Role
@@ -77,13 +131,13 @@ namespace MegaMod
             return false;
         }
 
-        public static void WriteImmediately(object action)
+        public static void WriteImmediately(RPC action)
         {
             MessageWriter writer = GetWriter(action);
             CloseWriter(writer);
         }
 
-        public static MessageWriter GetWriter(object action)
+        public static MessageWriter GetWriter(RPC action)
         {
            return AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte) action, Hazel.SendOption.None, -1);
         }

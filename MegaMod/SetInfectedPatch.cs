@@ -12,9 +12,6 @@ namespace MegaMod
     {
         public static void Postfix(Il2CppReferenceArray<GameData.PlayerInfo> JPGEIBIBJPJ)
         {
-            
-            // TODO: Über Map iterieren und für jeden Spieler zurücksetzen
-            
             List<Role> assignedRoles = assignedSpecialRoles.Values.ToList();
             foreach (Role r in assignedRoles)
             {
@@ -24,11 +21,12 @@ namespace MegaMod
             
             killedPlayers.Clear();
             
-            WriteImmediately(CustomRPC.ResetVaribles);
+            WriteImmediately(RPC.ResetVariables);
 
             List<PlayerControl> crewmates = PlayerControl.AllPlayerControls.ToArray().ToList();
             crewmates.RemoveAll(x => x.Data.IsImpostor);
 
+            ConsoleTools.Info("Trying to set special roles");
             Doctor.SetRole(crewmates);
             Detective.SetRole(crewmates);
             Engineer.SetRole(crewmates);
@@ -47,7 +45,7 @@ namespace MegaMod
                 localPlayers.Add(player);
             }
 
-            MessageWriter writer = GetWriter(CustomRPC.SetLocalPlayers);
+            MessageWriter writer = GetWriter(RPC.SetLocalPlayers);
             writer.WriteBytesAndSize(localPlayers.Select(player => player.PlayerId).ToArray());
             CloseWriter(writer);
         }

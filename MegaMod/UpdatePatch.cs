@@ -29,7 +29,6 @@ namespace MegaMod
                 PerformKillPatch.Prefix();
             }
 
-            Role current = GetSpecialRole<Role>(PlayerControl.LocalPlayer.PlayerId);
             bool sabotageActive = false;
             foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
             {
@@ -43,9 +42,14 @@ namespace MegaMod
                     _ => sabotageActive
                 };
             }
-            
-            // TODO: Check if null
+
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                player.nameText.Color = Color.white;
+
             bool showImpostorToJester = false;
+            //ConsoleTools.Info("Updating HUD for Special Roles");
+            Role current = GetSpecialRole(PlayerControl.LocalPlayer.PlayerId);
+            //ConsoleTools.Info($"Got Role {current?.name}");
             if (current != null)
             {
                 current.SetNameColor();
@@ -71,15 +75,15 @@ namespace MegaMod
                 }
             }
             
-            rend.SetActive(rend == false);
+            rend?.SetActive(rend == false);
 
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                player.nameText.Color = Color.white;
-
-            if (!PlayerControl.LocalPlayer.Data.IsImpostor && !showImpostorToJester) return;
-
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                player.nameText.Color = player.Data.IsImpostor ? Palette.ImpostorRed : player.nameText.Color;
+            if (PlayerControl.LocalPlayer.Data.IsImpostor || (current is Jester && showImpostorToJester))
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                    if (player.Data.IsImpostor)
+                    {
+                        ConsoleTools.Info($"I am {current?.player.nameText.Text} and want to See the Impostor {player.nameText.Text}.");
+                        player.nameText.Color = Palette.ImpostorRed;
+                    }
         }
     }
 }

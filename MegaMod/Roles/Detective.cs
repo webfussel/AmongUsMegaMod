@@ -9,7 +9,6 @@ using System.Collections.Generic;
 
 public class Detective : Role
 {
-
     public DateTime? lastKilled { get; set; }
     public float cooldown { get; set; }
 
@@ -18,7 +17,6 @@ public class Detective : Role
         name = "Detective";
         color = new Color(0, 40f / 255f, 198f / 255f, 1);
         startText = "Shoot the [FF0000FF]Impostor";
-        cooldown = HarmonyMain.optDetectiveKillCooldown.GetValue();
     }
 
     /**
@@ -28,6 +26,7 @@ public class Detective : Role
      */
     public static void SetRole(List<PlayerControl> crew)
     {
+        ConsoleTools.Info("Try to set Detective");
         bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optDetectiveSpawnChance.GetValue();
         if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         
@@ -36,7 +35,7 @@ public class Detective : Role
         AddSpecialRole(detective);
         crew.RemoveAt(random);
             
-        MessageWriter writer = GetWriter(CustomRPC.SetDetective);
+        MessageWriter writer = GetWriter(RPC.SetDetective);
         writer.Write(detective.player.PlayerId);
         CloseWriter(writer);
     }
@@ -54,7 +53,6 @@ public class Detective : Role
 
     public override void CheckDead(HudManager instance)
     {
-        return; // Do nothing for now. Maybe Detective will get some skill that breaks on death or something like that
     }
 
     public void CheckKillButton(HudManager instance)
@@ -79,7 +77,7 @@ public class Detective : Role
 
     private void KillPlayer(PlayerControl player)
     {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DetectiveKill, Hazel.SendOption.None, -1);
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)RPC.DetectiveKill, Hazel.SendOption.None, -1);
         writer.Write(PlayerControl.LocalPlayer.PlayerId);
         writer.Write(player.PlayerId);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -98,18 +96,15 @@ public class Detective : Role
         return (float) (cooldownMS - diff.TotalMilliseconds) / 1000.0f;
     }
 
-    [HarmonyPatch(typeof(IntroCutscene.CoBegin__d), nameof(IntroCutscene.CoBegin__d.MoveNext))]
-    class IntroCutscenePath
+    public override void SetIntro(IntroCutscene.CoBegin__d __instance)
     {
-        static void Postfix(IntroCutscene.CoBegin__d __instance)
-        {
-            Detective detective = GetSpecialRole<Detective>(PlayerControl.LocalPlayer.PlayerId);
-            detective.setIntro(__instance);
-            
-            // TODO: Wieso zur Hölle???
-            // TODO: Liest sich für mich so, als ob man dann echt scheiße gefressen hat, wenn man eine der frühen playerIDs hat, weil die differenz so unterschiedlich ist
-            detective.lastKilled = DateTime.UtcNow.AddSeconds((detective.player.PlayerId * -1) + 10 + __instance.timer);
-        }
+        base.SetIntro(__instance);
+        
+        // TODO: Wieso zur Hölle???
+        // TODO: Liest sich für mich so, als ob man dann echt scheiße gefressen hat, wenn man eine der frühen playerIDs hat, weil die differenz so unterschiedlich ist
+        // TODO: Der Cooldown soll hier auf 10 gesetzt werden. Geht wahrscheinlich so:
+        // Now - Cooldown + 10
+        lastKilled = DateTime.UtcNow.AddSeconds(10 - cooldown);
     }
 
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.Begin))]

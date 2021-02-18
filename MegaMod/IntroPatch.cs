@@ -6,16 +6,11 @@ using static MegaMod.MegaModManager;
 namespace MegaMod
 {
     [HarmonyPatch(typeof(IntroCutscene.CoBegin__d), nameof(IntroCutscene.CoBegin__d.MoveNext))]
-    class IntroCutscenePath
+    class IntroCutscenePatch
     {
         static bool Prefix(IntroCutscene.CoBegin__d __instance)
         {
-            Jester local = GetSpecialRole<Jester>(PlayerControl.LocalPlayer.PlayerId);
-            if (local == null) return true;
-            
-            var jokerTeam = new List<PlayerControl>();
-            jokerTeam.Add(PlayerControl.LocalPlayer);
-            __instance.yourTeam = jokerTeam;
+            GetSpecialRole(PlayerControl.LocalPlayer.PlayerId)?.SetIntro(__instance);
             return true;
         }
     }

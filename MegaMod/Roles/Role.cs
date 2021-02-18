@@ -21,14 +21,11 @@ public abstract class Role {
             player.nameText.Color = color;
         }
     }
-    public void setIntro(IntroCutscene.CoBegin__d __instance)
+    public virtual void SetIntro(IntroCutscene.CoBegin__d __instance)
     {
-        if (PlayerControl.LocalPlayer == player)
-        {
-            __instance.__this.Title.Text = name;
-            __instance.__this.Title.Color = color;
-            __instance.__this.ImpostorText.Text = startText;
-            __instance.__this.BackgroundBar.material.color = color;
-        }
+        __instance.__this.Title.Text = name;
+        __instance.__this.Title.Color = color;
+        __instance.__this.ImpostorText.Text = startText;
+        __instance.__this.BackgroundBar.material.color = color;
     }
 }

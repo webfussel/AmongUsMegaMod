@@ -23,7 +23,7 @@ namespace MegaMod
 
             Jester jesterInstance = GetSpecialRole<Jester>(jester.Key);
             
-            WriteImmediately(CustomRPC.JesterWin);
+            WriteImmediately(RPC.JesterWin);
 
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {

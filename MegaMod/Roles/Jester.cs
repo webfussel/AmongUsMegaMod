@@ -8,8 +8,8 @@ using UnityEngine;
 
 public class Jester : Role
 {
-    public bool showImpostorToJester = false;
-    public bool jesterCanDieToDetective = false;
+    public bool showImpostorToJester { get; set; }
+    public bool jesterCanDieToDetective { get; set; }
 
 
     public Jester(PlayerControl player)
@@ -27,7 +27,7 @@ public class Jester : Role
     public void ClearTasks()
     {
         var removeTask = new List<PlayerTask>();
-        foreach (PlayerTask task in player.myTasks)
+        foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
             if (task.TaskType != TaskTypes.FixComms && task.TaskType != TaskTypes.FixLights && task.TaskType != TaskTypes.ResetReactor && task.TaskType != TaskTypes.ResetSeismic && task.TaskType != TaskTypes.RestoreOxy)
                 removeTask.Add(task);
         foreach (PlayerTask task in removeTask)
@@ -42,11 +42,11 @@ public class Jester : Role
 
     public override void CheckDead(HudManager instance)
     {
-        throw new NotImplementedException();
     }
     
     public static void SetRole(List<PlayerControl> crew)
     {
+        ConsoleTools.Info("I am a jester! x)");
         bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optJesterSpawnChance.GetValue();
         if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         
@@ -54,8 +54,16 @@ public class Jester : Role
         Jester jester = new Jester(crew[random]);
         crew.RemoveAt(random);
 
-        MessageWriter writer = GetWriter(CustomRPC.SetJester);
+        MessageWriter writer = GetWriter(RPC.SetJester);
         writer.Write(jester.player.PlayerId);
         CloseWriter(writer);
+    }
+
+    public override void SetIntro(IntroCutscene.CoBegin__d __instance)
+    {
+        base.SetIntro(__instance);
+        var jesterTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
+        jesterTeam.Add(PlayerControl.LocalPlayer);
+        __instance.yourTeam = jesterTeam;
     }
 }

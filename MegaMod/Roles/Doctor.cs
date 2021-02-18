@@ -33,6 +33,7 @@ public class Doctor : Role
      */
     public static void SetRole(List<PlayerControl> crew)
     {
+        ConsoleTools.Info("Try to set Doctor");
         bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optDoctorSpawnChance.GetValue();
         if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         
@@ -41,7 +42,7 @@ public class Doctor : Role
         AddSpecialRole(doctor);
         crew.RemoveAt(random);
             
-        MessageWriter writer = GetWriter(CustomRPC.SetDoctor);
+        MessageWriter writer = GetWriter(RPC.SetDoctor);
         writer.Write(doctor.player.PlayerId);
         CloseWriter(writer);
     }
@@ -64,7 +65,7 @@ public class Doctor : Role
 
     public bool SetProtectedPlayer(PlayerControl target)
     {
-        MessageWriter writer = GetWriter(CustomRPC.SetProtected);
+        MessageWriter writer = GetWriter(RPC.SetProtected);
         protectedPlayer = target;
         shieldUsed = true;
         writer.Write(protectedPlayer.PlayerId);
@@ -81,7 +82,7 @@ public class Doctor : Role
         if (flag)
         {
             Doctor doctor = GetSpecialRole<Doctor>(PlayerControl.LocalPlayer.PlayerId);
-            WriteImmediately(CustomRPC.ShieldBreak);
+            WriteImmediately(RPC.ShieldBreak);
             
             doctor.protectedPlayer.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
             doctor.protectedPlayer.myRend.material.SetFloat("_Outline", 0f);

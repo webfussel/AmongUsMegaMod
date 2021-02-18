@@ -26,6 +26,7 @@ public class Engineer : Role
      */
     public static void SetRole(List<PlayerControl> crew)
     {
+        ConsoleTools.Info("Try to set Engineer");
         bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optEngineerSpawnChance.GetValue();
         if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
 
@@ -34,7 +35,7 @@ public class Engineer : Role
         AddSpecialRole(engineer);
         crew.RemoveAt(random);
             
-        MessageWriter writer = GetWriter(CustomRPC.SetEngineer);
+        MessageWriter writer = GetWriter(RPC.SetEngineer);
         writer.Write(engineer.player.PlayerId);
         CloseWriter(writer);
     }
@@ -168,7 +169,7 @@ public class Engineer : Role
             engi.repairUsed = true;
             SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
             switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
-            WriteImmediately(CustomRPC.FixLights);
+            WriteImmediately(RPC.FixLights);
             return false;
         }
     }
