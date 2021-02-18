@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Essentials.CustomOptions;
 using Il2CppSystem.Xml.Schema;
 using UnityEngine;
 using Reactor.Unstrip;
@@ -128,6 +129,7 @@ namespace MegaMod
         {
             public static Color protectedColor = new Color(0, 1, 1, 1);
         }
+        
         
 
         //function called on start of game. write version text on menu

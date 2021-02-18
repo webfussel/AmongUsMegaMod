@@ -116,8 +116,8 @@ namespace MegaMod
                 case (byte) CustomRPC.DetectiveKill:
                     var killerid = reader.ReadByte();
                     var targetid = reader.ReadByte();
-                    PlayerControl killer = PlayerTools.getPlayerById(killerid);
-                    PlayerControl target = PlayerTools.getPlayerById(targetid);
+                    PlayerControl killer = PlayerTools.GetPlayerById(killerid);
+                    PlayerControl target = PlayerTools.GetPlayerById(targetid);
                     killer.MurderPlayer(target);
                     break;
                 case (byte)CustomRPC.JesterWin:

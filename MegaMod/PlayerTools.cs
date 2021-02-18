@@ -22,7 +22,7 @@ namespace MegaMod
             return crewmateIds;
         }
 
-        public static PlayerControl getPlayerById(byte id)
+        public static PlayerControl GetPlayerById(byte id)
         {
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 if (player.PlayerId == id) return player;

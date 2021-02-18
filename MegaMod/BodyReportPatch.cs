@@ -22,8 +22,8 @@ namespace MegaMod
             
             // Create Body Report
             BodyReport br = new BodyReport();
-            br.Killer = PlayerTools.getPlayerById(killer.KillerId);
-            br.Reporter = PlayerTools.getPlayerById(reporterId);
+            br.Killer = PlayerTools.GetPlayerById(killer.KillerId);
+            br.Reporter = PlayerTools.GetPlayerById(reporterId);
             br.KillAge = (float) (DateTime.UtcNow - killer.KillTime).TotalMilliseconds;
             br.DeathReason = killer.DeathReason;
             // Generate message

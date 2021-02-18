@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Essentials.CustomOptions;
 using HarmonyLib;
 using Hazel;
 using MegaMod;
@@ -9,8 +8,6 @@ using UnityEngine;
 
 public class Engineer : Role
 {
-    public static CustomNumberOption optSpawnChance = CustomOption.AddNumber("Engineer Spawn Chance", 100, 0, 100, 5);
-
     public bool repairUsed;
     public bool sabotageActive { get; set; }
 
@@ -76,12 +73,11 @@ public class Engineer : Role
      */
     public static void SetRole(List<PlayerControl> crew)
     {
-        bool spawnChanceAchieved = rng.Next(1, 101) <= optSpawnChance.GetValue();
+        bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optEngineerSpawnChance.GetValue();
         if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
-        
-        Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+
         int random = rng.Next(0, crew.Count);
-        engineer.player = crew[random];
+        Engineer engineer = new Engineer(crew[random]);
         crew.RemoveAt(random);
             
         MessageWriter writer = GetWriter(CustomRPC.SetEngineer);

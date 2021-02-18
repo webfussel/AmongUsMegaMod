@@ -6,11 +6,11 @@ using System;
 using System.Linq;
 using System.Net;
 using Reactor;
-using Essentials.CustomOptions;
 using static MegaMod.MegaModManager;
 using Reactor.Unstrip;
 using UnityEngine;
 using System.IO;
+using Essentials.CustomOptions;
 using Reactor.Extensions;
 
 namespace MegaMod
@@ -20,18 +20,11 @@ namespace MegaMod
     [BepInDependency(ReactorPlugin.Id)]
     public class HarmonyMain : BasePlugin
     {
-        public const string Id = "gg.reactor.betterroles";
-
+        public const string Id = "gg.reactor.megamod";
         public Harmony Harmony { get; } = new Harmony(Id);
 
-        //This section uses the https://github.com/DorCoMaNdO/Reactor-Essentials framework, but I disabled the watermark.
-        //The code said that you were allowed, as long as you provided credit elsewhere. 
-        //I added a link in the Credits of the GitHub page, and I'm also mentioning it here.
-        //If the owner of this library has any problems with this, just message me on discord and we'll find a solution
-
-        //Hunter101#1337
-
-        // TODO: Schauen, ob Optionen aus Klassen da sind, sobald wieder gbeaut werden kann
+        // TODO: Optionen wieder nach hier verschieben
+        public static CustomNumberOption optEngineerSpawnChance = CustomOption.AddNumber("Engineer Spawn Chance", 100, 0, 100, 5);
         
         public ConfigEntry<string> Ip { get; set; }
         public ConfigEntry<ushort> Port { get; set; }
