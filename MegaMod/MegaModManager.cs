@@ -38,9 +38,9 @@ namespace MegaMod
         public static Dictionary<byte, Role> assignedSpecialRoles;
 
         // Only the engineer gets added to the dictionary so far
-        public static void AddSpecialRole(Role specialRole){
-            if(assignedSpecialRoles == null)
-                assignedSpecialRoles = new Dictionary<byte, Role>();
+        public static void AddSpecialRole(Role specialRole)
+        {
+            assignedSpecialRoles ??= new Dictionary<byte, Role>();
             assignedSpecialRoles.Add(specialRole.player.PlayerId, specialRole);
         }
 
@@ -52,10 +52,7 @@ namespace MegaMod
         public static T GetSpecialRole<T>() where T : Role
         {
             List<Role> specialRoles = assignedSpecialRoles.Values.ToList();
-            foreach(Role role in specialRoles)
-                if (role is T)
-                    return (T) role;
-            return null;
+            return specialRoles.OfType<T>().FirstOrDefault();
         }
 
         public static bool TryGetSpecialRole<T>(byte playerId, out T role) where T : Role
@@ -71,9 +68,8 @@ namespace MegaMod
 
         public static bool SpecialRoleIsAssigned<T>(out KeyValuePair<byte, T> keyValuePair) where T : Role
         {
-            foreach(KeyValuePair<byte, Role> kvp in assignedSpecialRoles)
+            foreach (var kvp in assignedSpecialRoles.Where(kvp => kvp.Value is T))
             {
-                if(!(kvp.Value is T)) continue;
                 keyValuePair = new KeyValuePair<byte, T>(kvp.Key, (T) kvp.Value);
                 return true;
             }
@@ -129,8 +125,6 @@ namespace MegaMod
         {
             public static Color protectedColor = new Color(0, 1, 1, 1);
         }
-        
-        
 
         //function called on start of game. write version text on menu
         [HarmonyPatch(typeof(VersionShower), nameof(VersionShower.Start))]

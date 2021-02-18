@@ -148,10 +148,10 @@ namespace MegaMod
                     var localPlayerBytes = reader.ReadBytesAndSize();
 
                     foreach (byte id in localPlayerBytes)
-                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        if (player.PlayerId == id)
-                            localPlayers.Add(player);
-                    break;
+                        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                            if (player.PlayerId == id)
+                                localPlayers.Add(player);
+                        break;
                 case (byte)RPC.SetInfected:
                     ConsoleTools.Info("set infected.");
                     break;
