@@ -91,146 +91,98 @@ namespace MegaMod.Roles
             killButton.TimerText.gameObject.SetActive(false);
         }
 
-        [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.ShowInfectedMap))]
-        class EngineerMapOpen
+        public void OpenMap(MapBehaviour instance)
         {
-            static void Postfix(MapBehaviour __instance)
-            {
-                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return;
-                Engineer engi = engineerKvp.Value;
-                if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId || !__instance.IsOpen) return;
+            if (!instance.IsOpen) return;
 
-                __instance.ColorControl.baseColor = engi.color;
-                foreach (MapRoom room in __instance.infectedOverlay.rooms)
-                {
-                    if (room.door == null) continue;
+            instance.ColorControl.baseColor = color;
+            foreach (MapRoom room in instance.infectedOverlay.rooms)
+            {
+                if (room.door == null) continue;
                 
-                    room.door.enabled = false;
-                    room.door.gameObject.SetActive(false);
-                    // here was room.door.gameObject.active = false
-                }
+                room.door.enabled = false;
+                room.door.gameObject.SetActive(false);
+                // here was room.door.gameObject.active = false
             }
         }
 
-        [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.FixedUpdate))]
-        class EngineerMapUpdate
+        public void UpdateMap(MapBehaviour instance)
         {
-            static void Postfix(MapBehaviour __instance)
-            {
-                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return;
-                Engineer engi = engineerKvp.Value;
-                if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId || !__instance.IsOpen || !__instance.infectedOverlay.gameObject.active) return;
+            if (!instance.IsOpen || !instance.infectedOverlay.gameObject.active) return;
 
-                __instance.ColorControl.baseColor = !engi.sabotageActive ? Color.gray : engi.color;
-                float perc = engi.repairUsed ? 1f : 0f;
+            instance.ColorControl.baseColor = !sabotageActive ? Color.gray : color;
+            float perc = repairUsed ? 1f : 0f;
             
-                foreach (MapRoom room in __instance.infectedOverlay.rooms)
-                {
-                    if (room.special == null) continue;
+            foreach (MapRoom room in instance.infectedOverlay.rooms)
+            {
+                if (room.special == null) continue;
                 
-                    room.special.material.SetFloat("_Desat", !engi.sabotageActive ? 1f : 0f);
-                    room.special.enabled = true;
-                    room.special.gameObject.SetActive(true);
-                    // here was room.special.gameObject.active = true;
-                    room.special.material.SetFloat("_Percent", !PlayerControl.LocalPlayer.Data.IsDead ? perc : 1f);
-                }
+                room.special.material.SetFloat("_Desat", !sabotageActive ? 1f : 0f);
+                room.special.enabled = true;
+                room.special.gameObject.SetActive(true);
+                room.special.material.SetFloat("_Percent", !PlayerControl.LocalPlayer.Data.IsDead ? perc : 1f);
             }
         }
         
         // Activates the buttons for the emergencies
-        [HarmonyPatch(typeof(MapRoom), nameof(MapRoom.Method_41))] // SetSpecialActive
-        class SabotageButtonDeactivatePatch
+        public bool SetRepairButtonsActive()
         {
-            static bool Prefix(MapRoom __instance, float DCEFKAOFGOG)
-            {
-                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return true;
-                Engineer engi = engineerKvp.Value;
-                return engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId;
-            }
+            return false;
         }
 
-        [HarmonyPatch(typeof(MapRoom), nameof(MapRoom.SabotageReactor))]
-        class SabotageReactorPatch
+        private bool CanRepair()
         {
-            static bool Prefix(MapRoom __instance)
-            {
-                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return true;
-                Engineer engi = engineerKvp.Value;
-                if (engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
-                if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
-            
-                engi.repairUsed = true;
-                ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 16);
-                return false;
-            }
+            return !repairUsed && sabotageActive && !player.Data.IsDead;
         }
 
-        [HarmonyPatch(typeof(MapRoom), nameof(MapRoom.SabotageLights))]
-        class SabotageLightsPatch
+        public bool RepairReactor()
         {
-            static bool Prefix(MapRoom __instance)
-            {
-                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return true;
-                Engineer engi = engineerKvp.Value;
-                if (engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
-                if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
+            if (!CanRepair()) return false;
             
-                engi.repairUsed = true;
-                SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
-                switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
-                WriteImmediately(RPC.FixLights);
-                return false;
-            }
+            repairUsed = true;
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 16);
+            return false;
         }
 
-        [HarmonyPatch(typeof(MapRoom), nameof(MapRoom.SabotageComms))]
-        class SabotageCommsPatch
+        public bool RepairLight()
         {
-            static bool Prefix(MapRoom __instance)
-            {
-                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return true;
-                Engineer engi = engineerKvp.Value;
-                if (engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
-                if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
+            if (!CanRepair()) return false;
             
-                engi.repairUsed = true;
-                ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16 | 0);
-                ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16 | 1);
-                return false;
-            }
+            repairUsed = true;
+            SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
+            switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
+            WriteImmediately(RPC.FixLights);
+            return false;
         }
 
-        [HarmonyPatch(typeof(MapRoom), nameof(MapRoom.SabotageOxygen))]
-        class SabotageOxyPatch
+        public bool RepairComms()
         {
-            static bool Prefix(MapRoom __instance)
-            {
-                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return true;
-                Engineer engi = engineerKvp.Value;
-                if (engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
-                if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
+            if (!CanRepair()) return false;
             
-                engi.repairUsed = true;
-                ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 0 | 64);
-                ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 1 | 64);
-                return false;
-            }
+            repairUsed = true;
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16 | 0);
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16 | 1);
+            return false;
         }
 
-        [HarmonyPatch(typeof(MapRoom), nameof(MapRoom.SabotageSeismic))]
-        class SabotageSeismicPatch
+        public bool RepairOxy()
         {
-            static bool Prefix(MapRoom __instance)
-            {
-                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return true;
-                Engineer engi = engineerKvp.Value;
-                if (engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
-                if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
             
-                engi.repairUsed = true;
-                ShipStatus.Instance.RpcRepairSystem(SystemTypes.Laboratory, 16);
-                return false;
-            }
+            if (!CanRepair()) return false;
+            
+            repairUsed = true;
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 0 | 64);
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 1 | 64);
+            return false;
+        }
+
+        public bool RepairSeismic()
+        {
+            if (!CanRepair()) return false;
+            
+            repairUsed = true;
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Laboratory, 16);
+            return false;
         }
     }
 }
