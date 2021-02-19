@@ -49,7 +49,7 @@ namespace MegaMod.Roles
             repairUsed = false;
         }
 
-        public override void SetConfigSettings()
+        protected override void SetConfigSettings()
         {
             // do nothing
         }

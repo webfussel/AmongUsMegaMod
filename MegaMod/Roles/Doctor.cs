@@ -55,7 +55,7 @@ namespace MegaMod.Roles
             shieldUsed = false;
         }
 
-        public override void SetConfigSettings()
+        protected override void SetConfigSettings()
         {
             showProtectedPlayer = HarmonyMain.optDoctorShowShieldedPlayer.GetValue();
             showReport = HarmonyMain.optDoctorReportSwitch.GetValue();

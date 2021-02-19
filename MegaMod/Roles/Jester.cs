@@ -52,7 +52,7 @@ namespace MegaMod.Roles
                 player.RemoveTask(task);
         }
 
-        public override void SetConfigSettings()
+        protected override void SetConfigSettings()
         {
             showImpostorToJester = HarmonyMain.optJesterShowImpostor.GetValue();
             jesterCanDieToDetective = HarmonyMain.optJesterCanDieToOfficer.GetValue();

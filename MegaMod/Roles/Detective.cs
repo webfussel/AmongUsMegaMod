@@ -49,7 +49,7 @@ namespace MegaMod.Roles
             lastKilled = null;
         }
 
-        public override void SetConfigSettings()
+        protected override void SetConfigSettings()
         {
             cooldown = HarmonyMain.optDetectiveKillCooldown.GetValue();
         }
