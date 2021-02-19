@@ -53,6 +53,28 @@ namespace MegaMod
             return closestPlayer;
         }
 
+        public static PlayerControl GetClosestPlayer(PlayerControl refPlayer)
+        {
+            Vector2 refPos = refPlayer.GetTruePosition();
+            float minSimpleDistance = float.MaxValue;
+            PlayerControl closestPlayer = null;
+            
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            {
+                if (player.Data.IsDead || player == refPlayer) continue;
+
+                Vector2 otherPos = player.GetTruePosition();
+                float simpleDistance = Math.Abs(refPos.x - otherPos.x) + Math.Abs(refPos.y - otherPos.y);
+                if (simpleDistance < minSimpleDistance)
+                {
+                    minSimpleDistance = simpleDistance;
+                    closestPlayer = player;
+                }
+            }
+
+            return closestPlayer;
+        }
+
         public static PlayerControl getPlayerFromId(byte id)
         {
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)

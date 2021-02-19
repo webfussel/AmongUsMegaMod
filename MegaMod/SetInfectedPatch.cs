@@ -18,8 +18,9 @@ namespace MegaMod
             {
                 r.ClearSettings();
             }
-            killedPlayers.Clear();
             assignedSpecialRoles.Clear();
+            killedPlayers.Clear();
+            
             WriteImmediately(RPC.ResetVariables);
 
             List<PlayerControl> crewmates = PlayerControl.AllPlayerControls.ToArray().ToList();

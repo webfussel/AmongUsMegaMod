@@ -20,21 +20,24 @@ namespace MegaMod
                 PlayerControl target = CurrentTarget;
 
                 if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Doctor doctor))
-                    doctor?.SetProtectedPlayer(target);
+                    doctor.SetProtectedPlayer(target);
 
-                if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Detective detective))
-                    detective?.KillOrCommitSuicide(target);
+                else if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Detective detective))
+                    detective.KillOrCommitSuicide(target);
             }
             else
             {
                 if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
-                    engineer?.ShowRepairMap();
+                    engineer.ShowRepairMap();
             }
 
+            PlayerControl closest = PlayerTools.GetClosestPlayer(PlayerControl.LocalPlayer);
+            if (PlayerControl.LocalPlayer.Data.IsImpostor && SpecialRoleIsAssigned<Doctor>(out var doctorCheckProtected) && doctorCheckProtected.Value.CheckProtectedPlayer(closest.PlayerId))
+                PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
+            
             if (!SpecialRoleIsAssigned<Doctor>(out var doctorKvp)) return true;
             return doctorKvp.Value.protectedPlayer == null || PlayerTools.closestPlayer.PlayerId != doctorKvp.Value.protectedPlayer.PlayerId;
         }
-        
 
         [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
         public static class MurderPlayerPatch

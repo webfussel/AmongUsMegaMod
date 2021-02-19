@@ -75,37 +75,19 @@ namespace MegaMod.Roles
         }
         public bool CheckProtectedPlayer(byte playerId)
         {
-            return protectedPlayer != null & protectedPlayer.PlayerId == playerId;
+            return protectedPlayer != null && protectedPlayer.PlayerId == playerId;
         }
     
         public void BreakShield(bool flag)
         {
             if (flag)
             {
-                Doctor doctor = GetSpecialRole<Doctor>(PlayerControl.LocalPlayer.PlayerId);
                 WriteImmediately(RPC.ShieldBreak);
             
-                doctor.protectedPlayer.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
-                doctor.protectedPlayer.myRend.material.SetFloat("_Outline", 0f);
-                doctor.protectedPlayer = null;
+                protectedPlayer.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
+                protectedPlayer.myRend.material.SetFloat("_Outline", 0f);
+                protectedPlayer = null;
             }
-        }
-
-        public void SetShieldButton(HudManager instance)
-        {
-            Sprite smallShieldIco = bundle.LoadAsset<Sprite>("RESmall").DontUnload();
-            if (protectedPlayer == null || protectedPlayer.PlayerId != PlayerControl.LocalPlayer.PlayerId ||
-                !instance.UseButton.isActiveAndEnabled) return;
-        
-            if (rend == null)
-            {
-                rend = new GameObject("Shield Icon");
-                rend.AddComponent<SpriteRenderer>().sprite = smallShieldIco;
-            }
-        
-            int scale = Screen.width > Screen.height ? Screen.width / 800 : Screen.height / 600;
-            rend.transform.localPosition = Camera.main.ScreenToWorldPoint(new Vector3(0 + (25 * scale), 0 + (25 * scale), -50f));
-            rend.SetActive(true);
         }
 
         public void CheckShieldButton(HudManager instance)
@@ -113,9 +95,9 @@ namespace MegaMod.Roles
             if (instance.UseButton == null || !instance.UseButton.isActiveAndEnabled) return;
         
             KillButtonManager killButton = instance.KillButton;
-            killButton.renderer.sprite = shieldIco;
             killButton.gameObject.SetActive(true);
             killButton.isActive = true;
+            killButton.renderer.sprite = shieldIco;
             killButton.SetCoolDown(0f, 1f);
             if (DistLocalClosest < GameOptionsData.KillDistances[PlayerControl.GameOptions.KillDistance] && !shieldUsed)
             {
@@ -162,7 +144,6 @@ namespace MegaMod.Roles
         {
             if (protectedPlayer == null || (!protectedPlayer.Data.IsDead && !player.Data.IsDead)) return;
             BreakShield(true);
-    
         }
     }
 }

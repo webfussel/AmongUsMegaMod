@@ -63,10 +63,8 @@ namespace MegaMod
             {
                 foreach (IPAddress address in Dns.GetHostAddresses(Ip.Value))
                 {
-                    if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                    {
-                        ip = address.ToString(); break;
-                    }
+                    if (address.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork) continue;
+                    ip = address.ToString(); break;
                 }
             }
 

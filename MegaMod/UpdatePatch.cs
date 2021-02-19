@@ -63,7 +63,6 @@ namespace MegaMod
                 switch (current)
                 {
                     case Doctor doctor:
-                        doctor.SetShieldButton(__instance);
                         doctor.CheckShieldButton(__instance);
                         break;
                     case Engineer engineer:
@@ -78,8 +77,6 @@ namespace MegaMod
                         break;
                 }
             }
-            
-            rend?.SetActive(rend == false);
 
             if (!PlayerControl.LocalPlayer.Data.IsImpostor && (!(current is Jester) || !showImpostorToJester)) return;
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)

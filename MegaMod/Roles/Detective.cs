@@ -124,10 +124,19 @@ namespace MegaMod.Roles
         public bool KillOrCommitSuicide(PlayerControl target)
         {
             if (target == null || GetCurrentCooldown() != 0) return false;
-        
+            
+            if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp))
+                if (doctorKvp.Value.protectedPlayer.PlayerId == target.PlayerId)
+                {
+                    // Sound effekt
+                    lastKilled = DateTime.UtcNow;
+                    return false;
+                }
+            
+            
             if (
                 //check if they're jester and the setting is configured
-                (SpecialRoleIsAssigned<Jester>(out KeyValuePair<byte, Jester> jesterKvp) && target.PlayerId == jesterKvp.Key && jesterKvp.Value.jesterCanDieToDetective)
+                (SpecialRoleIsAssigned(out KeyValuePair<byte, Jester> jesterKvp) && target.PlayerId == jesterKvp.Key && jesterKvp.Value.jesterCanDieToDetective)
                 //or if they're an impostor
                 || target.Data.IsImpostor
             )

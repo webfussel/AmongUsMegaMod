@@ -151,7 +151,6 @@ namespace MegaMod
 
         public static Vector3 ColorToVec(Color color) => new Vector3(color.r, color.g, color.b);
 
-        public static GameObject rend;
         //rudimentary array to convert a byte setting from config into true/false
         public static bool[] byteBool =
         {
