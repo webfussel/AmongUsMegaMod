@@ -58,7 +58,6 @@ namespace MegaMod.Roles
         {
             if (!player.Data.IsDead) return;
             
-            // TODO: Killbutton vanishes, but a 1 still remains after suicide
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(false);
             killButton.renderer.enabled = false;
