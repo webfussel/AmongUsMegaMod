@@ -29,7 +29,6 @@ namespace MegaMod.Roles
         {
             float spawnChance = HarmonyMain.optDetectiveSpawnChance.GetValue();
             if (spawnChance < 1) return;
-            ConsoleTools.Info("Try to set Detective");
             bool spawnChanceAchieved = rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         

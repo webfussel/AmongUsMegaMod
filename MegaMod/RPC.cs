@@ -19,28 +19,24 @@ namespace MegaMod
                 // ---------------------- Set special roles ----------------------
                 
                 case (byte) RPC.SetDetective:
-                    ConsoleTools.Info("Detective Set Through RPC!");
                     byte detectiveId = reader.ReadByte();
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         if (player.PlayerId == detectiveId)
                             AddSpecialRole(new Detective(player));
                     break;
                 case (byte) RPC.SetDoctor:
-                    ConsoleTools.Info("Doctor Set Through RPC!");
                     byte doctorId = reader.ReadByte();
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         if (player.PlayerId == doctorId)
                             AddSpecialRole(new Doctor(player));
                     break;
                 case (byte) RPC.SetEngineer:
-                    ConsoleTools.Info("Engineer Set Through RPC!");
                     byte engineerId = reader.ReadByte();
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         if (player.PlayerId == engineerId)
                             AddSpecialRole(new Engineer(player));
                     break;
                 case (byte) RPC.SetJester:
-                    ConsoleTools.Info("Jester Set Through RPC!");
                     byte jesterId = reader.ReadByte();
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                         if (player.PlayerId == jesterId)
@@ -73,7 +69,6 @@ namespace MegaMod
                     killer.MurderPlayer(target);
                     break;
                 case (byte)RPC.JesterWin:
-                    ConsoleTools.Info("Jester wins!");
                     Jester jester = GetSpecialRole<Jester>();
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                     {
@@ -96,11 +91,9 @@ namespace MegaMod
                     switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
                     break;
                 case (byte)RPC.SetLocalPlayers:
-                    ConsoleTools.Info("Setting Local Players...");
                     crew.Clear();
                     localPlayer = PlayerControl.LocalPlayer;
                     var localPlayerBytes = reader.ReadBytesAndSize();
-                    ConsoleTools.Info("Read all bytes");
 
                     foreach (byte id in localPlayerBytes)
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
@@ -108,7 +101,6 @@ namespace MegaMod
                                 crew.Add(player);
                         break;
                 case (byte) RPC.SetInfected:
-                    ConsoleTools.Info("set infected.");
                     break;
                 case (byte) RPC.ResetVariables:
                     List<Role> assignedRoles = assignedSpecialRoles.Values.ToList();

@@ -34,7 +34,6 @@ namespace MegaMod.Roles
         {
             float spawnChance = HarmonyMain.optDoctorSpawnChance.GetValue();
             if (spawnChance < 1) return;
-            ConsoleTools.Info("Try to set Doctor");
             bool spawnChanceAchieved = rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         

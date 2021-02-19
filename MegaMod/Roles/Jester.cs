@@ -16,14 +16,12 @@ namespace MegaMod.Roles
             name = "Jester";
             color = new Color(138f / 255f, 138f / 255f, 138f / 255f, 1);
             startText = "Get voted off of the ship to win";
-            ConsoleTools.Info($"{player.name} is the {name}!");
             ClearTasks();
         }
     
         public static void SetRole(List<PlayerControl> crew)
         {
             float spawnChance = HarmonyMain.optJesterSpawnChance.GetValue();
-            ConsoleTools.Info($"{spawnChance}");
             if (spawnChance < 1) return;
             bool spawnChanceAchieved = rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;

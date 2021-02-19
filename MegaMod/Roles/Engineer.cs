@@ -29,7 +29,6 @@ namespace MegaMod.Roles
         {
             float spawnChance = HarmonyMain.optEngineerSpawnChance.GetValue();
             if (spawnChance < 1) return;
-            ConsoleTools.Info("Try to set Engineer");
             bool spawnChanceAchieved = rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
 
@@ -97,7 +96,8 @@ namespace MegaMod.Roles
         {
             static void Postfix(MapBehaviour __instance)
             {
-                Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return;
+                Engineer engi = engineerKvp.Value;
                 if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId || !__instance.IsOpen) return;
 
                 __instance.ColorControl.baseColor = engi.color;
@@ -117,7 +117,8 @@ namespace MegaMod.Roles
         {
             static void Postfix(MapBehaviour __instance)
             {
-                Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return;
+                Engineer engi = engineerKvp.Value;
                 if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId || !__instance.IsOpen || !__instance.infectedOverlay.gameObject.active) return;
 
                 __instance.ColorControl.baseColor = !engi.sabotageActive ? Color.gray : engi.color;
@@ -135,15 +136,16 @@ namespace MegaMod.Roles
                 }
             }
         }
-
-        [HarmonyPatch(typeof(MapRoom), nameof(MapRoom.Method_41))]
+        
+        // Activates the buttons for the emergencies
+        [HarmonyPatch(typeof(MapRoom), nameof(MapRoom.Method_41))] // SetSpecialActive
         class SabotageButtonDeactivatePatch
         {
             static bool Prefix(MapRoom __instance, float DCEFKAOFGOG)
             {
-                Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                if (engi.player == null) return true;
-                return engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId;
+                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return true;
+                Engineer engi = engineerKvp.Value;
+                return engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId;
             }
         }
 
@@ -152,8 +154,9 @@ namespace MegaMod.Roles
         {
             static bool Prefix(MapRoom __instance)
             {
-                Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
+                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return true;
+                Engineer engi = engineerKvp.Value;
+                if (engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
                 if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
             
                 engi.repairUsed = true;
@@ -167,8 +170,9 @@ namespace MegaMod.Roles
         {
             static bool Prefix(MapRoom __instance)
             {
-                Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
+                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return true;
+                Engineer engi = engineerKvp.Value;
+                if (engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
                 if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
             
                 engi.repairUsed = true;
@@ -184,8 +188,9 @@ namespace MegaMod.Roles
         {
             static bool Prefix(MapRoom __instance)
             {
-                Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
+                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return true;
+                Engineer engi = engineerKvp.Value;
+                if (engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
                 if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
             
                 engi.repairUsed = true;
@@ -200,8 +205,9 @@ namespace MegaMod.Roles
         {
             static bool Prefix(MapRoom __instance)
             {
-                Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
+                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return true;
+                Engineer engi = engineerKvp.Value;
+                if (engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
                 if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
             
                 engi.repairUsed = true;
@@ -216,8 +222,9 @@ namespace MegaMod.Roles
         {
             static bool Prefix(MapRoom __instance)
             {
-                Engineer engi = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                if (engi.player == null || engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
+                if (!SpecialRoleIsAssigned<Engineer>(out var engineerKvp)) return true;
+                Engineer engi = engineerKvp.Value;
+                if (engi.player.PlayerId != PlayerControl.LocalPlayer.PlayerId) return true;
                 if (engi.repairUsed || !engi.sabotageActive || PlayerControl.LocalPlayer.Data.IsDead) return false;
             
                 engi.repairUsed = true;

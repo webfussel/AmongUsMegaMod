@@ -24,16 +24,17 @@ namespace MegaMod
                     {
                         case Doctor doctor:
                             return doctor.SetProtectedPlayer(target);
-                        case Engineer engineer:
-                            return engineer.ShowRepairMap();
                         case Detective detective:
                             return detective.KillOrCommitSuicide(target);
                     }
                 }
             }
 
-            if (!SpecialRoleIsAssigned<Doctor>(out var doctorKv)) return true;
-            return doctorKv.Value.protectedPlayer == null || PlayerTools.closestPlayer.PlayerId != doctorKv.Value.protectedPlayer.PlayerId;
+            if (SpecialRoleIsAssigned<Engineer>(out var engineerKvp))
+                engineerKvp.Value.ShowRepairMap();
+
+            if (!SpecialRoleIsAssigned<Doctor>(out var doctorKvp)) return true;
+            return doctorKvp.Value.protectedPlayer == null || PlayerTools.closestPlayer.PlayerId != doctorKvp.Value.protectedPlayer.PlayerId;
         }
         
 
