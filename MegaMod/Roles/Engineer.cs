@@ -88,6 +88,8 @@ namespace MegaMod.Roles
             killButton.isActive = false;
             killButton.SetTarget(null);
             killButton.enabled = false;
+            killButton.TimerText.Text = "";
+            killButton.TimerText.gameObject.SetActive(false);
         }
 
         [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.ShowInfectedMap))]

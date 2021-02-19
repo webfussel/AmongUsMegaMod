@@ -56,6 +56,19 @@ namespace MegaMod.Roles
 
         public override void CheckDead(HudManager instance)
         {
+            if (!player.Data.IsDead) return;
+            
+            // TODO: Killbutton vanishes, but a 1 still remains after suicide
+            KillButtonManager killButton = instance.KillButton;
+            killButton.gameObject.SetActive(false);
+            killButton.renderer.enabled = false;
+            killButton.isActive = false;
+            killButton.SetTarget(null);
+            killButton.enabled = false;
+            killButton.TimerText.Text = "";
+            killButton.TimerText.gameObject.SetActive(false);
+            cooldown = 0;
+            lastKilled = null;
         }
 
         public void CheckKillButton(HudManager instance)
@@ -80,10 +93,10 @@ namespace MegaMod.Roles
 
         private void KillPlayer(PlayerControl player)
         {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)RPC.DetectiveKill, Hazel.SendOption.None, -1);
+            MessageWriter writer = GetWriter(RPC.DetectiveKill);
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
             writer.Write(player.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            CloseWriter(writer);
             PlayerControl.LocalPlayer.MurderPlayer(player);
             lastKilled = DateTime.UtcNow;
         }
