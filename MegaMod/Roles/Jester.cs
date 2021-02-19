@@ -53,7 +53,7 @@ namespace MegaMod.Roles
         protected override void SetConfigSettings()
         {
             showImpostorToJester = HarmonyMain.optJesterShowImpostor.GetValue();
-            jesterCanDieToDetective = HarmonyMain.optJesterCanDieToOfficer.GetValue();
+            jesterCanDieToDetective = HarmonyMain.optJesterCanDieToDetective.GetValue();
         }
 
         public override void CheckDead(HudManager instance)

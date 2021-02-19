@@ -148,7 +148,7 @@ namespace MegaMod.Roles
                 protectedPlayer.myRend.material.SetFloat("_Outline", 1f);
                 protectedPlayer.myRend.material.SetColor("_OutlineColor", ModdedPalette.protectedColor);
             }
-            // If I am Medic and should see the shield
+            // If I am Doctor and should see the shield
             else if(PlayerControl.LocalPlayer == player && (showShielded == 1 || showShielded == 2))
             {
                 protectedPlayer.myRend.material.SetColor("_VisorColor", ModdedPalette.protectedColor);

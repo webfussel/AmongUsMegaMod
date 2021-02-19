@@ -35,7 +35,7 @@ namespace MegaMod
             
             if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance)
             {
-                // Send the message through chat only visible to the medic
+                // Send the message through chat only visible to the Doctor
                 DestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, reportMsg);
             }
             if (reportMsg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)

@@ -24,7 +24,7 @@ namespace MegaMod
             
             if (br.DeathReason == DEATH_REASON_SUICIDE)
             {
-                return $"Body Report (Officer): The cause of death appears to be suicide! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
+                return $"Body Report (Detective): The cause of death appears to be suicide! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
             }
             
             if (br.KillAge < doctor.doctorKillerNameDuration * 1000)

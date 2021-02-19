@@ -172,7 +172,6 @@ namespace MegaMod
         public static GameObject shieldIndicator = null;
         //renderer for the shield indicator
         public static SpriteRenderer shieldRenderer = null;
-        //medic settings and values
         public static string versionString = "v0.0.1";
 
         public static class ModdedPalette
