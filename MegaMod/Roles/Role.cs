@@ -10,9 +10,7 @@ public abstract class Role {
     public abstract void ClearSettings();
     public abstract void SetConfigSettings();
     public abstract void CheckDead(HudManager instance);
-    public string EjectMessage(string playerName) {
-        return $"{playerName} was the {name}";
-    }
+    public string EjectMessage(string playerName) => $"{playerName} was the {name}";
 
     public Role(PlayerControl player)
     {
@@ -22,16 +20,13 @@ public abstract class Role {
 
     public void SetNameColor()
     {
-        if (PlayerControl.LocalPlayer == player)
-        {
-            player.nameText.Color = color;
-        }
+        if (PlayerControl.LocalPlayer == player) player.nameText.Color = color;
     }
-    public virtual void SetIntro(IntroCutscene.CoBegin__d __instance)
+    public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
     {
-        __instance.__this.Title.Text = name;
-        __instance.__this.Title.Color = color;
-        __instance.__this.ImpostorText.Text = startText;
-        __instance.__this.BackgroundBar.material.color = color;
+        instance.__this.Title.Text = name;
+        instance.__this.Title.Color = color;
+        instance.__this.ImpostorText.Text = startText;
+        instance.__this.BackgroundBar.material.color = color;
     }
 }

@@ -77,12 +77,9 @@ namespace MegaMod
             
             rend?.SetActive(rend == false);
 
-            if (PlayerControl.LocalPlayer.Data.IsImpostor || (current is Jester && showImpostorToJester))
-                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                    if (player.Data.IsImpostor)
-                    {
-                        player.nameText.Color = Palette.ImpostorRed;
-                    }
+            if (!PlayerControl.LocalPlayer.Data.IsImpostor && (!(current is Jester) || !showImpostorToJester)) return;
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                if (player.Data.IsImpostor) player.nameText.Color = Palette.ImpostorRed;
         }
     }
 }
