@@ -17,6 +17,7 @@ namespace MegaMod
     {
         static void Prefix(UnityEngine.Object obj)
         {
+            //TODO: Das Spiel endet zwar, wenn man den Joker raus wirft, aber die komplette Crew hat gewonnen... halte ich für nich so praktisch
             if (ExileController.Instance == null || obj != ExileController.Instance.gameObject) return;
             if (!SpecialRoleIsAssigned<Jester>(out var jester)) return;
             if (ExileController.Instance.exiled?.PlayerId != jester.Key) return;

@@ -12,12 +12,28 @@ public class Jester : Role
     public bool jesterCanDieToDetective { get; set; }
 
 
-    public Jester(PlayerControl player)
+    public Jester(PlayerControl player) : base(player)
     {
-        this.player = player;
         name = "Jester";
         color = new Color(138f / 255f, 138f / 255f, 138f / 255f, 1);
         startText = "Get voted off of the ship to win";
+    }
+    
+    public static void SetRole(List<PlayerControl> crew)
+    {
+        float spawnChance = HarmonyMain.optJesterSpawnChance.GetValue();
+        if (spawnChance < 1) return;
+        ConsoleTools.Info("I am a jester! x)");
+        bool spawnChanceAchieved = rng.Next(1, 101) <= spawnChance;
+        if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
+        
+        int random = rng.Next(0, crew.Count);
+        Jester jester = new Jester(crew[random]);
+        crew.RemoveAt(random);
+
+        MessageWriter writer = GetWriter(RPC.SetJester);
+        writer.Write(jester.player.PlayerId);
+        CloseWriter(writer);
     }
     public override void ClearSettings()
     {
@@ -27,7 +43,7 @@ public class Jester : Role
     public void ClearTasks()
     {
         var removeTask = new List<PlayerTask>();
-        foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
+        foreach (PlayerTask task in player.myTasks)
             if (task.TaskType != TaskTypes.FixComms && task.TaskType != TaskTypes.FixLights && task.TaskType != TaskTypes.ResetReactor && task.TaskType != TaskTypes.ResetSeismic && task.TaskType != TaskTypes.RestoreOxy)
                 removeTask.Add(task);
         foreach (PlayerTask task in removeTask)
@@ -43,27 +59,12 @@ public class Jester : Role
     public override void CheckDead(HudManager instance)
     {
     }
-    
-    public static void SetRole(List<PlayerControl> crew)
-    {
-        ConsoleTools.Info("I am a jester! x)");
-        bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optJesterSpawnChance.GetValue();
-        if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
-        
-        int random = rng.Next(0, crew.Count);
-        Jester jester = new Jester(crew[random]);
-        crew.RemoveAt(random);
-
-        MessageWriter writer = GetWriter(RPC.SetJester);
-        writer.Write(jester.player.PlayerId);
-        CloseWriter(writer);
-    }
 
     public override void SetIntro(IntroCutscene.CoBegin__d __instance)
     {
         base.SetIntro(__instance);
         var jesterTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
-        jesterTeam.Add(PlayerControl.LocalPlayer);
+        jesterTeam.Add(player);
         __instance.yourTeam = jesterTeam;
     }
 }

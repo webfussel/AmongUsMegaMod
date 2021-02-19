@@ -81,7 +81,6 @@ namespace MegaMod
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                     if (player.Data.IsImpostor)
                     {
-                        ConsoleTools.Info($"I am {current?.player.nameText.Text} and want to See the Impostor {player.nameText.Text}.");
                         player.nameText.Color = Palette.ImpostorRed;
                     }
         }

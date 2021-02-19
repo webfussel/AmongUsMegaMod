@@ -14,6 +14,12 @@ public abstract class Role {
         return $"{playerName} was the {name}";
     }
 
+    public Role(PlayerControl player)
+    {
+        this.player = player;
+        SetConfigSettings();
+    }
+
     public void SetNameColor()
     {
         if (PlayerControl.LocalPlayer == player)

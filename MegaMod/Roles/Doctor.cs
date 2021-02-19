@@ -18,7 +18,7 @@ public class Doctor : Role
     public int  showProtectedPlayer { get; set; }
     public bool shieldKillAttemptIndicator { get; set; }
 
-    public Doctor(PlayerControl player)
+    public Doctor(PlayerControl player) : base(player)
     {
         this.player = player;
         name = "Doctor";
@@ -33,8 +33,10 @@ public class Doctor : Role
      */
     public static void SetRole(List<PlayerControl> crew)
     {
+        float spawnChance = HarmonyMain.optDoctorSpawnChance.GetValue();
+        if (spawnChance < 1) return;
         ConsoleTools.Info("Try to set Doctor");
-        bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optDoctorSpawnChance.GetValue();
+        bool spawnChanceAchieved = rng.Next(1, 101) <= spawnChance;
         if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         
         int random = rng.Next(0, crew.Count);

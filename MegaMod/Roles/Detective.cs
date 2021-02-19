@@ -12,7 +12,8 @@ public class Detective : Role
     public DateTime? lastKilled { get; set; }
     public float cooldown { get; set; }
 
-    public Detective(PlayerControl player) {
+    public Detective(PlayerControl player) : base(player)
+    {
         this.player = player;
         name = "Detective";
         color = new Color(0, 40f / 255f, 198f / 255f, 1);
@@ -26,8 +27,10 @@ public class Detective : Role
      */
     public static void SetRole(List<PlayerControl> crew)
     {
+        float spawnChance = HarmonyMain.optDetectiveSpawnChance.GetValue();
+        if (spawnChance < 1) return;
         ConsoleTools.Info("Try to set Detective");
-        bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optDetectiveSpawnChance.GetValue();
+        bool spawnChanceAchieved = rng.Next(1, 101) <= spawnChance;
         if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         
         int random = rng.Next(0, crew.Count);
@@ -112,6 +115,7 @@ public class Detective : Role
     {
         static void Postfix(ExileController __instance)
         {
+            // TODO: Hier gibts noch Probleme beim Rauswerfen von Spielern
             Detective detective = GetSpecialRole<Detective>(PlayerControl.LocalPlayer.PlayerId);
             detective.lastKilled = DateTime.UtcNow.AddMilliseconds(__instance.Duration);
         }

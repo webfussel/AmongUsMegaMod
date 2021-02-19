@@ -16,11 +16,8 @@ namespace MegaMod
             foreach (Role r in assignedRoles)
             {
                 r.ClearSettings();
-                r.SetConfigSettings();
             }
-            
             killedPlayers.Clear();
-            
             WriteImmediately(RPC.ResetVariables);
 
             List<PlayerControl> crewmates = PlayerControl.AllPlayerControls.ToArray().ToList();
@@ -34,6 +31,11 @@ namespace MegaMod
 
             localPlayers.Clear();
             localPlayer = PlayerControl.LocalPlayer;
+            
+            foreach (Role r in assignedRoles)
+            {
+                r.SetConfigSettings();
+            }
             
             bool jesterExists = SpecialRoleIsAssigned<Jester>(out var jesterKv);
             Jester jesterInstance = jesterKv.Value;

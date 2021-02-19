@@ -11,7 +11,7 @@ public class Engineer : Role
     public bool repairUsed;
     public bool sabotageActive { get; set; }
 
-    public Engineer(PlayerControl player)
+    public Engineer(PlayerControl player) : base(player)
     {
         this.player = player;
         name = "Engineer";
@@ -26,8 +26,10 @@ public class Engineer : Role
      */
     public static void SetRole(List<PlayerControl> crew)
     {
+        float spawnChance = HarmonyMain.optEngineerSpawnChance.GetValue();
+        if (spawnChance < 1) return;
         ConsoleTools.Info("Try to set Engineer");
-        bool spawnChanceAchieved = rng.Next(1, 101) <= HarmonyMain.optEngineerSpawnChance.GetValue();
+        bool spawnChanceAchieved = rng.Next(1, 101) <= spawnChance;
         if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
 
         int random = rng.Next(0, crew.Count);
