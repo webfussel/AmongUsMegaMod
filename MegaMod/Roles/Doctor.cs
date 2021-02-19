@@ -65,6 +65,7 @@ namespace MegaMod.Roles
 
         public bool SetProtectedPlayer(PlayerControl target)
         {
+            ConsoleTools.Info($"Shielded {target.Data.PlayerName}");
             MessageWriter writer = GetWriter(RPC.SetProtected);
             protectedPlayer = target;
             shieldUsed = true;

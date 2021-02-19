@@ -49,7 +49,10 @@ namespace MegaMod
 
             // Jester Tasks have to be reset every frame... I don't know why but huh.
             Jester clearJestertasks = GetSpecialRole<Jester>();
-                clearJestertasks?.ClearTasks();
+            clearJestertasks?.ClearTasks();
+            
+            Doctor doctorShowShielded = GetSpecialRole<Doctor>();
+            doctorShowShielded?.ShowShieldedPlayer();
                 
             bool showImpostorToJester = false;
             Role current = GetSpecialRole(PlayerControl.LocalPlayer.PlayerId);
@@ -62,7 +65,6 @@ namespace MegaMod
                     case Doctor doctor:
                         doctor.SetShieldButton(__instance);
                         doctor.CheckShieldButton(__instance);
-                        doctor.ShowShieldedPlayer();
                         break;
                     case Engineer engineer:
                         engineer.SetRepairButton(__instance);

@@ -18,20 +18,18 @@ namespace MegaMod
             if (CurrentTarget != null)
             {
                 PlayerControl target = CurrentTarget;
-                if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Role current))
-                {
-                    switch (current)
-                    {
-                        case Doctor doctor:
-                            return doctor.SetProtectedPlayer(target);
-                        case Detective detective:
-                            return detective.KillOrCommitSuicide(target);
-                    }
-                }
-            }
 
-            Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-            engineer?.ShowRepairMap();
+                if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Doctor doctor))
+                    doctor?.SetProtectedPlayer(target);
+
+                if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Detective detective))
+                    detective?.KillOrCommitSuicide(target);
+            }
+            else
+            {
+                if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
+                    engineer?.ShowRepairMap();
+            }
 
             if (!SpecialRoleIsAssigned<Doctor>(out var doctorKvp)) return true;
             return doctorKvp.Value.protectedPlayer == null || PlayerTools.closestPlayer.PlayerId != doctorKvp.Value.protectedPlayer.PlayerId;

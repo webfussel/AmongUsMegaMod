@@ -111,9 +111,9 @@ namespace MegaMod
 
         public static bool TryGetSpecialRole<T>(byte playerId, out T role) where T : Role
         {
-            if(assignedSpecialRoles.TryGetValue(playerId, out Role tempRole))
+            if(assignedSpecialRoles.TryGetValue(playerId, out Role tempRole) && tempRole is T value)
             {
-                role = (T) tempRole;
+                role = value;
                 return true;
             }
             role  = null;
