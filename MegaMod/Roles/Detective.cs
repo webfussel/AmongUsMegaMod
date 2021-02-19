@@ -102,11 +102,6 @@ public class Detective : Role
     public override void SetIntro(IntroCutscene.CoBegin__d __instance)
     {
         base.SetIntro(__instance);
-        
-        // TODO: Wieso zur Hölle???
-        // TODO: Liest sich für mich so, als ob man dann echt scheiße gefressen hat, wenn man eine der frühen playerIDs hat, weil die differenz so unterschiedlich ist
-        // TODO: Der Cooldown soll hier auf 10 gesetzt werden. Geht wahrscheinlich so:
-        // Now - Cooldown + 10
         lastKilled = DateTime.UtcNow.AddSeconds(10 - cooldown);
     }
 

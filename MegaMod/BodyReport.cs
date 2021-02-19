@@ -31,7 +31,6 @@ namespace MegaMod
                 return $"Body Report: The killer appears to be {br.Killer.name}! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
             }
             
-            //TODO (make the type of color be written to chat
             var colors = new Dictionary<byte, string>()
             {
                 {0, "darker"},

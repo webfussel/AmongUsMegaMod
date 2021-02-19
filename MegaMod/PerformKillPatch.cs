@@ -19,12 +19,6 @@ namespace MegaMod
                 PlayerControl target = CurrentTarget;
                 if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Role current))
                 {
-                    // TODO: Bin mir nicht sicher, ob wir so den Typ der Rolle vergleichen können.
-                    // Ich denke eher, dass wir es so schreiben müssen:
-                    // if(current is Doctor)
-                    // else if(current is Engineer)
-                    // Aber das sehen wir dann beim Testen x)
-                    
                     switch (current)
                     {
                         case Doctor doctor:
