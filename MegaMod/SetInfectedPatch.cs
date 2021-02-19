@@ -2,6 +2,7 @@
 using Hazel;
 using System.Collections.Generic;
 using System.Linq;
+using MegaMod.Roles;
 using UnhollowerBaseLib;
 using static MegaMod.MegaModManager;
 
@@ -18,6 +19,7 @@ namespace MegaMod
                 r.ClearSettings();
             }
             killedPlayers.Clear();
+            assignedRoles.Clear();
             WriteImmediately(RPC.ResetVariables);
 
             List<PlayerControl> crewmates = PlayerControl.AllPlayerControls.ToArray().ToList();
@@ -29,13 +31,8 @@ namespace MegaMod
             Engineer.SetRole(crewmates);
             Jester.SetRole(crewmates);
 
-            localPlayers.Clear();
+            crew.Clear();
             localPlayer = PlayerControl.LocalPlayer;
-            
-            foreach (Role r in assignedRoles)
-            {
-                r.SetConfigSettings();
-            }
             
             bool jesterExists = SpecialRoleIsAssigned<Jester>(out var jesterKv);
             Jester jesterInstance = jesterKv.Value;
@@ -44,11 +41,11 @@ namespace MegaMod
                 if (player.Data.IsImpostor) continue;
                 if (jesterExists && jesterInstance.player.PlayerId == player.PlayerId) continue;
                 
-                localPlayers.Add(player);
+                crew.Add(player);
             }
 
             MessageWriter writer = GetWriter(RPC.SetLocalPlayers);
-            writer.WriteBytesAndSize(localPlayers.Select(player => player.PlayerId).ToArray());
+            writer.WriteBytesAndSize(crew.Select(player => player.PlayerId).ToArray());
             CloseWriter(writer);
         }
     }

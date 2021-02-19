@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using MegaMod.Roles;
 using UnityEngine;
 using static MegaMod.MegaModManager;
 
@@ -66,7 +67,6 @@ namespace MegaMod
                         engineer.sabotageActive = sabotageActive;
                         break;
                     case Jester jester:
-                        jester.ClearTasks();
                         showImpostorToJester = jester.showImpostorToJester;
                         break;
                     case Detective detective:

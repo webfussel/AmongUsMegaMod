@@ -12,6 +12,7 @@ using UnityEngine;
 using System.IO;
 using Essentials.CustomOptions;
 using Reactor.Extensions;
+using System.Collections.Generic;
 
 namespace MegaMod
 {

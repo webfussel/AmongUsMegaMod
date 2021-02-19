@@ -2,6 +2,7 @@
 using System.Linq;
 using HarmonyLib;
 using Hazel;
+using MegaMod.Roles;
 using static MegaMod.MegaModManager;
 
 namespace MegaMod
@@ -72,15 +73,17 @@ namespace MegaMod
                     killer.MurderPlayer(target);
                     break;
                 case (byte)RPC.JesterWin:
+                    ConsoleTools.Info("Jester wins!");
+                    Jester jester = GetSpecialRole<Jester>();
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                     {
+                        if (player == jester.player) continue;
                         player.RemoveInfected();
                         player.Die(DeathReason.Exile);
                         player.Data.IsDead = true;
                         player.Data.IsImpostor = false;
                     }
 
-                    Jester jester = GetSpecialRole<Jester>();
                     jester.player.Revive();
                     jester.player.Data.IsDead = false;
                     jester.player.Data.IsImpostor = true;
@@ -94,14 +97,15 @@ namespace MegaMod
                     break;
                 case (byte)RPC.SetLocalPlayers:
                     ConsoleTools.Info("Setting Local Players...");
-                    localPlayers.Clear();
+                    crew.Clear();
                     localPlayer = PlayerControl.LocalPlayer;
                     var localPlayerBytes = reader.ReadBytesAndSize();
+                    ConsoleTools.Info("Read all bytes");
 
                     foreach (byte id in localPlayerBytes)
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                             if (player.PlayerId == id)
-                                localPlayers.Add(player);
+                                crew.Add(player);
                         break;
                 case (byte) RPC.SetInfected:
                     ConsoleTools.Info("set infected.");
@@ -111,8 +115,8 @@ namespace MegaMod
                     foreach (Role r in assignedRoles)
                     {
                         r.ClearSettings();
-                        r.SetConfigSettings();
                     }
+                    assignedRoles.Clear();
                     killedPlayers.Clear();
                     break;
             }

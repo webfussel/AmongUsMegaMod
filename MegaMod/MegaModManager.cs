@@ -161,7 +161,7 @@ namespace MegaMod
         public static List<DeadPlayer> killedPlayers = new List<DeadPlayer>();
         public static PlayerControl CurrentTarget = null;
         public static PlayerControl localPlayer = null;
-        public static List<PlayerControl> localPlayers = new List<PlayerControl>();
+        public static List<PlayerControl> crew = new List<PlayerControl>();
         //global rng
         public static System.Random rng = new System.Random();
         //the id of the targeted player

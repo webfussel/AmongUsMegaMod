@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MegaMod.Roles;
 using static MegaMod.MegaModManager; // TODO: wtf?
 
 namespace MegaMod

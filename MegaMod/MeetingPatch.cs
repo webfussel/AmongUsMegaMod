@@ -8,6 +8,7 @@ using UnityEngine;
 using static MegaMod.MegaModManager;
 using UnhollowerBaseLib;
 using System.Collections;
+using MegaMod.Roles;
 
 namespace MegaMod
 {
@@ -19,24 +20,25 @@ namespace MegaMod
         {
             //TODO: Das Spiel endet zwar, wenn man den Joker raus wirft, aber die komplette Crew hat gewonnen... halte ich für nich so praktisch
             if (ExileController.Instance == null || obj != ExileController.Instance.gameObject) return;
-            if (!SpecialRoleIsAssigned<Jester>(out var jester)) return;
-            if (ExileController.Instance.exiled?.PlayerId != jester.Key) return;
-
-            Jester jesterInstance = GetSpecialRole<Jester>(jester.Key);
+            if (SpecialRoleIsAssigned<Detective>(out var detectiveKvp))
+                detectiveKvp.Value.ResetCooldown(ExileController.Instance);
+            if (!SpecialRoleIsAssigned<Jester>(out var jesterKvp)) return;
+            if (ExileController.Instance.exiled?.PlayerId != jesterKvp.Key) return;
             
             WriteImmediately(RPC.JesterWin);
-
+            
+            Jester jester = jesterKvp.Value;
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
-                if (player == jesterInstance.player) continue;
+                if (player == jester.player) continue;
                 player.RemoveInfected();
                 player.Die(DeathReason.Exile);
                 player.Data.IsDead = true;
                 player.Data.IsImpostor = false;
             }
-            jesterInstance.player.Revive();
-            jesterInstance.player.Data.IsDead = false;
-            jesterInstance.player.Data.IsImpostor = true;
+            jester.player.Revive();
+            jester.player.Data.IsDead = false;
+            jester.player.Data.IsImpostor = true;
         }
     }
 

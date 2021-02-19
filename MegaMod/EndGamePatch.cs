@@ -14,10 +14,10 @@ namespace MegaMod
             {
                 TempData.winners.Clear();
                 List<PlayerControl> orderLocalPlayers = new List<PlayerControl>();
-                foreach (PlayerControl player in localPlayers)
+                foreach (PlayerControl player in crew)
                     if (player.PlayerId == localPlayer.PlayerId)
                         orderLocalPlayers.Add(player);
-                foreach (PlayerControl player in localPlayers)
+                foreach (PlayerControl player in crew)
                     if (player.PlayerId != localPlayer.PlayerId)
                         orderLocalPlayers.Add(player);
                 foreach (PlayerControl winner in orderLocalPlayers)
@@ -33,7 +33,7 @@ namespace MegaMod
             if (TempData.DidHumansWin(TempData.EndReason))
             {
                 bool flag = true;
-                foreach (PlayerControl player in localPlayers)
+                foreach (PlayerControl player in crew)
                 {
                     if (player.PlayerId == localPlayer.PlayerId)
                     {
