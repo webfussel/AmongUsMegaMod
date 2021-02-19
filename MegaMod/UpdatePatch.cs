@@ -47,10 +47,12 @@ namespace MegaMod
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 player.nameText.Color = Color.white;
 
+            // Jester Tasks have to be reset every frame... I don't know why but huh.
+            Jester clearJestertasks = GetSpecialRole<Jester>();
+                clearJestertasks?.ClearTasks();
+                
             bool showImpostorToJester = false;
-            //ConsoleTools.Info("Updating HUD for Special Roles");
             Role current = GetSpecialRole(PlayerControl.LocalPlayer.PlayerId);
-            //ConsoleTools.Info($"Got Role {current?.name}");
             if (current != null)
             {
                 current.SetNameColor();

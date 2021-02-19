@@ -116,7 +116,7 @@ namespace MegaMod
                     {
                         r.ClearSettings();
                     }
-                    assignedRoles.Clear();
+                    assignedSpecialRoles.Clear();
                     killedPlayers.Clear();
                     break;
             }
