@@ -67,16 +67,6 @@ namespace MegaMod.Roles
             killButton.renderer.material.SetFloat("_Desat", 0f);
         }
 
-        public bool ShowRepairMap()
-        {
-            DestroyableSingleton<HudManager>.Instance.ShowMap((Action<MapBehaviour>)delegate (MapBehaviour m)
-            {
-                m.ShowInfectedMap();
-                m.ColorControl.baseColor = sabotageActive ? Color.gray : color;
-            });
-            return false;
-        }
-
         public override void CheckDead(HudManager instance)
         {
             if (!player.Data.IsDead) return;
@@ -89,6 +79,16 @@ namespace MegaMod.Roles
             killButton.enabled = false;
             killButton.TimerText.Text = "";
             killButton.TimerText.gameObject.SetActive(false);
+        }
+
+        public bool ShowRepairMap()
+        {
+            DestroyableSingleton<HudManager>.Instance.ShowMap((Action<MapBehaviour>)delegate (MapBehaviour m)
+            {
+                m.ShowInfectedMap();
+                m.ColorControl.baseColor = sabotageActive ? Color.gray : color;
+            });
+            return false;
         }
 
         public void OpenMap(MapBehaviour instance)

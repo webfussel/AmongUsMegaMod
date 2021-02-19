@@ -30,8 +30,8 @@ namespace MegaMod
                 }
             }
 
-            if (SpecialRoleIsAssigned<Engineer>(out var engineerKvp))
-                engineerKvp.Value.ShowRepairMap();
+            Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
+            engineer?.ShowRepairMap();
 
             if (!SpecialRoleIsAssigned<Doctor>(out var doctorKvp)) return true;
             return doctorKvp.Value.protectedPlayer == null || PlayerTools.closestPlayer.PlayerId != doctorKvp.Value.protectedPlayer.PlayerId;
