@@ -11,6 +11,7 @@ namespace MegaMod.Roles
     {
         public DateTime? lastKilled { get; set; }
         public float cooldown { get; set; }
+        public bool showReport { get; set; }
 
         public Detective(PlayerControl player) : base(player)
         {
@@ -51,6 +52,7 @@ namespace MegaMod.Roles
         protected override void SetConfigSettings()
         {
             cooldown = HarmonyMain.optDetectiveKillCooldown.GetValue();
+            showReport = HarmonyMain.showDetectiveReports.GetValue();
         }
 
         public override void CheckDead(HudManager instance)
@@ -120,7 +122,7 @@ namespace MegaMod.Roles
             
             if (
                 //check if they're jester and the setting is configured
-                (SpecialRoleIsAssigned(out KeyValuePair<byte, Jester> jesterKvp) && target.PlayerId == jesterKvp.Key && jesterKvp.Value.jesterCanDieToDetective)
+                (SpecialRoleIsAssigned(out KeyValuePair<byte, Jester> jesterKvp) && target.PlayerId == jesterKvp.Key && jesterKvp.Value.maniacCanDieToDetective)
                 //or if they're an impostor
                 || target.Data.IsImpostor
             )

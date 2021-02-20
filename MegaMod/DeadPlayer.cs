@@ -4,15 +4,15 @@ namespace MegaMod
 {
     public class DeadPlayer
     {
-        public byte KillerId { get; }
-        public byte PlayerId { get; }
+        public PlayerControl Killer { get; }
+        public PlayerControl Victim { get; }
         public DateTime KillTime { get; }
         public DeathReason DeathReason { get; set;  }
 
-        public DeadPlayer(byte killerId, byte playerId, DateTime killTime, DeathReason deathReason)
+        public DeadPlayer(PlayerControl killerId, PlayerControl playerId, DateTime killTime, DeathReason deathReason)
         {
-            KillerId = killerId;
-            PlayerId = playerId;
+            Killer = killerId;
+            Victim = playerId;
             KillTime = killTime;
             DeathReason = deathReason;
         }

@@ -7,20 +7,20 @@ namespace MegaMod.Roles
 {
     public class Jester : Role
     {
-        public bool showImpostorToJester { get; private set; }
-        public bool jesterCanDieToDetective { get; private set; }
+        public bool showImpostorToManiac { get; private set; }
+        public bool maniacCanDieToDetective { get; private set; }
 
 
         public Jester(PlayerControl player) : base(player)
         {
-            name = "Jester";
+            name = "Maniac";
             color = new Color(138f / 255f, 138f / 255f, 138f / 255f, 1);
             startText = "Get voted off of the ship to win";
         }
     
         public static void SetRole(List<PlayerControl> crew)
         {
-            float spawnChance = HarmonyMain.optJesterSpawnChance.GetValue();
+            float spawnChance = HarmonyMain.optManiacSpawnChance.GetValue();
             if (spawnChance < 1) return;
             bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
@@ -53,8 +53,8 @@ namespace MegaMod.Roles
 
         protected override void SetConfigSettings()
         {
-            showImpostorToJester = HarmonyMain.optJesterShowImpostor.GetValue();
-            jesterCanDieToDetective = HarmonyMain.optJesterCanDieToDetective.GetValue();
+            showImpostorToManiac = HarmonyMain.optManiacShowImpostor.GetValue();
+            maniacCanDieToDetective = HarmonyMain.optManiacCanDieToDetective.GetValue();
         }
 
         public override void CheckDead(HudManager instance)

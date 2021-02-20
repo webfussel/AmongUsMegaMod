@@ -49,7 +49,7 @@ namespace MegaMod
                 PlayerControl current = __instance;
                 PlayerControl target = CAKODNGLPDF;
                 
-                DeadPlayer deadPlayer = new DeadPlayer(current.PlayerId, target.PlayerId, DateTime.UtcNow, DeathReason.Kill);
+                DeadPlayer deadPlayer = new DeadPlayer(current, target, DateTime.UtcNow, DeathReason.Kill);
                 
                 if (SpecialRoleIsAssigned<Detective>(out KeyValuePair<byte, Detective> detectiveKvp))
                 {

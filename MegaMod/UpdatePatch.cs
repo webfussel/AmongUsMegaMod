@@ -72,7 +72,7 @@ namespace MegaMod
                         engineer.sabotageActive = sabotageActive;
                         break;
                     case Jester jester:
-                        showImpostorToJester = jester.showImpostorToJester;
+                        showImpostorToJester = jester.showImpostorToManiac;
                         break;
                     case Detective detective:
                         detective.CheckKillButton(__instance);

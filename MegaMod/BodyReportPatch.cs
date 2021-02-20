@@ -13,29 +13,28 @@ namespace MegaMod
         static void Postfix(PlayerControl __instance, GameData.PlayerInfo CAKODNGLPDF)
         {
             System.Console.WriteLine("Report Body!");
-            byte reporterId = __instance.PlayerId;
-            DeadPlayer killer = KilledPlayers.FirstOrDefault(x => x.PlayerId == CAKODNGLPDF.PlayerId);
-            if (killer == null) return;
+            DeadPlayer killed = KilledPlayers.FirstOrDefault(x => x.Victim.PlayerId == CAKODNGLPDF.PlayerId);
+            if (killed == null) return;
 
-            Doctor doctor = GetSpecialRole<Doctor>(PlayerControl.LocalPlayer.PlayerId);
-            if (reporterId != doctor.player.PlayerId || !doctor.showReport) return;
-            // If doctor found body and has access to reports continue
+            Detective detective = GetSpecialRole<Detective>(PlayerControl.LocalPlayer.PlayerId);
+            if (__instance.PlayerId != detective.player.PlayerId || !detective.showReport) return;
             
             // Create Body Report
             BodyReport br = new BodyReport();
-            br.Killer = PlayerTools.GetPlayerById(killer.KillerId);
-            br.Reporter = PlayerTools.GetPlayerById(reporterId);
-            br.KillAge = (float) (DateTime.UtcNow - killer.KillTime).TotalMilliseconds;
-            br.DeathReason = killer.DeathReason;
+            br.Killer = killed.Killer;
+            br.Reporter = __instance;
+            br.DeadPlayer = killed;
+            br.KillAge = (float) (DateTime.UtcNow - killed.KillTime).TotalMilliseconds;
+            br.DeathReason = killed.DeathReason;
             // Generate message
-            var reportMsg = BodyReport.ParseBodyReport(br);
+            var reportMsg = br.ParseBodyReport();
 
             // If message is empty return
             if (string.IsNullOrWhiteSpace(reportMsg)) return;
             
             if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance)
             {
-                // Send the message through chat only visible to the Doctor
+                // Send the message through chat only visible to the Detective
                 DestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, reportMsg);
             }
             if (reportMsg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)

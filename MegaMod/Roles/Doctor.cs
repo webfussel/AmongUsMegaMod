@@ -11,9 +11,6 @@ namespace MegaMod.Roles
     
         public PlayerControl protectedPlayer { get; set; }
         public bool shieldUsed { get; set; }
-        public int doctorKillerNameDuration { get; set; }
-        public int doctorKillerColorDuration { get; set; }
-        public bool showReport {get; set;}
         public int  showProtectedPlayer { get; set; }
         public bool shieldKillAttemptIndicator { get; set; }
         public Sprite specialButton { get; }
@@ -59,10 +56,7 @@ namespace MegaMod.Roles
         protected override void SetConfigSettings()
         {
             showProtectedPlayer = HarmonyMain.optDoctorShowShieldedPlayer.GetValue();
-            showReport = HarmonyMain.optDoctorReportSwitch.GetValue();
             shieldKillAttemptIndicator = HarmonyMain.optDoctorPlayerMurderIndicator.GetValue();
-            doctorKillerNameDuration = (int) HarmonyMain.optDoctorReportNameDuration.GetValue();
-            doctorKillerColorDuration = (int) HarmonyMain.optDoctorReportColorDuration.GetValue();
         }
 
         public void SetCooldown(float deltaTime)
