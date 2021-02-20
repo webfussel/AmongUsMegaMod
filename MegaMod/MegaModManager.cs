@@ -141,7 +141,6 @@ namespace MegaMod
         public static void ResetValues()
         {
             AssignedSpecialRoles.Clear();
-            ConsoleTools.Info("Cleared AssignedSpecialRoles");
             KilledPlayers.Clear();
         }
 
@@ -194,7 +193,8 @@ namespace MegaMod
                 __instance.text.Text += $"\nMegaMod {versionString}";
             }
         }
-
+        
+        /* Maybe we need that someday
         [HarmonyPatch(typeof(ShipStatus), "GetSpawnLocation")]
         public static class StartGamePatch
         {
@@ -202,6 +202,6 @@ namespace MegaMod
             {
                 ConsoleTools.Info("Game Started!");
             }
-        }
+        }*/
     }
 }

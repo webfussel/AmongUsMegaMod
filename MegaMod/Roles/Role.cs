@@ -5,7 +5,7 @@ public abstract class Role {
 
     public PlayerControl player;
     public string name {get; set;}
-    protected Color color {get; set;}
+    public Color color {get; set;}
     protected string startText {get; set;}
 
     public abstract void ClearSettings();
@@ -19,8 +19,19 @@ public abstract class Role {
         SetConfigSettings();
     }
 
-    public void SetNameColor() => player.nameText.Color = color;
-    
+    public void SetNameColor()
+    {
+
+        if (MeetingHud.Instance != null)
+        {
+            foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
+                if (player.PlayerId == playerVote.TargetPlayerId)
+                    playerVote.NameText.Color = color;
+        }
+        else
+            player.nameText.Color = color;
+    }
+
     public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
     {
         instance.__this.Title.Text = name;

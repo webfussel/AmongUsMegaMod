@@ -83,8 +83,19 @@ namespace MegaMod
             }
 
             if (!PlayerControl.LocalPlayer.Data.IsImpostor && (!(current is Jester) || !showImpostorToJester)) return;
+            
+            
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                if (player.Data.IsImpostor) player.nameText.Color = Palette.ImpostorRed;
+                if (player.Data.IsImpostor)
+                {
+                    if (MeetingHud.Instance != null)
+                    {
+                        foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
+                            if (player.PlayerId == playerVote.TargetPlayerId)
+                                playerVote.NameText.Color = Palette.ImpostorRed;
+                    }
+                    player.nameText.Color = Palette.ImpostorRed;
+                }
         }
     }
 }
