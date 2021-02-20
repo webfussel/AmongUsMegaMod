@@ -25,10 +25,16 @@ namespace MegaMod
             List<PlayerControl> crewmates = PlayerControl.AllPlayerControls.ToArray().ToList();
             crewmates.RemoveAll(x => x.Data.IsImpostor);
 
+            ConsoleTools.Info($"(Before) There are currently {AssignedSpecialRoles.Count} Entries in AssignedSpecialRoles.");
+            foreach ((var key, Role role) in AssignedSpecialRoles)
+            {
+                ConsoleTools.Info($"Entry: {key} | Role: {role.name} | Player: {role.player.name}");
+            }
             Doctor.SetRole(crewmates);
             Detective.SetRole(crewmates);
             Engineer.SetRole(crewmates);
             Jester.SetRole(crewmates);
+            ConsoleTools.Info($"(After) There are currently {AssignedSpecialRoles.Count} Entries in AssignedSpecialRoles.");
 
             Crew.Clear();
             localPlayer = PlayerControl.LocalPlayer;

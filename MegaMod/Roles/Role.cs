@@ -4,7 +4,7 @@ using UnityEngine;
 public abstract class Role {
 
     public PlayerControl player;
-    protected string name {get; set;}
+    public string name {get; set;}
     protected Color color {get; set;}
     protected string startText {get; set;}
 

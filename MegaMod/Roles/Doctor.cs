@@ -17,7 +17,6 @@ namespace MegaMod.Roles
         public int  showProtectedPlayer { get; set; }
         public bool shieldKillAttemptIndicator { get; set; }
         public Sprite specialButton { get; }
-        public float cooldown { get; set; }
 
         public Doctor(PlayerControl player) : base(player)
         {
@@ -64,7 +63,6 @@ namespace MegaMod.Roles
             shieldKillAttemptIndicator = HarmonyMain.optDoctorPlayerMurderIndicator.GetValue();
             doctorKillerNameDuration = (int) HarmonyMain.optDoctorReportNameDuration.GetValue();
             doctorKillerColorDuration = (int) HarmonyMain.optDoctorReportColorDuration.GetValue();
-            cooldown = (int) HarmonyMain.optDoctorShieldCooldown.GetValue();
         }
 
         public void SetCooldown(float deltaTime)
@@ -77,7 +75,7 @@ namespace MegaMod.Roles
             if (protectedPlayer != null) return false;
             protectedPlayer = PlayerTools.FindClosestTarget(player);
             shieldUsed = true;
-            player.SetKillTimer(cooldown);
+            
             MessageWriter writer = GetWriter(RPC.SetProtected);
             writer.Write(protectedPlayer.PlayerId);
             CloseWriter(writer);
@@ -88,7 +86,7 @@ namespace MegaMod.Roles
             return protectedPlayer != null && protectedPlayer.PlayerId == playerId;
         }
     
-        public void BreakShield()
+        public void BreakShield() 
         {
             WriteImmediately(RPC.ShieldBreak);
             
@@ -105,7 +103,7 @@ namespace MegaMod.Roles
             killButton.gameObject.SetActive(true);
             killButton.isActive = true;
             killButton.renderer.sprite = specialButton;
-            killButton.SetTarget(!shieldUsed && !killButton.isCoolingDown ? PlayerTools.FindClosestTarget(player) : null);
+            killButton.SetTarget(!shieldUsed ? PlayerTools.FindClosestTarget(player) : null);
         }
 
         public void ShowShieldedPlayer()

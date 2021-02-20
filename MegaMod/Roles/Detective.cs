@@ -75,11 +75,13 @@ namespace MegaMod.Roles
         public void CheckKillButton(HudManager instance)
         {
             if (instance.UseButton == null || !instance.UseButton.isActiveAndEnabled) return;
-        
+            
+            // do not desaturate button if in reach
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(true);
             killButton.isActive = true;
-            killButton.SetTarget(killButton.isCoolingDown ? null : PlayerTools.FindClosestTarget(player));
+            killButton.renderer.sprite = defaultKillButton;
+            killButton.SetTarget(PlayerTools.FindClosestTarget(player));
         }
 
         private void KillPlayer(PlayerControl player)

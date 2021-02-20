@@ -72,6 +72,7 @@ namespace MegaMod
         
         public static AssetBundle bundle;
         public static AudioClip breakClip;
+        public static Sprite defaultKillButton;
         
         /* To cast into Deathreason, which are:
         Exile, (0)
@@ -82,7 +83,12 @@ namespace MegaMod
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
 
         // Only the engineer gets added to the dictionary so far
-        public static void AddSpecialRole(Role specialRole) => AssignedSpecialRoles.Add(specialRole.player.PlayerId, specialRole);
+        public static void AddSpecialRole(Role specialRole)
+        {
+            if (AssignedSpecialRoles.ContainsKey(specialRole.player.PlayerId))
+                AssignedSpecialRoles.Remove(specialRole.player.PlayerId);
+            AssignedSpecialRoles.Add(specialRole.player.PlayerId, specialRole);
+        }
 
         public static T GetSpecialRole<T>(byte playerId) where T : Role => AssignedSpecialRoles.TryGetValue(playerId, out Role role) ? (T) role : null;
 
@@ -135,6 +141,7 @@ namespace MegaMod
         public static void ResetValues()
         {
             AssignedSpecialRoles.Clear();
+            ConsoleTools.Info("Cleared AssignedSpecialRoles");
             KilledPlayers.Clear();
         }
 

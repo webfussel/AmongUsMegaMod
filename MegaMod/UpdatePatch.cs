@@ -20,6 +20,8 @@ namespace MegaMod
         static void Postfix(HudManager __instance)
         {
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
+            if (defaultKillButton == null) defaultKillButton = __instance.KillButton.renderer.sprite;
+            if (PlayerControl.LocalPlayer.Data.IsImpostor) __instance.KillButton.renderer.sprite = defaultKillButton;
             
             bool lastQ = Input.GetKeyUp(KeyCode.Q);
             PlayerTools.closestPlayer = PlayerTools.GetClosestPlayer(PlayerControl.LocalPlayer, out distLocalClosest);
@@ -75,6 +77,7 @@ namespace MegaMod
                     case Detective detective:
                         detective.CheckKillButton(__instance);
                         detective.SetCooldown(Time.deltaTime);
+                        __instance.KillButton.renderer.sprite = defaultKillButton;
                         break;
                 }
             }
