@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using HarmonyLib;
 using Hazel;
+using Reactor.Extensions;
 using UnityEngine;
 using static MegaMod.MegaModManager; // TODO: wtf?
 
@@ -11,13 +12,14 @@ namespace MegaMod.Roles
     {
         public bool repairUsed;
         public bool sabotageActive { get; set; }
+        public Sprite specialButton;
 
         public Engineer(PlayerControl player) : base(player)
         {
-            this.player = player;
             name = "Engineer";
             color = new Color(255f / 255f, 165f / 255f, 10f / 255f, 1);
             startText = "Maintain important systems on the ship";
+            specialButton = bundle.LoadAsset<Sprite>("RE").DontUnload();
         }
 
         /**
@@ -29,10 +31,10 @@ namespace MegaMod.Roles
         {
             float spawnChance = HarmonyMain.optEngineerSpawnChance.GetValue();
             if (spawnChance < 1) return;
-            bool spawnChanceAchieved = rng.Next(1, 101) <= spawnChance;
+            bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
 
-            int random = rng.Next(0, crew.Count);
+            int random = Rng.Next(0, crew.Count);
             Engineer engineer = new Engineer(crew[random]);
             AddSpecialRole(engineer);
             crew.RemoveAt(random);
@@ -53,7 +55,7 @@ namespace MegaMod.Roles
             // do nothing
         }
 
-        public void SetRepairButton(HudManager instance)
+        public void CheckRepairButton(HudManager instance)
         {
             if (player == null || player.PlayerId != PlayerControl.LocalPlayer.PlayerId ||
                 !instance.UseButton.isActiveAndEnabled) return;
@@ -62,7 +64,7 @@ namespace MegaMod.Roles
             killButton.gameObject.SetActive(true);
             killButton.isActive = true;
             killButton.SetCoolDown(0f, 1f);
-            killButton.renderer.sprite = repairIco;
+            killButton.renderer.sprite = specialButton;
             killButton.renderer.color = Palette.EnabledColor;
             killButton.renderer.material.SetFloat("_Desat", 0f);
         }

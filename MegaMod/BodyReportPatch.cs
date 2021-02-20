@@ -14,7 +14,7 @@ namespace MegaMod
         {
             System.Console.WriteLine("Report Body!");
             byte reporterId = __instance.PlayerId;
-            DeadPlayer killer = killedPlayers.FirstOrDefault(x => x.PlayerId == CAKODNGLPDF.PlayerId);
+            DeadPlayer killer = KilledPlayers.FirstOrDefault(x => x.PlayerId == CAKODNGLPDF.PlayerId);
             if (killer == null) return;
 
             Doctor doctor = GetSpecialRole<Doctor>(PlayerControl.LocalPlayer.PlayerId);

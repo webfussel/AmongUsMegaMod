@@ -13,13 +13,12 @@ namespace MegaMod
     {
         public static void Postfix(Il2CppReferenceArray<GameData.PlayerInfo> JPGEIBIBJPJ)
         {
-            List<Role> assignedRoles = assignedSpecialRoles.Values.ToList();
+            List<Role> assignedRoles = AssignedSpecialRoles.Values.ToList();
             foreach (Role r in assignedRoles)
             {
                 r.ClearSettings();
             }
-            assignedSpecialRoles.Clear();
-            killedPlayers.Clear();
+            ResetValues();
             
             WriteImmediately(RPC.ResetVariables);
 
@@ -31,7 +30,7 @@ namespace MegaMod
             Engineer.SetRole(crewmates);
             Jester.SetRole(crewmates);
 
-            crew.Clear();
+            Crew.Clear();
             localPlayer = PlayerControl.LocalPlayer;
             
             bool jesterExists = SpecialRoleIsAssigned<Jester>(out var jesterKv);
@@ -41,11 +40,11 @@ namespace MegaMod
                 if (player.Data.IsImpostor) continue;
                 if (jesterExists && jesterInstance.player.PlayerId == player.PlayerId) continue;
                 
-                crew.Add(player);
+                Crew.Add(player);
             }
 
             MessageWriter writer = GetWriter(RPC.SetLocalPlayers);
-            writer.WriteBytesAndSize(crew.Select(player => player.PlayerId).ToArray());
+            writer.WriteBytesAndSize(Crew.Select(player => player.PlayerId).ToArray());
             CloseWriter(writer);
         }
     }

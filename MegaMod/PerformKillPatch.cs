@@ -14,24 +14,17 @@ namespace MegaMod
         public static bool Prefix()
         {
             if (PlayerControl.LocalPlayer.Data.IsDead) return false;
+            
+            if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Detective detective))
+                detective.KillOrCommitSuicide();
+            
+            if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
+                engineer.ShowRepairMap();
+                
+            if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Doctor doctor))
+                doctor.SetProtectedPlayer();
 
-            if (CurrentTarget != null)
-            {
-                PlayerControl target = CurrentTarget;
-
-                if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Doctor doctor))
-                    doctor.SetProtectedPlayer(target);
-
-                else if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Detective detective))
-                    detective.KillOrCommitSuicide(target);
-            }
-            else
-            {
-                if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
-                    engineer.ShowRepairMap();
-            }
-
-            PlayerControl closest = PlayerTools.GetClosestPlayer(PlayerControl.LocalPlayer);
+            PlayerControl closest = PlayerTools.FindClosestTarget(PlayerControl.LocalPlayer);
             if (PlayerControl.LocalPlayer.Data.IsImpostor && SpecialRoleIsAssigned<Doctor>(out var doctorCheckProtected) && doctorCheckProtected.Value.CheckProtectedPlayer(closest.PlayerId))
                 PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
             
@@ -64,9 +57,9 @@ namespace MegaMod
                     if (current == detectiveKvp.Value.player)
                         current.Data.IsImpostor = false;
                     if (current.PlayerId == target.PlayerId)
-                        deadPlayer.DeathReason = DEATH_REASON_SUICIDE;
+                        deadPlayer.DeathReason = DeathReasonSuicide;
                 }
-                killedPlayers.Add(deadPlayer);
+                KilledPlayers.Add(deadPlayer);
             }
         }
     }

@@ -91,25 +91,24 @@ namespace MegaMod
                     switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
                     break;
                 case (byte)RPC.SetLocalPlayers:
-                    crew.Clear();
+                    Crew.Clear();
                     localPlayer = PlayerControl.LocalPlayer;
                     var localPlayerBytes = reader.ReadBytesAndSize();
 
                     foreach (byte id in localPlayerBytes)
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                             if (player.PlayerId == id)
-                                crew.Add(player);
+                                Crew.Add(player);
                         break;
                 case (byte) RPC.SetInfected:
                     break;
                 case (byte) RPC.ResetVariables:
-                    List<Role> assignedRoles = assignedSpecialRoles.Values.ToList();
+                    List<Role> assignedRoles = AssignedSpecialRoles.Values.ToList();
                     foreach (Role r in assignedRoles)
                     {
                         r.ClearSettings();
                     }
-                    assignedSpecialRoles.Clear();
-                    killedPlayers.Clear();
+                    ResetValues();
                     break;
             }
         }

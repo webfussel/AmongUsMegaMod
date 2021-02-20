@@ -14,7 +14,6 @@ namespace MegaMod
         }
     }
 
-
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     class HudUpdateManager
     {
@@ -23,7 +22,7 @@ namespace MegaMod
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
             
             bool lastQ = Input.GetKeyUp(KeyCode.Q);
-            PlayerTools.closestPlayer = PlayerTools.GetClosestPlayer(PlayerControl.LocalPlayer, out DistLocalClosest);
+            PlayerTools.closestPlayer = PlayerTools.GetClosestPlayer(PlayerControl.LocalPlayer, out distLocalClosest);
             
             if (!PlayerControl.LocalPlayer.Data.IsImpostor && Input.GetKeyDown(KeyCode.Q) && !lastQ && __instance.UseButton.isActiveAndEnabled)
             {
@@ -64,9 +63,10 @@ namespace MegaMod
                 {
                     case Doctor doctor:
                         doctor.CheckShieldButton(__instance);
+                        doctor.SetCooldown(Time.deltaTime);
                         break;
                     case Engineer engineer:
-                        engineer.SetRepairButton(__instance);
+                        engineer.CheckRepairButton(__instance);
                         engineer.sabotageActive = sabotageActive;
                         break;
                     case Jester jester:
@@ -74,6 +74,7 @@ namespace MegaMod
                         break;
                     case Detective detective:
                         detective.CheckKillButton(__instance);
+                        detective.SetCooldown(Time.deltaTime);
                         break;
                 }
             }

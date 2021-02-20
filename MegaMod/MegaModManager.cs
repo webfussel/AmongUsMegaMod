@@ -72,46 +72,31 @@ namespace MegaMod
         
         public static AssetBundle bundle;
         public static AudioClip breakClip;
-        public static Sprite repairIco;
-        public static Sprite shieldIco;
         
         /* To cast into Deathreason, which are:
         Exile, (0)
         Kill, (1)
         Disconnect (2)
          */
-        public static readonly DeathReason DEATH_REASON_SUICIDE = (DeathReason) 3;
-
-        public static Dictionary<byte, Role> assignedSpecialRoles = new Dictionary<byte, Role>();
+        public static readonly DeathReason DeathReasonSuicide;
+        public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
 
         // Only the engineer gets added to the dictionary so far
-        public static void AddSpecialRole(Role specialRole)
-        {
-            assignedSpecialRoles.Add(specialRole.player.PlayerId, specialRole);
-        }
+        public static void AddSpecialRole(Role specialRole) => AssignedSpecialRoles.Add(specialRole.player.PlayerId, specialRole);
 
-        public static T GetSpecialRole<T>(byte playerId) where T : Role
-        {
-            return assignedSpecialRoles.TryGetValue(playerId, out Role role) ? (T) role : null;
-        }
+        public static T GetSpecialRole<T>(byte playerId) where T : Role => AssignedSpecialRoles.TryGetValue(playerId, out Role role) ? (T) role : null;
 
-        public static Role GetSpecialRole(byte playerId)
-        {
-            return assignedSpecialRoles.TryGetValue(playerId, out Role role) ? role : null;
-        }
+        public static Role GetSpecialRole(byte playerId) => AssignedSpecialRoles.TryGetValue(playerId, out Role role) ? role : null;
 
         public static T GetSpecialRole<T>() where T : Role
         {
-            List<Role> specialRoles = assignedSpecialRoles.Values.ToList();
-            foreach(Role role in specialRoles)
-                if (role is T)
-                    return (T) role;
-            return null;
+            List<Role> specialRoles = AssignedSpecialRoles.Values.ToList();
+            return specialRoles.OfType<T>().FirstOrDefault();
         }
 
         public static bool TryGetSpecialRole<T>(byte playerId, out T role) where T : Role
         {
-            if(assignedSpecialRoles.TryGetValue(playerId, out Role tempRole) && tempRole is T value)
+            if(AssignedSpecialRoles.TryGetValue(playerId, out Role tempRole) && tempRole is T value)
             {
                 role = value;
                 return true;
@@ -122,9 +107,9 @@ namespace MegaMod
 
         public static bool SpecialRoleIsAssigned<T>(out KeyValuePair<byte, T> keyValuePair) where T : Role
         {
-            foreach (var kvp in assignedSpecialRoles.Where(kvp => kvp.Value is T))
+            foreach ((var key, Role value) in AssignedSpecialRoles.Where(kvp => kvp.Value is T))
             {
-                keyValuePair = new KeyValuePair<byte, T>(kvp.Key, (T) kvp.Value);
+                keyValuePair = new KeyValuePair<byte, T>(key, (T) value);
                 return true;
             }
             keyValuePair = default;
@@ -139,7 +124,7 @@ namespace MegaMod
 
         public static MessageWriter GetWriter(RPC action)
         {
-           return AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte) action, Hazel.SendOption.None, -1);
+           return AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte) action, SendOption.None, -1);
         }
 
         public static void CloseWriter(MessageWriter writer)
@@ -147,31 +132,28 @@ namespace MegaMod
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
 
+        public static void ResetValues()
+        {
+            AssignedSpecialRoles.Clear();
+            KilledPlayers.Clear();
+        }
+
         public static Color VecToColor(Vector3 vec) => new Color(vec.x, vec.y, vec.z);
 
         public static Vector3 ColorToVec(Color color) => new Vector3(color.r, color.g, color.b);
-
-        //rudimentary array to convert a byte setting from config into true/false
-        public static bool[] byteBool =
-        {
-            false,
-            true
-        };
-        public static List<DeadPlayer> killedPlayers = new List<DeadPlayer>();
-        public static PlayerControl CurrentTarget = null;
+        public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
+        public static PlayerControl currentTarget = null;
         public static PlayerControl localPlayer = null;
-        public static List<PlayerControl> crew = new List<PlayerControl>();
-        //global rng
-        public static System.Random rng = new System.Random();
-        //the id of the targeted player
-        public static int KBTarget;
-        //distance between the local player and closest player
-        public static double DistLocalClosest;
-        //shield indicator sprite (placeholder)
-        public static GameObject shieldIndicator = null;
-        //renderer for the shield indicator
-        public static SpriteRenderer shieldRenderer = null;
+        public static readonly List<PlayerControl> Crew = new List<PlayerControl>();
+        public static readonly System.Random Rng = new System.Random();
+        public static double distLocalClosest;
         public static string versionString = "v0.0.1";
+
+        static MegaModManager()
+        {
+            DeathReasonSuicide = (DeathReason) 3;
+            AssignedSpecialRoles = new Dictionary<byte, Role>();
+        }
 
         public static class ModdedPalette
         {

@@ -14,10 +14,10 @@ namespace MegaMod.Roles
 
         public Detective(PlayerControl player) : base(player)
         {
-            this.player = player;
             name = "Detective";
             color = new Color(0, 40f / 255f, 198f / 255f, 1);
             startText = "Shoot the [FF0000FF]Impostor";
+            player.SetKillTimer(10f);
         }
 
         /**
@@ -29,10 +29,10 @@ namespace MegaMod.Roles
         {
             float spawnChance = HarmonyMain.optDetectiveSpawnChance.GetValue();
             if (spawnChance < 1) return;
-            bool spawnChanceAchieved = rng.Next(1, 101) <= spawnChance;
+            bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         
-            int random = rng.Next(0, crew.Count);
+            int random = Rng.Next(0, crew.Count);
             Detective detective = new Detective(crew[random]);
             AddSpecialRole(detective);
             crew.RemoveAt(random);
@@ -65,8 +65,11 @@ namespace MegaMod.Roles
             killButton.enabled = false;
             killButton.TimerText.Text = "";
             killButton.TimerText.gameObject.SetActive(false);
-            cooldown = 0;
-            lastKilled = null;
+        }
+
+        public void SetCooldown(float deltaTime)
+        {
+            player.SetKillTimer(Mathf.Max(0.0f, player.killTimer - deltaTime));
         }
 
         public void CheckKillButton(HudManager instance)
@@ -76,17 +79,7 @@ namespace MegaMod.Roles
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(true);
             killButton.isActive = true;
-            killButton.SetCoolDown(GetCurrentCooldown(), PlayerControl.GameOptions.KillCooldown + 15.0f);
-            if (DistLocalClosest < GameOptionsData.KillDistances[PlayerControl.GameOptions.KillDistance])
-            {
-                killButton.SetTarget(PlayerTools.closestPlayer);
-                CurrentTarget = PlayerTools.closestPlayer;
-            }
-            else
-            {
-                killButton.SetTarget(null);
-                CurrentTarget = null;
-            }
+            killButton.SetTarget(killButton.isCoolingDown ? null : PlayerTools.FindClosestTarget(player));
         }
 
         private void KillPlayer(PlayerControl player)
@@ -97,17 +90,6 @@ namespace MegaMod.Roles
             CloseWriter(writer);
             PlayerControl.LocalPlayer.MurderPlayer(player);
             lastKilled = DateTime.UtcNow;
-        }
-
-        public float GetCurrentCooldown()
-        {
-            if (lastKilled == null) return cooldown;
-        
-            TimeSpan diff = (TimeSpan) (DateTime.UtcNow - lastKilled);
-
-            float cooldownMS = cooldown * 1000.0f;
-            if (diff.TotalMilliseconds > cooldownMS) return 0;
-            return (float) (cooldownMS - diff.TotalMilliseconds) / 1000.0f;
         }
 
         public override void SetIntro(IntroCutscene.CoBegin__d __instance)
@@ -121,17 +103,17 @@ namespace MegaMod.Roles
             lastKilled = DateTime.UtcNow.AddMilliseconds(instance.Duration);
         }
 
-        public bool KillOrCommitSuicide(PlayerControl target)
+        public bool KillOrCommitSuicide()
         {
-            if (target == null || GetCurrentCooldown() != 0) return false;
-            
-            if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp))
-                if (doctorKvp.Value.protectedPlayer.PlayerId == target.PlayerId)
-                {
-                    // Sound effekt
-                    lastKilled = DateTime.UtcNow;
-                    return false;
-                }
+            PlayerControl target = PlayerTools.FindClosestTarget(player);
+            if (target == null) return false;
+
+            if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp) && doctorKvp.Value.protectedPlayer?.PlayerId == target.PlayerId)
+            {
+                // Sound effekt
+                player.SetKillTimer(cooldown);
+                return false;
+            }
             
             
             if (

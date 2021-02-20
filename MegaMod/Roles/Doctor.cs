@@ -16,13 +16,16 @@ namespace MegaMod.Roles
         public bool showReport {get; set;}
         public int  showProtectedPlayer { get; set; }
         public bool shieldKillAttemptIndicator { get; set; }
+        public Sprite specialButton { get; }
+        public float cooldown { get; set; }
 
         public Doctor(PlayerControl player) : base(player)
         {
-            this.player = player;
             name = "Doctor";
             color = new Color(36f / 255f, 183f / 255f, 32f / 255f, 1);
             startText = "Create a shield to protect a [8DFFFF]Crewmate";
+            specialButton = bundle.LoadAsset<Sprite>("SA").DontUnload();
+            player.SetKillTimer(10f);
         }
 
         /**
@@ -34,10 +37,10 @@ namespace MegaMod.Roles
         {
             float spawnChance = HarmonyMain.optDoctorSpawnChance.GetValue();
             if (spawnChance < 1) return;
-            bool spawnChanceAchieved = rng.Next(1, 101) <= spawnChance;
+            bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         
-            int random = rng.Next(0, crew.Count);
+            int random = Rng.Next(0, crew.Count);
             Doctor doctor = new Doctor(crew[random]);
             AddSpecialRole(doctor);
             crew.RemoveAt(random);
@@ -61,14 +64,21 @@ namespace MegaMod.Roles
             shieldKillAttemptIndicator = HarmonyMain.optDoctorPlayerMurderIndicator.GetValue();
             doctorKillerNameDuration = (int) HarmonyMain.optDoctorReportNameDuration.GetValue();
             doctorKillerColorDuration = (int) HarmonyMain.optDoctorReportColorDuration.GetValue();
+            cooldown = (int) HarmonyMain.optDoctorShieldCooldown.GetValue();
         }
 
-        public bool SetProtectedPlayer(PlayerControl target)
+        public void SetCooldown(float deltaTime)
         {
-            ConsoleTools.Info($"Shielded {target.Data.PlayerName}");
-            MessageWriter writer = GetWriter(RPC.SetProtected);
-            protectedPlayer = target;
+            player.SetKillTimer(Mathf.Max(0.0f, player.killTimer - deltaTime));
+        }
+
+        public bool SetProtectedPlayer()
+        {
+            if (protectedPlayer != null) return false;
+            protectedPlayer = PlayerTools.FindClosestTarget(player);
             shieldUsed = true;
+            player.SetKillTimer(cooldown);
+            MessageWriter writer = GetWriter(RPC.SetProtected);
             writer.Write(protectedPlayer.PlayerId);
             CloseWriter(writer);
             return false;
@@ -78,16 +88,13 @@ namespace MegaMod.Roles
             return protectedPlayer != null && protectedPlayer.PlayerId == playerId;
         }
     
-        public void BreakShield(bool flag)
+        public void BreakShield()
         {
-            if (flag)
-            {
-                WriteImmediately(RPC.ShieldBreak);
+            WriteImmediately(RPC.ShieldBreak);
             
-                protectedPlayer.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
-                protectedPlayer.myRend.material.SetFloat("_Outline", 0f);
-                protectedPlayer = null;
-            }
+            protectedPlayer.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
+            protectedPlayer.myRend.material.SetFloat("_Outline", 0f);
+            protectedPlayer = null;
         }
 
         public void CheckShieldButton(HudManager instance)
@@ -97,18 +104,8 @@ namespace MegaMod.Roles
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(true);
             killButton.isActive = true;
-            killButton.renderer.sprite = shieldIco;
-            killButton.SetCoolDown(0f, 1f);
-            if (DistLocalClosest < GameOptionsData.KillDistances[PlayerControl.GameOptions.KillDistance] && !shieldUsed)
-            {
-                killButton.SetTarget(PlayerTools.closestPlayer);
-                CurrentTarget = PlayerTools.closestPlayer;
-            }
-            else
-            {
-                killButton.SetTarget(null);
-                CurrentTarget = null;
-            }
+            killButton.renderer.sprite = specialButton;
+            killButton.SetTarget(!shieldUsed && !killButton.isCoolingDown ? PlayerTools.FindClosestTarget(player) : null);
         }
 
         public void ShowShieldedPlayer()
@@ -142,8 +139,8 @@ namespace MegaMod.Roles
 
         public override void CheckDead(HudManager instance)
         {
-            if (protectedPlayer == null || (!protectedPlayer.Data.IsDead && !player.Data.IsDead)) return;
-            BreakShield(true);
+            if (protectedPlayer == null || !protectedPlayer.Data.IsDead && !player.Data.IsDead) return;
+            BreakShield();
         }
     }
 }

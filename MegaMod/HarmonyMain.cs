@@ -39,6 +39,7 @@ namespace MegaMod
         public static CustomToggleOption optDoctorReportSwitch = CustomOption.AddToggle("Show Doctor Reports", true);
         public static CustomNumberOption optDoctorReportNameDuration = CustomOption.AddNumber("Time Where Doctor Reports Will Have Name", 5, 0, 60, 2.5f);
         public static CustomNumberOption optDoctorReportColorDuration = CustomOption.AddNumber("Time Where Doctor Reports Will Have Color Type", 20, 0, 120, 2.5f);
+        public static CustomNumberOption optDoctorShieldCooldown = CustomOption.AddNumber("Detective Kill Cooldown", 30f, 10f, 60f, 2.5f);
         
         // Jester
         public static CustomToggleOption optJesterShowImpostor = CustomOption.AddToggle("Show Impostor to Jester", false);
@@ -54,8 +55,6 @@ namespace MegaMod
 
             bundle = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\bundle");
             breakClip = bundle.LoadAsset<AudioClip>("SB").DontUnload();
-            repairIco = bundle.LoadAsset<Sprite>("RE").DontUnload();
-            shieldIco = bundle.LoadAsset<Sprite>("SA").DontUnload();
 
             var defaultRegions = ServerManager.DefaultRegions.ToList();
             var ip = Ip.Value;

@@ -23,10 +23,10 @@ namespace MegaMod.Roles
         {
             float spawnChance = HarmonyMain.optJesterSpawnChance.GetValue();
             if (spawnChance < 1) return;
-            bool spawnChanceAchieved = rng.Next(1, 101) <= spawnChance;
+            bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         
-            int random = rng.Next(0, crew.Count);
+            int random = Rng.Next(0, crew.Count);
             Jester jester = new Jester(crew[random]);
             AddSpecialRole(jester);
             crew.RemoveAt(random);
