@@ -49,11 +49,11 @@ namespace MegaMod
                 player.nameText.Color = Color.white;
 
             // Jester Tasks have to be reset every frame... I don't know why but huh.
-            Jester clearJestertasks = GetSpecialRole<Jester>();
-            clearJestertasks?.ClearTasks();
+            if (SpecialRoleIsAssigned<Jester>(out var jesterKvp))
+                jesterKvp.Value.ClearTasks();
             
-            Doctor doctorShowShielded = GetSpecialRole<Doctor>();
-            doctorShowShielded?.ShowShieldedPlayer();
+            if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp))
+                doctorKvp.Value.ShowShieldedPlayer();
                 
             bool showImpostorToJester = false;
             Role current = GetSpecialRole(PlayerControl.LocalPlayer.PlayerId);

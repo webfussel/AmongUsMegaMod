@@ -16,7 +16,6 @@ namespace MegaMod.Roles
             name = "Jester";
             color = new Color(138f / 255f, 138f / 255f, 138f / 255f, 1);
             startText = "Get voted off of the ship to win";
-            ClearTasks();
         }
     
         public static void SetRole(List<PlayerControl> crew)
@@ -42,6 +41,8 @@ namespace MegaMod.Roles
 
         public void ClearTasks()
         {
+            if (player == null) return;
+            
             var tasksToRemove = new List<PlayerTask>();
             foreach (PlayerTask task in player.myTasks)
                 if (task.TaskType != TaskTypes.FixComms && task.TaskType != TaskTypes.FixLights && task.TaskType != TaskTypes.ResetReactor && task.TaskType != TaskTypes.ResetSeismic && task.TaskType != TaskTypes.RestoreOxy)
