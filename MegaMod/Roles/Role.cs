@@ -19,10 +19,8 @@ public abstract class Role {
         SetConfigSettings();
     }
 
-    public void SetNameColor()
-    {
-        if (PlayerControl.LocalPlayer == player) player.nameText.Color = color;
-    }
+    public void SetNameColor() => player.nameText.Color = color;
+    
     public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
     {
         instance.__this.Title.Text = name;

@@ -1,13 +1,7 @@
-using MegaMod;
 using HarmonyLib;
-using Hazel;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
 using static MegaMod.MegaModManager;
 using UnhollowerBaseLib;
-using System.Collections;
 using MegaMod.Roles;
 
 namespace MegaMod

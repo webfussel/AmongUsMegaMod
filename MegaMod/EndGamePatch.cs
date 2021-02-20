@@ -30,23 +30,22 @@ namespace MegaMod
 
         public static void Postfix(EndGameManager __instance)
         {
-            if (TempData.DidHumansWin(TempData.EndReason))
+            if (!TempData.DidHumansWin(TempData.EndReason)) return;
+            
+            bool flag = true;
+            foreach (PlayerControl player in Crew)
             {
-                bool flag = true;
-                foreach (PlayerControl player in Crew)
+                if (player.PlayerId == localPlayer.PlayerId)
                 {
-                    if (player.PlayerId == localPlayer.PlayerId)
-                    {
-                        flag = false;
-                    }
-                }
-                if (flag)
-                {
-                    __instance.WinText.Text = "Defeat";
-                    __instance.WinText.Color = Palette.ImpostorRed;
-                    __instance.BackgroundBar.material.color = new Color(1, 0, 0);
+                    flag = false;
                 }
             }
+
+            if (!flag) return;
+            
+            __instance.WinText.Text = "Defeat";
+            __instance.WinText.Color = Palette.ImpostorRed;
+            __instance.BackgroundBar.material.color = new Color(1, 0, 0);
         }
     }
 }
