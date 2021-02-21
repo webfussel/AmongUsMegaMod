@@ -7,14 +7,12 @@ namespace MegaMod
         public PlayerControl Killer { get; }
         public PlayerControl Victim { get; }
         public DateTime KillTime { get; }
-        public DeathReason DeathReason { get; set;  }
 
-        public DeadPlayer(PlayerControl killerId, PlayerControl playerId, DateTime killTime, DeathReason deathReason)
+        public DeadPlayer(PlayerControl killerId, PlayerControl playerId, DateTime killTime)
         {
             Killer = killerId;
             Victim = playerId;
             KillTime = killTime;
-            DeathReason = deathReason;
         }
     }
 }

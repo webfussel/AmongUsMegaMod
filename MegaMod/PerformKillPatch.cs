@@ -1,9 +1,7 @@
 ﻿using HarmonyLib;
-using Hazel;
 using System;
 using System.Collections.Generic;
 using MegaMod.Roles;
-using UnityEngine;
 using static MegaMod.MegaModManager;
 
 namespace MegaMod
@@ -29,7 +27,7 @@ namespace MegaMod
                 PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
             
             if (!SpecialRoleIsAssigned<Doctor>(out var doctorKvp)) return true;
-            return doctorKvp.Value.protectedPlayer == null || PlayerTools.closestPlayer.PlayerId != doctorKvp.Value.protectedPlayer.PlayerId;
+            return doctorKvp.Value.protectedPlayer == null || PlayerTools.FindClosestTarget(PlayerControl.LocalPlayer).PlayerId != doctorKvp.Value.protectedPlayer.PlayerId;
         }
 
         [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
@@ -49,15 +47,16 @@ namespace MegaMod
                 PlayerControl current = __instance;
                 PlayerControl target = CAKODNGLPDF;
                 
-                DeadPlayer deadPlayer = new DeadPlayer(current, target, DateTime.UtcNow, DeathReason.Kill);
+                DeadPlayer deadPlayer = new DeadPlayer(current, target, DateTime.UtcNow);
                 
-                if (SpecialRoleIsAssigned<Detective>(out KeyValuePair<byte, Detective> detectiveKvp))
+                if (SpecialRoleIsAssigned(out KeyValuePair<byte, Detective> detectiveKvp))
                 {
                     // If the killer is the detective, set him back to crewmate
                     if (current == detectiveKvp.Value.player)
                         current.Data.IsImpostor = false;
                     if (current.PlayerId == target.PlayerId)
-                        deadPlayer.DeathReason = DeathReasonSuicide;
+                    {
+                    }
                 }
                 KilledPlayers.Add(deadPlayer);
             }

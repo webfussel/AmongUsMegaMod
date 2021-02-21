@@ -9,22 +9,19 @@ namespace MegaMod
 {
     public static class PlayerVentTimeExtension
     {
-        public static IDictionary<byte, DateTime> allVentTimes = new Dictionary<byte, DateTime>() { };
+        private static readonly IDictionary<byte, DateTime> AllVentTimes = new Dictionary<byte, DateTime>();
 
         public static void SetLastVent(byte player)
         {
-            if (allVentTimes.ContainsKey(player))
-                allVentTimes[player] = DateTime.UtcNow;
+            if (AllVentTimes.ContainsKey(player))
+                AllVentTimes[player] = DateTime.UtcNow;
             else
-                allVentTimes.Add(player, DateTime.UtcNow);
+                AllVentTimes.Add(player, DateTime.UtcNow);
         }
 
         public static DateTime GetLastVent(byte player)
         {
-            if (allVentTimes.ContainsKey(player))
-                return allVentTimes[player];
-            else
-                return new DateTime(0);
+            return AllVentTimes.ContainsKey(player) ? AllVentTimes[player] : new DateTime(0);
         }
     }
 

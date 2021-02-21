@@ -10,10 +10,10 @@ namespace MegaMod.Roles
     {
     
         public PlayerControl protectedPlayer { get; set; }
-        public bool shieldUsed { get; set; }
-        public int  showProtectedPlayer { get; set; }
-        public bool shieldKillAttemptIndicator { get; set; }
-        public Sprite specialButton { get; }
+        private bool shieldUsed { get; set; }
+        private int  showProtectedPlayer { get; set; }
+        private bool shieldKillAttemptIndicator { get; set; }
+        private Sprite specialButton { get; }
 
         public Doctor(PlayerControl player) : base(player)
         {
@@ -31,7 +31,7 @@ namespace MegaMod.Roles
      */
         public static void SetRole(List<PlayerControl> crew)
         {
-            float spawnChance = HarmonyMain.optDoctorSpawnChance.GetValue();
+            float spawnChance = HarmonyMain.OptDoctorSpawnChance.GetValue();
             if (spawnChance < 1) return;
             bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
@@ -55,8 +55,8 @@ namespace MegaMod.Roles
 
         protected override void SetConfigSettings()
         {
-            showProtectedPlayer = HarmonyMain.optDoctorShowShieldedPlayer.GetValue();
-            shieldKillAttemptIndicator = HarmonyMain.optDoctorPlayerMurderIndicator.GetValue();
+            showProtectedPlayer = HarmonyMain.OptDoctorShowShieldedPlayer.GetValue();
+            shieldKillAttemptIndicator = HarmonyMain.OptDoctorPlayerMurderIndicator.GetValue();
         }
 
         public void SetCooldown(float deltaTime)

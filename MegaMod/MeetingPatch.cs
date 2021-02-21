@@ -13,8 +13,6 @@ namespace MegaMod
         static void Prefix(UnityEngine.Object obj)
         {
             if (ExileController.Instance == null || obj != ExileController.Instance.gameObject) return;
-            if (SpecialRoleIsAssigned<Detective>(out var detectiveKvp))
-                detectiveKvp.Value.ResetCooldown(ExileController.Instance);
             if (!SpecialRoleIsAssigned<Jester>(out var jesterKvp)) return;
             if (ExileController.Instance.exiled?.PlayerId != jesterKvp.Key) return;
             

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using HarmonyLib;
 using Hazel;
 using UnityEngine;
 using static MegaMod.MegaModManager;
@@ -9,9 +7,8 @@ namespace MegaMod.Roles
 {
     public class Detective : Role
     {
-        public DateTime? lastKilled { get; set; }
-        public float cooldown { get; set; }
-        public bool showReport { get; set; }
+        private float cooldown { get; set; }
+        public bool showReport { get; private set; }
 
         public Detective(PlayerControl player) : base(player)
         {
@@ -28,7 +25,7 @@ namespace MegaMod.Roles
      */
         public static void SetRole(List<PlayerControl> crew)
         {
-            float spawnChance = HarmonyMain.optDetectiveSpawnChance.GetValue();
+            float spawnChance = HarmonyMain.OptDetectiveSpawnChance.GetValue();
             if (spawnChance < 1) return;
             bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
@@ -46,13 +43,12 @@ namespace MegaMod.Roles
         public override void ClearSettings()
         {
             player = null;
-            lastKilled = null;
         }
 
         protected override void SetConfigSettings()
         {
-            cooldown = HarmonyMain.optDetectiveKillCooldown.GetValue();
-            showReport = HarmonyMain.showDetectiveReports.GetValue();
+            cooldown = HarmonyMain.OptDetectiveKillCooldown.GetValue();
+            showReport = HarmonyMain.ShowDetectiveReports.GetValue();
         }
 
         public override void CheckDead(HudManager instance)
@@ -86,25 +82,13 @@ namespace MegaMod.Roles
             killButton.SetTarget(PlayerTools.FindClosestTarget(player));
         }
 
-        private void KillPlayer(PlayerControl player)
+        private void KillPlayer(PlayerControl target)
         {
             MessageWriter writer = GetWriter(RPC.DetectiveKill);
             writer.Write(PlayerControl.LocalPlayer.PlayerId);
-            writer.Write(player.PlayerId);
+            writer.Write(target.PlayerId);
             CloseWriter(writer);
-            PlayerControl.LocalPlayer.MurderPlayer(player);
-            lastKilled = DateTime.UtcNow;
-        }
-
-        public override void SetIntro(IntroCutscene.CoBegin__d __instance)
-        {
-            base.SetIntro(__instance);
-            lastKilled = DateTime.UtcNow.AddSeconds(10 - cooldown);
-        }
-
-        public void ResetCooldown(ExileController instance)
-        {
-            lastKilled = DateTime.UtcNow.AddMilliseconds(instance.Duration);
+            PlayerControl.LocalPlayer.MurderPlayer(target);
         }
 
         public bool KillOrCommitSuicide()

@@ -2,7 +2,7 @@
 
 namespace MegaMod
 {
-    class ConsoleTools
+    static class ConsoleTools
     {
         public static void Info(string message)
         {

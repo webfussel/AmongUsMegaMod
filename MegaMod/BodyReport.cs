@@ -8,13 +8,11 @@ namespace MegaMod
 {
     public class BodyReport
     {
-        public DeathReason DeathReason { get; set; }
         public PlayerControl Killer { get; set; }
-        public PlayerControl Reporter { get; set; }
         public DeadPlayer DeadPlayer { get; set; }
         public float KillAge { get; set; }
             
-        private readonly Dictionary<byte, string> colors = new Dictionary<byte, string>()
+        private readonly Dictionary<byte, string> _colors = new Dictionary<byte, string>()
         {
             {0, "darker"},
             {1, "darker"},
@@ -30,7 +28,7 @@ namespace MegaMod
             {11, "lighter"},
         };
 
-        private readonly List<string> lastWords = new List<string>()
+        private readonly List<string> _lastWords = new List<string>()
         {
             "YOLO!",
             "Oh no! It's YOU!?",
@@ -44,23 +42,25 @@ namespace MegaMod
 
         public string ParseBodyReport()
         {
-            String rolename = "Crewmate";
+            String roleName = "Crewmate";
             if (TryGetSpecialRole<Role>(DeadPlayer.Victim.PlayerId, out var roleKvp))
             {
-                rolename = roleKvp.name;
+                roleName = roleKvp.name;
             } else if (DeadPlayer.Killer.Data.IsImpostor)
             {
-                rolename = "Impostor";
+                roleName = "Impostor";
             }
             
             List<string> hints = new List<string>()
             {
                 $"The player was killed {Math.Round(KillAge / 1000)}s ago",
                 $"The killer seems to have the Letter \"{Killer.name[Rng.Next(0, Killer.name.Length)]}\" in their name.",
-                $"The Kill seems to be of a {colors[Killer.Data.ColorId]} color",
+                $"The Kill seems to be of a {_colors[Killer.Data.ColorId]} color",
                 $"The Killer seems to have already killed {KilledPlayers.Count(x => x.Killer.PlayerId == Killer.PlayerId) - 1} other Crewmates.",
-                $"It seems like the Victim had the role \"{rolename}\"",
-                $"The last words of the Victim were: \"{lastWords[Rng.Next(0, lastWords.Count)]}\""
+                $"It seems like the Victim had the role \"{roleName}\"",
+                $"The last words of the Victim were: \"{_lastWords[Rng.Next(0, _lastWords.Count)]}\"",
+                "Well, there goes my lunch...",
+                "Urgs, a corpse!"
             };
 
             foreach (var hint in hints)

@@ -1,22 +1,10 @@
 ﻿using HarmonyLib;
 using Hazel;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Essentials.CustomOptions;
-using Il2CppSystem.Xml.Schema;
+using MegaMod.Roles;
 using UnityEngine;
 using Reactor.Unstrip;
-using Reactor.Extensions;
-
-/*
-Hex colors for extra roles
-Engineer: 972e00
-Jester: 838383
-Doctor: 24b720
-Detective: 0028c6
-*/
 
 namespace MegaMod
 {
@@ -71,6 +59,7 @@ namespace MegaMod
         }
         
         public static AssetBundle bundle;
+        public static AssetBundle buttons;
         public static AudioClip breakClip;
         public static Sprite defaultKillButton;
         
@@ -146,13 +135,10 @@ namespace MegaMod
 
         public static Color VecToColor(Vector3 vec) => new Color(vec.x, vec.y, vec.z);
 
-        public static Vector3 ColorToVec(Color color) => new Vector3(color.r, color.g, color.b);
         public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
-        public static PlayerControl currentTarget = null;
         public static PlayerControl localPlayer = null;
         public static readonly List<PlayerControl> Crew = new List<PlayerControl>();
         public static readonly System.Random Rng = new System.Random();
-        public static double distLocalClosest;
         public static string versionString = "v0.0.1";
 
         static MegaModManager()

@@ -25,7 +25,6 @@ namespace MegaMod
             List<PlayerControl> crewmates = PlayerControl.AllPlayerControls.ToArray().ToList();
             crewmates.RemoveAll(x => x.Data.IsImpostor);
 
-            foreach ((var key, Role role) in AssignedSpecialRoles)
             Doctor.SetRole(crewmates);
             Detective.SetRole(crewmates);
             Engineer.SetRole(crewmates);

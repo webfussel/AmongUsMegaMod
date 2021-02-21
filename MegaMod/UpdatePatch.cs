@@ -24,7 +24,6 @@ namespace MegaMod
             if (PlayerControl.LocalPlayer.Data.IsImpostor) __instance.KillButton.renderer.sprite = defaultKillButton;
             
             bool lastQ = Input.GetKeyUp(KeyCode.Q);
-            PlayerTools.closestPlayer = PlayerTools.GetClosestPlayer(PlayerControl.LocalPlayer, out distLocalClosest);
             
             if (!PlayerControl.LocalPlayer.Data.IsImpostor && Input.GetKeyDown(KeyCode.Q) && !lastQ && __instance.UseButton.isActiveAndEnabled)
             {
