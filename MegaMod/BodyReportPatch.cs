@@ -11,11 +11,15 @@ namespace MegaMod
     {
         static void Postfix(PlayerControl __instance, GameData.PlayerInfo CAKODNGLPDF)
         {
-            System.Console.WriteLine("Report Body!");
             DeadPlayer killed = KilledPlayers.FirstOrDefault(x => x.Victim.PlayerId == CAKODNGLPDF.PlayerId);
             if (killed == null) return;
 
+            if (!TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Detective _))
+                return;
+            
             Detective detective = GetSpecialRole<Detective>(PlayerControl.LocalPlayer.PlayerId);
+            if (detective == null) return;
+            
             if (__instance.PlayerId != detective.player.PlayerId || !detective.showReport) return;
             
             BodyReport br = new BodyReport();

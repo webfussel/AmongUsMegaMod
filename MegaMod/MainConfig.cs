@@ -51,8 +51,10 @@ namespace MegaMod
 
             bundle = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\bundle");
             breakClip = bundle.LoadAsset<AudioClip>("SB").DontUnload();
+            shieldButton = bundle.LoadAsset<Sprite>("SA").DontUnload();
             
             buttons = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\buttons");
+            repairButton = buttons.LoadAsset<Sprite>("repair").DontUnload();
 
             var defaultRegions = ServerManager.DefaultRegions.ToList();
             var ip = Ip.Value;

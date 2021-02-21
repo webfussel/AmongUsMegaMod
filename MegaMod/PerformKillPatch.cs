@@ -11,7 +11,7 @@ namespace MegaMod
     {
         public static bool Prefix(KillButtonManager __instance)
         {
-            if (PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data.IsDead) return false;
+            if (__instance == null || PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data.IsDead) return false;
             
             if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Detective detective))
                 detective.KillOrCommitSuicide(__instance);
@@ -23,11 +23,11 @@ namespace MegaMod
                 doctor.SetProtectedPlayer(__instance);
 
             PlayerControl closest = PlayerTools.FindClosestTarget(PlayerControl.LocalPlayer);
-            if (PlayerControl.LocalPlayer.Data.IsImpostor && SpecialRoleIsAssigned<Doctor>(out var doctorCheckProtected) && doctorCheckProtected.Value.CheckProtectedPlayer(closest.PlayerId))
+            if (closest != null && PlayerControl.LocalPlayer.Data.IsImpostor && SpecialRoleIsAssigned<Doctor>(out var doctorCheckProtected) && doctorCheckProtected.Value.CheckProtectedPlayer(closest.PlayerId))
                 PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
             
             if (!SpecialRoleIsAssigned<Doctor>(out var doctorKvp)) return true;
-            return doctorKvp.Value.protectedPlayer == null || PlayerTools.FindClosestTarget(PlayerControl.LocalPlayer).PlayerId != doctorKvp.Value.protectedPlayer.PlayerId;
+            return doctorKvp.Value.protectedPlayer == null || PlayerTools.FindClosestTarget(PlayerControl.LocalPlayer).PlayerId != doctorKvp.Value.protectedPlayer?.PlayerId;
         }
 
         [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]

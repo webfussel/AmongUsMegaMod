@@ -11,7 +11,7 @@ namespace MegaMod
     [HarmonyPatch]
     public static class MegaModManager
     {
-        private const string VersionString = "beta-1.0.0";
+        private const string VersionString = "b-1.0.3";
 
         public enum RPC
         {
@@ -64,6 +64,8 @@ namespace MegaMod
         public static AssetBundle buttons;
         public static AudioClip breakClip; // Still need that for the shield
         public static Sprite defaultKillButton;
+        public static Sprite shieldButton;
+        public static Sprite repairButton;
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
 
         // Only the engineer gets added to the dictionary so far

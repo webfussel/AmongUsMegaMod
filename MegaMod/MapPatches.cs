@@ -11,8 +11,8 @@ namespace MegaMod
         {
             static void Postfix(MapBehaviour __instance)
             {
-                Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                engineer?.OpenMap(__instance);
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
+                    engineer?.OpenMap(__instance);
             }
         }
         
@@ -21,8 +21,8 @@ namespace MegaMod
         {
             static void Postfix(MapBehaviour __instance)
             {
-                Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                engineer?.UpdateMap(__instance);
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
+                    engineer?.UpdateMap(__instance);
             }
         }
         
@@ -31,8 +31,8 @@ namespace MegaMod
         {
             static bool Prefix(MapRoom __instance, float DCEFKAOFGOG)
             {
-                Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                if (engineer != null) return engineer.SetRepairButtonsActive();
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
+                    return engineer.SetRepairButtonsActive();
 
                 return true;
             }
@@ -43,8 +43,8 @@ namespace MegaMod
         {
             static bool Prefix(MapRoom __instance)
             {
-                Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                if (engineer != null) return engineer.RepairReactor();
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
+                    return engineer.RepairReactor();
                 
                 return true;
             }
@@ -55,8 +55,8 @@ namespace MegaMod
         {
             static bool Prefix(MapRoom __instance)
             {
-                Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                if (engineer != null) return engineer.RepairLight();
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
+                    return engineer.RepairLight();
                 
                 return true;
             }
@@ -67,8 +67,8 @@ namespace MegaMod
         {
             static bool Prefix(MapRoom __instance)
             {
-                Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                if (engineer != null) return engineer.RepairComms();
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
+                    return engineer.RepairComms();
                 
                 return true;
             }
@@ -79,8 +79,8 @@ namespace MegaMod
         {
             static bool Prefix(MapRoom __instance)
             {
-                Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                if (engineer != null) return engineer.RepairOxy();
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
+                    return engineer.RepairOxy();
                 
                 return true;
             }
@@ -91,8 +91,8 @@ namespace MegaMod
         {
             static bool Prefix(MapRoom __instance)
             {
-                Engineer engineer = GetSpecialRole<Engineer>(PlayerControl.LocalPlayer.PlayerId);
-                if (engineer != null) return engineer.RepairSeismic();
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
+                    return engineer.RepairSeismic();
                 
                 return true;
             }

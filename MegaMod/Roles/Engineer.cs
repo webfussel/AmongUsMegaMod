@@ -18,7 +18,7 @@ namespace MegaMod.Roles
             name = "Engineer";
             color = new Color(255f / 255f, 165f / 255f, 10f / 255f, 1);
             startText = "Maintain important systems on the ship";
-            _specialButton = buttons.LoadAsset<Sprite>("repair").DontUnload();
+            _specialButton = repairButton;
         }
 
         /**
