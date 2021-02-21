@@ -11,7 +11,9 @@ namespace MegaMod
     {
         static void Postfix(PlayerControl __instance, GameData.PlayerInfo CAKODNGLPDF)
         {
-            DeadPlayer killed = KilledPlayers.FirstOrDefault(x => x.Victim.PlayerId == CAKODNGLPDF.PlayerId);
+            if (__instance == null || PlayerControl.LocalPlayer == null || KilledPlayers.Count <= 0) return;
+            
+            DeadPlayer killed = KilledPlayers?.FirstOrDefault(x => x.Victim?.PlayerId == CAKODNGLPDF?.PlayerId);
             if (killed == null) return;
 
             if (!TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Detective _))

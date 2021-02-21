@@ -91,10 +91,11 @@ namespace MegaMod.Roles
 
         public void CheckShieldButton(HudManager instance)
         {
-            if (instance.UseButton == null || !instance.UseButton.isActiveAndEnabled) return;
+            if (instance.UseButton == null || !instance.UseButton.isActiveAndEnabled || player.Data.IsDead) return;
         
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(true);
+            killButton.renderer.enabled = true;
             killButton.isActive = true;
             killButton.renderer.sprite = specialButton;
             killButton.SetTarget(!shieldUsed ? PlayerTools.FindClosestTarget(player) : null);
@@ -132,6 +133,15 @@ namespace MegaMod.Roles
         public override void CheckDead(HudManager instance)
         {
             if (protectedPlayer == null || !protectedPlayer.Data.IsDead && !player.Data.IsDead) return;
+            
+            KillButtonManager killButton = instance.KillButton;
+            killButton.gameObject.SetActive(false);
+            killButton.renderer.enabled = false;
+            /*
+            killButton.isActive = false;
+            killButton.SetTarget(null);
+            killButton.enabled = false;
+            killButton.TimerText.Text = "";*/
             BreakShield();
         }
     }

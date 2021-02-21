@@ -26,8 +26,10 @@ namespace MegaMod
             if (closest != null && PlayerControl.LocalPlayer.Data.IsImpostor && SpecialRoleIsAssigned<Doctor>(out var doctorCheckProtected) && doctorCheckProtected.Value.CheckProtectedPlayer(closest.PlayerId))
                 PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
             
-            if (!SpecialRoleIsAssigned<Doctor>(out var doctorKvp)) return true;
-            return doctorKvp.Value.protectedPlayer == null || PlayerTools.FindClosestTarget(PlayerControl.LocalPlayer).PlayerId != doctorKvp.Value.protectedPlayer?.PlayerId;
+            if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Doctor doctorClosestTarget)) 
+                return doctorClosestTarget.protectedPlayer == null || PlayerTools.FindClosestTarget(PlayerControl.LocalPlayer)?.PlayerId != doctorClosestTarget.protectedPlayer?.PlayerId;
+            
+            return true;
         }
 
         [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]

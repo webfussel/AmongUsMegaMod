@@ -57,11 +57,12 @@ namespace MegaMod.Roles
         public void CheckRepairButton(HudManager instance)
         {
             if (player == null || player.PlayerId != PlayerControl.LocalPlayer.PlayerId ||
-                !instance.UseButton.isActiveAndEnabled) return;
+                !instance.UseButton.isActiveAndEnabled || player.Data.IsDead) return;
         
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(true);
             killButton.isActive = true;
+            killButton.renderer.enabled = true;
             killButton.SetCoolDown(0f, 1f);
             killButton.renderer.sprite = _specialButton;
             killButton.renderer.color = Palette.EnabledColor;
@@ -75,11 +76,11 @@ namespace MegaMod.Roles
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(false);
             killButton.renderer.enabled = false;
+            /*
             killButton.isActive = false;
             killButton.SetTarget(null);
             killButton.enabled = false;
-            killButton.TimerText.Text = "";
-            killButton.TimerText.gameObject.SetActive(false);
+            killButton.TimerText.Text = "";*/
         }
 
         public bool ShowRepairMap()

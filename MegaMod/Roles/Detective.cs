@@ -58,11 +58,11 @@ namespace MegaMod.Roles
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(false);
             killButton.renderer.enabled = false;
+            /*
             killButton.isActive = false;
             killButton.SetTarget(null);
             killButton.enabled = false;
-            killButton.TimerText.Text = "";
-            killButton.TimerText.gameObject.SetActive(false);
+            killButton.TimerText.Text = "";*/
         }
 
         public void SetCooldown(float deltaTime)
@@ -72,11 +72,11 @@ namespace MegaMod.Roles
 
         public void CheckKillButton(HudManager instance)
         {
-            if (instance.UseButton == null || !instance.UseButton.isActiveAndEnabled) return;
+            if (instance.UseButton == null || !instance.UseButton.isActiveAndEnabled || player.Data.IsDead) return;
             
-            // do not desaturate button if in reach
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(true);
+            killButton.renderer.enabled = true;
             killButton.isActive = true;
             killButton.renderer.sprite = defaultKillButton;
             killButton.SetTarget(PlayerTools.FindClosestTarget(player));

@@ -21,7 +21,12 @@ namespace MegaMod
         {
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
             if (defaultKillButton == null) defaultKillButton = __instance.KillButton.renderer.sprite;
-            if (PlayerControl.LocalPlayer.Data.IsImpostor) __instance.KillButton.renderer.sprite = defaultKillButton;
+            if (PlayerControl.LocalPlayer.Data.IsImpostor)
+            {
+                __instance.KillButton.gameObject.SetActive(true);
+                __instance.KillButton.renderer.enabled = true;
+                __instance.KillButton.renderer.sprite = defaultKillButton;
+            }
             
             bool lastQ = Input.GetKeyUp(KeyCode.Q);
             

@@ -11,7 +11,7 @@ namespace MegaMod
     [HarmonyPatch]
     public static class MegaModManager
     {
-        private const string VersionString = "b-1.0.3";
+        private const string VersionString = "b-1.0.9";
 
         public enum RPC
         {
@@ -67,6 +67,7 @@ namespace MegaMod
         public static Sprite shieldButton;
         public static Sprite repairButton;
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
+        public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
 
         // Only the engineer gets added to the dictionary so far
         public static void AddSpecialRole(Role specialRole)
@@ -131,8 +132,6 @@ namespace MegaMod
         }
 
         public static Color VecToColor(Vector3 vec) => new Color(vec.x, vec.y, vec.z);
-
-        public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
         public static PlayerControl localPlayer = null;
         public static readonly List<PlayerControl> Crew = new List<PlayerControl>();
         public static readonly System.Random Rng = new System.Random();
