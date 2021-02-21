@@ -9,18 +9,18 @@ namespace MegaMod
     [HarmonyPatch(typeof(KillButtonManager), nameof(KillButtonManager.PerformKill))]
     class PerformKillPatch
     {
-        public static bool Prefix()
+        public static bool Prefix(KillButtonManager __instance)
         {
-            if (PlayerControl.LocalPlayer.Data.IsDead) return false;
+            if (PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data.IsDead) return false;
             
             if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Detective detective))
-                detective.KillOrCommitSuicide();
+                detective.KillOrCommitSuicide(__instance);
             
             if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                 engineer.ShowRepairMap();
                 
             if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Doctor doctor))
-                doctor.SetProtectedPlayer();
+                doctor.SetProtectedPlayer(__instance);
 
             PlayerControl closest = PlayerTools.FindClosestTarget(PlayerControl.LocalPlayer);
             if (PlayerControl.LocalPlayer.Data.IsImpostor && SpecialRoleIsAssigned<Doctor>(out var doctorCheckProtected) && doctorCheckProtected.Value.CheckProtectedPlayer(closest.PlayerId))
@@ -49,14 +49,9 @@ namespace MegaMod
                 
                 DeadPlayer deadPlayer = new DeadPlayer(current, target, DateTime.UtcNow);
                 
-                if (SpecialRoleIsAssigned(out KeyValuePair<byte, Detective> detectiveKvp))
+                if (TryGetSpecialRole(current.PlayerId, out Detective _))
                 {
-                    // If the killer is the detective, set him back to crewmate
-                    if (current == detectiveKvp.Value.player)
-                        current.Data.IsImpostor = false;
-                    if (current.PlayerId == target.PlayerId)
-                    {
-                    }
+                    current.Data.IsImpostor = false;
                 }
                 KilledPlayers.Add(deadPlayer);
             }

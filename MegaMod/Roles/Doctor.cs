@@ -64,9 +64,9 @@ namespace MegaMod.Roles
             player.SetKillTimer(Mathf.Max(0.0f, player.killTimer - deltaTime));
         }
 
-        public bool SetProtectedPlayer()
+        public bool SetProtectedPlayer(KillButtonManager instance)
         {
-            if (protectedPlayer != null) return false;
+            if (protectedPlayer != null || instance.isCoolingDown) return false;
             protectedPlayer = PlayerTools.FindClosestTarget(player);
             shieldUsed = true;
             

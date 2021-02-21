@@ -27,7 +27,7 @@ namespace MegaMod
             
             if (!PlayerControl.LocalPlayer.Data.IsImpostor && Input.GetKeyDown(KeyCode.Q) && !lastQ && __instance.UseButton.isActiveAndEnabled)
             {
-                PerformKillPatch.Prefix();
+                PerformKillPatch.Prefix(null);
             }
 
             bool sabotageActive = false;

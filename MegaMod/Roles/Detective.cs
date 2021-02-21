@@ -91,8 +91,10 @@ namespace MegaMod.Roles
             PlayerControl.LocalPlayer.MurderPlayer(target);
         }
 
-        public bool KillOrCommitSuicide()
+        public bool KillOrCommitSuicide(KillButtonManager instance)
         {
+            if (instance.isCoolingDown) return false;
+            
             PlayerControl target = PlayerTools.FindClosestTarget(player);
             if (target == null) return false;
 
