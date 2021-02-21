@@ -58,11 +58,6 @@ namespace MegaMod.Roles
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(false);
             killButton.renderer.enabled = false;
-            /*
-            killButton.isActive = false;
-            killButton.SetTarget(null);
-            killButton.enabled = false;
-            killButton.TimerText.Text = "";*/
         }
 
         public void SetCooldown(float deltaTime)

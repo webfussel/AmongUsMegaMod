@@ -72,15 +72,10 @@ namespace MegaMod.Roles
         public override void CheckDead(HudManager instance)
         {
             if (!player.Data.IsDead) return;
-            // Should Engineer really be unable to solve an emergency when dead?
+            
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(false);
             killButton.renderer.enabled = false;
-            /*
-            killButton.isActive = false;
-            killButton.SetTarget(null);
-            killButton.enabled = false;
-            killButton.TimerText.Text = "";*/
         }
 
         public bool ShowRepairMap()
