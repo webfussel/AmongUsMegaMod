@@ -5,13 +5,13 @@ using static MegaMod.MegaModManager; // TODO: wtf?
 
 namespace MegaMod.Roles
 {
-    public class Jester : Role
+    public class Maniac : Role
     {
         public bool showImpostorToManiac { get; private set; }
         public bool maniacCanDieToDetective { get; private set; }
 
 
-        public Jester(PlayerControl player) : base(player)
+        public Maniac(PlayerControl player) : base(player)
         {
             name = "Maniac";
             color = new Color(138f / 255f, 138f / 255f, 138f / 255f, 1);
@@ -26,12 +26,12 @@ namespace MegaMod.Roles
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
         
             int random = Rng.Next(0, crew.Count);
-            Jester jester = new Jester(crew[random]);
-            AddSpecialRole(jester);
+            Maniac maniac = new Maniac(crew[random]);
+            AddSpecialRole(maniac);
             crew.RemoveAt(random);
 
-            MessageWriter writer = GetWriter(RPC.SetJester);
-            writer.Write(jester.player.PlayerId);
+            MessageWriter writer = GetWriter(RPC.SetManiac);
+            writer.Write(maniac.player.PlayerId);
             CloseWriter(writer);
         }
         public override void ClearSettings()
@@ -64,9 +64,9 @@ namespace MegaMod.Roles
         public override void SetIntro(IntroCutscene.CoBegin__d instance)
         {
             base.SetIntro(instance);
-            var jesterTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
-            jesterTeam.Add(player);
-            instance.yourTeam = jesterTeam;
+            var maniacTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
+            maniacTeam.Add(player);
+            instance.yourTeam = maniacTeam;
         }
     }
 }

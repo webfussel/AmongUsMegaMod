@@ -28,17 +28,17 @@ namespace MegaMod
             Doctor.SetRole(crewmates);
             Detective.SetRole(crewmates);
             Engineer.SetRole(crewmates);
-            Jester.SetRole(crewmates);
+            Maniac.SetRole(crewmates);
 
             Crew.Clear();
             localPlayer = PlayerControl.LocalPlayer;
             
-            bool jesterExists = SpecialRoleIsAssigned<Jester>(out var jesterKv);
-            Jester jesterInstance = jesterKv.Value;
+            bool maniacExists = SpecialRoleIsAssigned<Maniac>(out var maniacKvp);
+            Maniac maniacInstance = maniacKvp.Value;
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
                 if (player.Data.IsImpostor) continue;
-                if (jesterExists && jesterInstance.player.PlayerId == player.PlayerId) continue;
+                if (maniacExists && maniacInstance.player.PlayerId == player.PlayerId) continue;
                 
                 Crew.Add(player);
             }

@@ -54,10 +54,10 @@ namespace MegaMod
             DetectiveKill = 47,
             SetEngineer = 48,
             FixLights = 49,
-            SetJester = 50,
+            SetManiac = 50,
             ResetVariables = 51,
             SetLocalPlayers = 56,
-            JesterWin = 57,
+            ManiacWin = 57,
         }
         
         public static AssetBundle bundle;

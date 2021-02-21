@@ -37,7 +37,7 @@ namespace MegaMod
         public static readonly CustomStringOption OptDoctorShowShieldedPlayer = CustomOption.AddString("Show Shielded Player", new[] { "Self", "Doctor", "Self+Doctor", "Everyone" });
         public static readonly CustomToggleOption OptDoctorPlayerMurderIndicator = CustomOption.AddToggle("Murder Attempt Indicator for Shielded Player", true);
         
-        // Jester
+        // Maniac
         public static readonly CustomToggleOption OptManiacShowImpostor = CustomOption.AddToggle("Show Impostor to Maniac", false);
         public static readonly CustomToggleOption OptManiacCanDieToDetective = CustomOption.AddToggle("Maniac Can Die To Detective", true);
 

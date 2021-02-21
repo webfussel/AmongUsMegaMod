@@ -107,8 +107,8 @@ namespace MegaMod.Roles
             
             
             if (
-                //check if they're jester and the setting is configured
-                (SpecialRoleIsAssigned(out KeyValuePair<byte, Jester> jesterKvp) && target.PlayerId == jesterKvp.Key && jesterKvp.Value.maniacCanDieToDetective)
+                //check if they're Maniac and the setting is configured
+                (SpecialRoleIsAssigned(out KeyValuePair<byte, Maniac> maniacKvp) && target.PlayerId == maniacKvp.Key && maniacKvp.Value.maniacCanDieToDetective)
                 //or if they're an impostor
                 || target.Data.IsImpostor
             )

@@ -47,14 +47,14 @@ namespace MegaMod
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 player.nameText.Color = Color.white;
 
-            // Jester Tasks have to be reset every frame... I don't know why but huh.
-            if (SpecialRoleIsAssigned<Jester>(out var jesterKvp))
-                jesterKvp.Value.ClearTasks();
+            // Maniac Tasks have to be reset every frame... I don't know why but huh.
+            if (SpecialRoleIsAssigned<Maniac>(out var maniacKvp))
+                maniacKvp.Value.ClearTasks();
             
             if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp))
                 doctorKvp.Value.ShowShieldedPlayer();
                 
-            bool showImpostorToJester = false;
+            bool showImpostorToManiac = false;
             Role current = GetSpecialRole(PlayerControl.LocalPlayer.PlayerId);
             if (current != null)
             {
@@ -70,8 +70,8 @@ namespace MegaMod
                         engineer.CheckRepairButton(__instance);
                         engineer.sabotageActive = sabotageActive;
                         break;
-                    case Jester jester:
-                        showImpostorToJester = jester.showImpostorToManiac;
+                    case Maniac maniac:
+                        showImpostorToManiac = maniac.showImpostorToManiac;
                         break;
                     case Detective detective:
                         detective.CheckKillButton(__instance);
@@ -81,7 +81,7 @@ namespace MegaMod
                 }
             }
 
-            if (!PlayerControl.LocalPlayer.Data.IsImpostor && (!(current is Jester) || !showImpostorToJester)) return;
+            if (!PlayerControl.LocalPlayer.Data.IsImpostor && (!(current is Maniac) || !showImpostorToManiac)) return;
             
             
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)

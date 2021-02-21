@@ -13,23 +13,23 @@ namespace MegaMod
         static void Prefix(UnityEngine.Object obj)
         {
             if (ExileController.Instance == null || obj != ExileController.Instance.gameObject) return;
-            if (!SpecialRoleIsAssigned<Jester>(out var jesterKvp)) return;
-            if (ExileController.Instance.exiled?.PlayerId != jesterKvp.Key) return;
+            if (!SpecialRoleIsAssigned<Maniac>(out var maniacKvp)) return;
+            if (ExileController.Instance.exiled?.PlayerId != maniacKvp.Key) return;
             
-            WriteImmediately(RPC.JesterWin);
+            WriteImmediately(RPC.ManiacWin);
             
-            Jester jester = jesterKvp.Value;
+            Maniac maniac = maniacKvp.Value;
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
-                if (player == jester.player) continue;
+                if (player == maniac.player) continue;
                 player.RemoveInfected();
                 player.Die(DeathReason.Exile);
                 player.Data.IsDead = true;
                 player.Data.IsImpostor = false;
             }
-            jester.player.Revive();
-            jester.player.Data.IsDead = false;
-            jester.player.Data.IsImpostor = true;
+            maniac.player.Revive();
+            maniac.player.Data.IsDead = false;
+            maniac.player.Data.IsImpostor = true;
         }
     }
 
@@ -58,7 +58,7 @@ namespace MegaMod
                 case StringNames.ImpostorsRemainP:
                 case StringNames.ImpostorsRemainS:
                 {
-                    if (role is Jester)
+                    if (role is Maniac)
                         __result = "";
                     break;
                 }

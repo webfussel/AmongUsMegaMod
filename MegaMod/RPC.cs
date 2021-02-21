@@ -36,11 +36,11 @@ namespace MegaMod
                         if (player.PlayerId == engineerId)
                             AddSpecialRole(new Engineer(player));
                     break;
-                case (byte) RPC.SetJester:
-                    byte jesterId = reader.ReadByte();
+                case (byte) RPC.SetManiac:
+                    byte maniacId = reader.ReadByte();
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        if (player.PlayerId == jesterId)
-                            AddSpecialRole(new Jester(player));
+                        if (player.PlayerId == maniacId)
+                            AddSpecialRole(new Maniac(player));
                     break;
                 
                 // -------------- Happenings related to special roles --------------
@@ -68,20 +68,20 @@ namespace MegaMod
                     PlayerControl target = PlayerTools.GetPlayerById(targetid);
                     killer.MurderPlayer(target);
                     break;
-                case (byte)RPC.JesterWin:
-                    Jester jester = GetSpecialRole<Jester>();
+                case (byte)RPC.ManiacWin:
+                    Maniac maniac = GetSpecialRole<Maniac>();
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                     {
-                        if (player == jester.player) continue;
+                        if (player == maniac.player) continue;
                         player.RemoveInfected();
                         player.Die(DeathReason.Exile);
                         player.Data.IsDead = true;
                         player.Data.IsImpostor = false;
                     }
 
-                    jester.player.Revive();
-                    jester.player.Data.IsDead = false;
-                    jester.player.Data.IsImpostor = true;
+                    maniac.player.Revive();
+                    maniac.player.Data.IsDead = false;
+                    maniac.player.Data.IsImpostor = true;
                     break;
                 
                 // --------------------------- Other ---------------------------
