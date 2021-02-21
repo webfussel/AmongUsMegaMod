@@ -11,6 +11,8 @@ namespace MegaMod
     [HarmonyPatch]
     public static class MegaModManager
     {
+        private const string VersionString = "beta-1.0.0";
+
         public enum RPC
         {
             PlayAnimation = 0,
@@ -60,15 +62,8 @@ namespace MegaMod
         
         public static AssetBundle bundle;
         public static AssetBundle buttons;
-        public static AudioClip breakClip;
+        public static AudioClip breakClip; // Still need that for the shield
         public static Sprite defaultKillButton;
-        
-        /* To cast into Deathreason, which are:
-        Exile, (0)
-        Kill, (1)
-        Disconnect (2)
-         */
-        public static readonly DeathReason DeathReasonSuicide;
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
 
         // Only the engineer gets added to the dictionary so far
@@ -139,11 +134,9 @@ namespace MegaMod
         public static PlayerControl localPlayer = null;
         public static readonly List<PlayerControl> Crew = new List<PlayerControl>();
         public static readonly System.Random Rng = new System.Random();
-        public static string versionString = "v0.0.1";
 
         static MegaModManager()
         {
-            DeathReasonSuicide = (DeathReason) 3;
             AssignedSpecialRoles = new Dictionary<byte, Role>();
         }
 
@@ -158,7 +151,7 @@ namespace MegaMod
         {
             static void Postfix(VersionShower __instance)
             {
-                __instance.text.Text += $"    MegaMod {versionString}";
+                __instance.text.Text += $"    MegaMod {VersionString}";
             }
         }
 
@@ -176,7 +169,7 @@ namespace MegaMod
         {
             public static void Postfix(PingTracker __instance)
             {
-                __instance.text.Text += $"\nMegaMod {versionString}";
+                __instance.text.Text += $"\nMegaMod {VersionString}";
             }
         }
         
