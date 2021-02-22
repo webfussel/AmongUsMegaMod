@@ -107,7 +107,7 @@ namespace MegaMod
                     tracker.markedSystem = system;
                     break;
                 case (byte)RPC.ResetTrackerMark:
-                    GetSpecialRole<Tracker>().ResetTrackerMark();
+                    GetSpecialRole<Tracker>().TrapSuccessful();
                     break;
 
                 // --------------------------- Other ---------------------------
