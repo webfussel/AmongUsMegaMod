@@ -1,3 +1,4 @@
+using Reactor.Extensions;
 using UnityEngine;
 
 namespace MegaMod.Roles
@@ -7,6 +8,7 @@ namespace MegaMod.Roles
         public PlayerControl player;
         public string name {get; protected set;}
         protected Color color {get; set;}
+        protected Color borderColor { get; set; } = new Color(0, 0, 0, 1);
         protected string startText {get; set;}
 
         public abstract void ClearSettings();
@@ -36,6 +38,7 @@ namespace MegaMod.Roles
         public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
         {
             instance.__this.Title.Text = name;
+            instance.__this.Title.render?.material?.SetColor("_OutlineColor", borderColor);
             instance.c = color;
             instance.__this.ImpostorText.Text = startText;
             instance.__this.BackgroundBar.material.color = color;

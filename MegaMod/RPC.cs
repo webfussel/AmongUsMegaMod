@@ -43,6 +43,10 @@ namespace MegaMod
                                 case var value when value == Seer.RoleID:
                                     AddSpecialRole(new Seer(player));
                                     break;
+                                
+                                case var value when value == Ninja.RoleID:
+                                    AddSpecialRole(new Ninja(player));
+                                    break;
                             }
                     break;
                 // -------------- Happenings related to special roles --------------
