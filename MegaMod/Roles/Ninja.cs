@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Hazel;
+using Il2CppSystem.Configuration;
 using UnityEngine;
 using static MegaMod.MegaModManager;
 
@@ -8,6 +9,7 @@ namespace MegaMod.Roles
     public class Ninja : Role
     {
         public static readonly byte RoleID = 106;
+        public bool doubleKillUsed { get; set; }
         
         public Ninja(PlayerControl player) : base(player)
         {
@@ -38,6 +40,29 @@ namespace MegaMod.Roles
             writer.Write(RoleID);
             writer.Write(ninja.player.PlayerId);
             CloseWriter(writer);
+        }
+
+        public void CheckKillButton(HudManager instance)
+        {
+            if (instance.UseButton == null || !instance.UseButton.isActiveAndEnabled || player.Data.IsDead) return;
+            
+            KillButtonManager killButton = instance.KillButton;
+            killButton.gameObject.SetActive(true);
+            killButton.renderer.enabled = true;
+            killButton.isActive = true;
+            killButton.renderer.sprite = defaultKillButton;
+            killButton.SetTarget(PlayerTools.FindClosestTarget(player));
+        }
+
+        public void CheckCooldown(KillButtonManager instance)
+        {
+            PlayerControl closest = PlayerTools.FindClosestTarget(player);
+            if (!instance.isCoolingDown || doubleKillUsed || closest.Data.IsImpostor) return;
+            
+            doubleKillUsed = true;
+            player.MurderPlayer(closest);
+            player.RpcMurderPlayer(closest);
+            player.SetKillTimer(player.killTimer + PlayerControl.GameOptions.KillCooldown * 2);
         }
 
         public override void ClearSettings()

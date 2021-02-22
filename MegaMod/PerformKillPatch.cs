@@ -25,9 +25,13 @@ namespace MegaMod
             PlayerControl closest = PlayerTools.FindClosestTarget(PlayerControl.LocalPlayer);
             if (closest != null && PlayerControl.LocalPlayer.Data.IsImpostor && SpecialRoleIsAssigned<Doctor>(out var doctorCheckProtected) && doctorCheckProtected.Value.CheckProtectedPlayer(closest.PlayerId))
                 PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
+
+            if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Ninja ninja))
+                ninja.CheckCooldown(__instance);
             
             if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Doctor doctorClosestTarget)) 
                 return doctorClosestTarget.protectedPlayer == null || PlayerTools.FindClosestTarget(PlayerControl.LocalPlayer)?.PlayerId != doctorClosestTarget.protectedPlayer?.PlayerId;
+            
             
             return true;
         }
