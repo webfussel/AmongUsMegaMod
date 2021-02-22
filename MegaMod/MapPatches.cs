@@ -13,6 +13,8 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     engineer?.OpenMap(__instance);
+                else if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    tracker?.OpenMap(__instance);
             }
         }
         
@@ -23,6 +25,8 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     engineer?.UpdateMap(__instance);
+                else if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    tracker?.UpdateMap(__instance);
             }
         }
         
@@ -33,6 +37,8 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     return engineer.SetRepairButtonsActive();
+                else if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    return tracker.SetMarkButtonsActive();
 
                 return true;
             }
@@ -45,6 +51,8 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     return engineer.RepairReactor();
+                else if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    return tracker.MarkReactor();
                 
                 return true;
             }
@@ -57,6 +65,8 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     return engineer.RepairLight();
+                else if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    return tracker.MarkLight();
                 
                 return true;
             }
@@ -69,6 +79,8 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     return engineer.RepairComms();
+                else if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    return tracker.MarkComms();
                 
                 return true;
             }
@@ -81,6 +93,8 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     return engineer.RepairOxy();
+                else if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    return tracker.MarkOxy();
                 
                 return true;
             }
@@ -93,6 +107,8 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     return engineer.RepairSeismic();
+                else if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    return tracker.MarkSeismic();
                 
                 return true;
             }

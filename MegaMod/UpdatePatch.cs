@@ -87,6 +87,10 @@ namespace MegaMod
                     case Seer seer:
                         seer.SetChatActive(__instance);
                         break;
+                    case Tracker tracker:
+                        tracker.CheckMarkButton(__instance);
+                        tracker.sabotageActive = sabotageActive;
+                        break;
                 }
             }
 
