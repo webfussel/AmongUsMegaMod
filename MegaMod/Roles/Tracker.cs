@@ -22,7 +22,7 @@ namespace MegaMod.Roles
         public Tracker(PlayerControl player) : base(player)
         {
             name = "Engineer";
-            color = new Color(255f / 255f, 165f / 255f, 10f / 255f, 1); // TODO: Give unique color
+            color = new Color(0.82f, 0.75f, 1f); // TODO: Give unique color
             startText = "Track down the [FF0000FF]Impostors";
             _specialButton = markTrapButton;
         }
@@ -135,7 +135,7 @@ namespace MegaMod.Roles
             if (!instance.IsOpen || !instance.infectedOverlay.gameObject.active) return;
 
             instance.ColorControl.baseColor = sabotageActive ? Color.gray : color;
-            float percentage = _repairUsed ? 1f : 0f;
+            float percentage = markTrapUsed ? 1f : 0f;
             
             foreach (MapRoom room in instance.infectedOverlay.rooms)
             {
