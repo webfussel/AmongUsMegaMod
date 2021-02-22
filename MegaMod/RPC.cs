@@ -102,12 +102,13 @@ namespace MegaMod
                     maniac.player.Data.IsImpostor = true;
                     break;
                 case (byte)RPC.SetTrackerMark:
-                    Tracker tracker = GetSpecialRole<Tracker>();
+                    Tracker tracker1 = GetSpecialRole<Tracker>();
                     SystemTypes system = (SystemTypes) reader.ReadInt32();
-                    tracker.markedSystem = system;
+                    tracker1.markedSystem = system;
                     break;
-                case (byte)RPC.ResetTrackerMark:
-                    GetSpecialRole<Tracker>().TrapSuccessful();
+                case (byte)RPC.TrapSuccessful:
+                    if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker2))
+                        tracker2.TrapSuccessful();
                     break;
 
                 // --------------------------- Other ---------------------------

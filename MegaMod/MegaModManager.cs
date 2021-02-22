@@ -57,7 +57,7 @@ namespace MegaMod
             SetLocalPlayers = 56,
             ManiacWin = 57,
             SetTrackerMark = 58,
-            ResetTrackerMark = 59
+            TrapSuccessful = 59
         }
         
         public static AssetBundle buttons;
