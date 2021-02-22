@@ -13,6 +13,7 @@ namespace MegaMod.Roles
         {
             name = "Ninja";
             color = new Color(0, 0, 0, 1);
+            borderColor = new Color(1, 1, 1, 1);
             startText = "Double kill - Triple cooldown";
         }
         
@@ -21,17 +22,17 @@ namespace MegaMod.Roles
          * Can only set Role if crew still has space for Role.
          * Removes crew free space on successful assignment.
          */
-        public static void SetRole(List<PlayerControl> crew)
+        public static void SetRole(List<PlayerControl> imps)
         {
             float spawnChance = MainConfig.OptNinjaSpawnChance.GetValue();
             if (spawnChance < 1) return;
             bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
-            if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
+            if ((imps.Count <= 0 || !spawnChanceAchieved)) return;
         
-            int random = Rng.Next(0, crew.Count);
-            Ninja ninja = new Ninja(crew[random]);
+            int random = Rng.Next(0, imps.Count);
+            Ninja ninja = new Ninja(imps[random]);
             AddSpecialRole(ninja);
-            crew.RemoveAt(random);
+            imps.RemoveAt(random);
             
             MessageWriter writer = GetWriter(RPC.SetRole);
             writer.Write(RoleID);
