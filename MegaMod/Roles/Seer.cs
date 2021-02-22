@@ -52,9 +52,10 @@ namespace MegaMod.Roles
             CloseWriter(writer);
         }
 
-        public void SetChatActive(HudManager instance)
+        public void AdjustChat(HudManager instance, bool typingEnabled)
         {
             instance.Chat.gameObject.SetActive(true);
+            instance.Chat.TypingArea.gameObject.SetActive(typingEnabled);
         }
 
         public void SetEmergencyButtonInactive(EmergencyMinigame instance)
