@@ -87,6 +87,9 @@ namespace MegaMod
                     case Seer seer:
                         seer.SetChatActive(__instance);
                         break;
+                    case Ninja ninja:
+                        ninja.CheckKillButton(__instance);
+                        break;
                 }
             }
 
