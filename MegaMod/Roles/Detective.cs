@@ -17,9 +17,9 @@ namespace MegaMod.Roles
             color = new Color(0, 40f / 255f, 198f / 255f, 1);
             startText = "Shoot the [FF0000FF]Impostor";
             player.SetKillTimer(10f);
-        }
-
-        /**
+        } 
+        
+    /**
      * Sets the Role if spawn chance is reached.
      * Can only set Role if crew still has space for Role.
      * Removes crew free space on successful assignment.
