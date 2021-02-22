@@ -11,11 +11,12 @@ namespace MegaMod
             int columns = 5;
 
             float xMin = 1.45f;
-            float yMin = -0.05f;
+
+            float scale = 0.65f;
             float add = 0.45f;
 
             float x = xMin;
-            float y = yMin;
+            float y = -0.05f;
             for (int i = 0; i < __instance.ColorChips.Count; ++i)
             {
                 if (i % columns == 0)
@@ -30,7 +31,7 @@ namespace MegaMod
                 
                 ColorChip chip = __instance.ColorChips[i];
                 chip.transform.localPosition = new Vector3(x, y, -1f);
-                chip.transform.localScale = chip.transform.localScale * 0.65f;
+                chip.transform.localScale *= scale;
             }
         }
     }
