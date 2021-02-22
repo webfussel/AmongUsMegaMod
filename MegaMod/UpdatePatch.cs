@@ -100,7 +100,7 @@ namespace MegaMod
                         break;
                     case Tracker tracker:
                         tracker.CheckMarkButton(__instance);
-                        tracker.sabotageActive = sabotageActive;
+                        tracker.SetSabotageState(sabotageActive);
                         break;
                 }
             }
