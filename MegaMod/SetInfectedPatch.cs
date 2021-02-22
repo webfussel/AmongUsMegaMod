@@ -30,6 +30,7 @@ namespace MegaMod
             Engineer.SetRole(crewmates);
             Maniac.SetRole(crewmates);
             Seer.SetRole(crewmates);
+            Tracker.SetRole(crewmates);
             
             
             List<PlayerControl> impostors = PlayerControl.AllPlayerControls.ToArray().ToList();
