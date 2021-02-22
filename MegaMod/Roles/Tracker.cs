@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Hazel;
 using UnityEngine;
 using static MegaMod.MegaModManager; // TODO: wtf?
+using UnhollowerBaseLib;
 
 namespace MegaMod.Roles
 {
