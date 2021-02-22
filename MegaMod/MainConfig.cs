@@ -29,6 +29,7 @@ namespace MegaMod
         public static readonly CustomNumberOption OptDoctorSpawnChance = CustomOption.AddNumber("Doctor Spawn Chance", 100, 0, 100, 10);
         public static readonly CustomNumberOption OptSeerSpawnChance = CustomOption.AddNumber("Seer Spawn Chance", 100, 0, 100, 10);
         public static readonly CustomNumberOption OptManiacSpawnChance = CustomOption.AddNumber("Maniac Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptTrackerSpawnChance = CustomOption.AddNumber("Tracker Spawn Chance", 100, 0, 100, 10);
         
         // Detective
         public static readonly CustomNumberOption OptDetectiveKillCooldown = CustomOption.AddNumber("Detective Kill Cooldown", 30f, 10f, 60f, 2.5f);
@@ -85,6 +86,7 @@ namespace MegaMod
             
             buttons = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\buttons");
             repairButton = buttons.LoadAsset<Sprite>("repair").DontUnload();
+            markTrapButton = buttons.LoadAsset<Sprite>("repair").DontUnload(); // TODO: Geeignete Grafik einbinden
 
             var defaultRegions = ServerManager.DefaultRegions.ToList();
             var ip = Ip.Value;
