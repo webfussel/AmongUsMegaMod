@@ -20,7 +20,7 @@ namespace MegaMod.Roles
     
         public static void SetRole(List<PlayerControl> crew)
         {
-            float spawnChance = HarmonyMain.OptManiacSpawnChance.GetValue();
+            float spawnChance = MainConfig.OptManiacSpawnChance.GetValue();
             if (spawnChance < 1) return;
             bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
@@ -53,8 +53,8 @@ namespace MegaMod.Roles
 
         protected override void SetConfigSettings()
         {
-            showImpostorToManiac = HarmonyMain.OptManiacShowImpostor.GetValue();
-            maniacCanDieToDetective = HarmonyMain.OptManiacCanDieToDetective.GetValue();
+            showImpostorToManiac = MainConfig.OptManiacShowImpostor.GetValue();
+            maniacCanDieToDetective = MainConfig.OptManiacCanDieToDetective.GetValue();
         }
 
         public override void CheckDead(HudManager instance)

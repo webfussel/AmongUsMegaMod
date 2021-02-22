@@ -9,8 +9,6 @@ namespace MegaMod.Roles
 {
     public class Seer : Role
     {
-        // TODO: Der Seer soll den Notfall-Button nicht benutzen können!
-
         public enum MessageType { EnteredVent, ExitedVent, Died }
         private readonly Dictionary<MessageType, string> messages = new Dictionary<MessageType, string>()
         {
@@ -18,13 +16,15 @@ namespace MegaMod.Roles
             { MessageType.ExitedVent,  "Someone exited a vent..." },
             { MessageType.Died,        "Someone died..." }
         };
+        
+        private bool canCallEmergency { get; set; }
 
         public Seer(PlayerControl player) : base(player)
         {
             name = "Seer";
             color = new Color(1f, 0.71f, 0.92f);
-            // TODO: Maybe: "You know things..."
-            startText = "Listen carefully to gather valuable information!";
+            // Old message was too long
+            startText = "You know things...";
         }
 
         /*
@@ -34,7 +34,7 @@ namespace MegaMod.Roles
         */
         public static void SetRole(List<PlayerControl> crew)
         {
-            float spawnChance = HarmonyMain.OptSeerSpawnChance.GetValue();
+            float spawnChance = MainConfig.OptSeerSpawnChance.GetValue();
             if (spawnChance < 1) return;
             bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
@@ -54,6 +54,16 @@ namespace MegaMod.Roles
             instance.Chat.gameObject.SetActive(true);
         }
 
+        public void SetEmergencyButtonInactive(EmergencyMinigame instance)
+        {
+            if (canCallEmergency) return;
+            instance.StatusText.Text = "You can't call an Emergency!";
+            instance.NumberText.Text = string.Empty;
+            instance.ButtonActive = false;
+            instance.ClosedLid.gameObject.SetActive(true);
+            instance.OpenLid.gameObject.SetActive(false);
+        }
+
         public override void ClearSettings()
         {
             player = null;
@@ -61,7 +71,7 @@ namespace MegaMod.Roles
 
         protected override void SetConfigSettings()
         {
-            // do nothing
+            canCallEmergency = MainConfig.OptSeerCanPressEmergency.GetValue();
         }
 
         public override void CheckDead(HudManager instance)

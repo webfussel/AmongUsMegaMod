@@ -25,7 +25,7 @@ namespace MegaMod.Roles
      */
         public static void SetRole(List<PlayerControl> crew)
         {
-            float spawnChance = HarmonyMain.OptDetectiveSpawnChance.GetValue();
+            float spawnChance = MainConfig.OptDetectiveSpawnChance.GetValue();
             if (spawnChance < 1) return;
             bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
@@ -47,8 +47,8 @@ namespace MegaMod.Roles
 
         protected override void SetConfigSettings()
         {
-            cooldown = HarmonyMain.OptDetectiveKillCooldown.GetValue();
-            showReport = HarmonyMain.ShowDetectiveReports.GetValue();
+            cooldown = MainConfig.OptDetectiveKillCooldown.GetValue();
+            showReport = MainConfig.OptShowDetectiveReports.GetValue();
         }
 
         public override void CheckDead(HudManager instance)

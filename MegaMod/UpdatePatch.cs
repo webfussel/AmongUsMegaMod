@@ -5,6 +5,7 @@ using static MegaMod.MegaModManager;
 
 namespace MegaMod
 {
+    // This is for smaller Game Settings in the beginning, so nothing vanishes off screen
     [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.Method_24))]
     class GameOptionsData_ToHudString
     {
@@ -103,6 +104,17 @@ namespace MegaMod
                     }
                     player.nameText.Color = Palette.ImpostorRed;
                 }
+        }
+    }
+
+
+    [HarmonyPatch(typeof(EmergencyMinigame), nameof(EmergencyMinigame.Update))]
+    class EmergencyButtonPatch
+    {
+        static void Postfix(EmergencyMinigame __instance)
+        {
+            if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Seer seer))
+                seer.SetEmergencyButtonInactive(__instance);
         }
     }
 }

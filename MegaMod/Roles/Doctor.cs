@@ -31,7 +31,7 @@ namespace MegaMod.Roles
      */
         public static void SetRole(List<PlayerControl> crew)
         {
-            float spawnChance = HarmonyMain.OptDoctorSpawnChance.GetValue();
+            float spawnChance = MainConfig.OptDoctorSpawnChance.GetValue();
             if (spawnChance < 1) return;
             bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
@@ -55,8 +55,8 @@ namespace MegaMod.Roles
 
         protected override void SetConfigSettings()
         {
-            showProtectedPlayer = HarmonyMain.OptDoctorShowShieldedPlayer.GetValue();
-            shieldKillAttemptIndicator = HarmonyMain.OptDoctorPlayerMurderIndicator.GetValue();
+            showProtectedPlayer = MainConfig.OptDoctorShowShieldedPlayer.GetValue();
+            shieldKillAttemptIndicator = MainConfig.OptDoctorPlayerMurderIndicator.GetValue();
         }
 
         public void SetCooldown(float deltaTime)

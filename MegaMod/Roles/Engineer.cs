@@ -28,7 +28,7 @@ namespace MegaMod.Roles
      */
         public static void SetRole(List<PlayerControl> crew)
         {
-            float spawnChance = HarmonyMain.OptEngineerSpawnChance.GetValue();
+            float spawnChance = MainConfig.OptEngineerSpawnChance.GetValue();
             if (spawnChance < 1) return;
             bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
