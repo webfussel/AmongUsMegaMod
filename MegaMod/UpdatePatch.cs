@@ -98,14 +98,6 @@ namespace MegaMod
                     case Ninja ninja:
                         ninja.CheckKillButton(__instance);
                         break;
-                    case Tracker tracker:
-                        tracker.CheckMarkButton(__instance);
-                        tracker.sabotageActive = sabotageActive;
-                        break;
-                    case Tracker tracker:
-                        tracker.CheckMarkButton(__instance);
-                        tracker.sabotageActive = sabotageActive;
-                        break;
                 }
             }
 

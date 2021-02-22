@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using Hazel;
 using MegaMod.Roles;
 using static MegaMod.MegaModManager;
 
