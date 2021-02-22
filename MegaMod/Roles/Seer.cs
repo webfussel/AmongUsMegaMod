@@ -22,7 +22,7 @@ namespace MegaMod.Roles
         public Seer(PlayerControl player) : base(player)
         {
             name = "Seer";
-            color = new Color(255f / 255f, 165f / 255f, 10f / 255f, 1); // TODO: Set unique color!
+            color = new Color(1f, 0.71f, 0.92f);
             startText = "Listen carefully to gather valuable informations!";
         }
 
