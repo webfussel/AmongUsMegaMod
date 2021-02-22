@@ -57,8 +57,8 @@ namespace MegaMod
                 }
                 KilledPlayers.Add(deadPlayer);
 
-                if(SpecialRoleIsAssigned<Seer>(out var seerKvp) && target != seerKvp.Value.player)
-                    seerKvp.Value.SendChatMessage(Seer.MessageType.Died);
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Seer seer) && target != seer.player)
+                    seer.SendChatMessage(Seer.MessageType.Died);
             }
         }
     }

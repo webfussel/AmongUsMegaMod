@@ -83,6 +83,9 @@ namespace MegaMod
                         detective.SetCooldown(Time.deltaTime);
                         __instance.KillButton.renderer.sprite = defaultKillButton;
                         break;
+                    case Seer seer:
+                        seer.SetChatActive(__instance);
+                        break;
                 }
             }
 

@@ -23,7 +23,8 @@ namespace MegaMod.Roles
         {
             name = "Seer";
             color = new Color(1f, 0.71f, 0.92f);
-            startText = "Listen carefully to gather valuable informations!";
+            // TODO: Maybe: "You know things..."
+            startText = "Listen carefully to gather valuable information!";
         }
 
         /*
@@ -46,6 +47,11 @@ namespace MegaMod.Roles
             MessageWriter writer = GetWriter(RPC.SetSeer);
             writer.Write(seer.player.PlayerId);
             CloseWriter(writer);
+        }
+
+        public void SetChatActive(HudManager instance)
+        {
+            instance.Chat.gameObject.SetActive(true);
         }
 
         public override void ClearSettings()

@@ -58,6 +58,7 @@ namespace MegaMod
             ResetVariables = 51,
             SetLocalPlayers = 56,
             ManiacWin = 57,
+            SetSeer = 58
         }
         
         public static AssetBundle bundle;

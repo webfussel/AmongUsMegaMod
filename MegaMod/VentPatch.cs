@@ -54,8 +54,8 @@ namespace MegaMod
         {
             PlayerVentTimeExtension.SetLastVent(NMEAPOJFNKA.PlayerId);
 
-            if(SpecialRoleIsAssigned<Seer>(out var seerKvp))
-                seerKvp.Value.SendVentMessage(Seer.MessageType.EnteredVent);
+            if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Seer seer))
+                seer.SendChatMessage(Seer.MessageType.EnteredVent);
         }
     }
 
@@ -66,8 +66,8 @@ namespace MegaMod
         {
             PlayerVentTimeExtension.SetLastVent(NMEAPOJFNKA.PlayerId);
 
-            if(SpecialRoleIsAssigned<Seer>(out var seerKvp))
-                seerKvp.Value.SendVentMessage(Seer.MessageType.ExitedVent);
+            if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Seer seer))
+                seer.SendChatMessage(Seer.MessageType.ExitedVent);
         }
     }
 }
