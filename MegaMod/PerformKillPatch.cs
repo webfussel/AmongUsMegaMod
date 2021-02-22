@@ -22,6 +22,9 @@ namespace MegaMod
             if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Doctor doctor))
                 doctor.SetProtectedPlayer(__instance);
 
+            if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                tracker.ShowMarkTrapMap();
+
             PlayerControl closest = PlayerTools.FindClosestTarget(PlayerControl.LocalPlayer);
             if (closest != null && PlayerControl.LocalPlayer.Data.IsImpostor &&
                 SpecialRoleIsAssigned<Doctor>(out var doctorCheckProtected) &&

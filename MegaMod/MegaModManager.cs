@@ -55,7 +55,9 @@ namespace MegaMod
             FixLights = 49,
             ResetVariables = 51,
             SetLocalPlayers = 56,
-            ManiacWin = 57
+            ManiacWin = 57,
+            SetTrackerMark = 58,
+            ResetTrackerMark = 59
         }
         
         public static AssetBundle buttons;
