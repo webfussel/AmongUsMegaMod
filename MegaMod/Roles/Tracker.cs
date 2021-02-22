@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Hazel;
-using Il2CppSystem.Linq.Expressions;
 using UnityEngine;
 using static MegaMod.MegaModManager; // TODO: wtf?
 
@@ -16,12 +15,14 @@ namespace MegaMod.Roles
         public bool sabotageActive;
         public static readonly byte RoleID = 105;
         public SystemTypes? markedSystem;
+
         public Tracker(PlayerControl player) : base(player)
         {
             name = "Tracker";
             color = _color;
             startText = "Track down the [FF0000FF]Impostors";
             _specialButton = markTrapButton;
+
         }
 
         /**
@@ -84,9 +85,10 @@ namespace MegaMod.Roles
             killButton.renderer.enabled = false;
         }
 
-        public void SetChatActive(HudManager instance)
+        public void AdjustChat(HudManager instance, bool typingEnabled)
         {
             instance.Chat.gameObject.SetActive(true);
+            instance.Chat.TypingArea.gameObject.SetActive(typingEnabled);           
         }
 
         public bool ShowMarkTrapMap()
@@ -159,9 +161,11 @@ namespace MegaMod.Roles
             ConsoleTools.Info($"You marked {(system == markedSystem ? "correctly" : "incorrectly")}");
 
             if (system != markedSystem) return;
-            
+
+            markTrapUsed = false;
+            markedSystem = null;
             TrapSuccessful();
-            MessageWriter writer = GetWriter(RPC.ResetTrackerMark);
+            MessageWriter writer = GetWriter(RPC.TrapSuccessful);
             CloseWriter(writer);
         }
 
