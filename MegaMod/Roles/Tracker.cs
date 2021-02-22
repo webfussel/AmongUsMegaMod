@@ -1,10 +1,9 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using Hazel;
+using Il2CppSystem.Linq.Expressions;
 using UnityEngine;
 using static MegaMod.MegaModManager; // TODO: wtf?
-using UnhollowerBaseLib;
 
 namespace MegaMod.Roles
 {
@@ -12,7 +11,7 @@ namespace MegaMod.Roles
     {
         private bool markTrapUsed;
         private readonly Sprite _specialButton;
-        private static readonly Color _color = new Color(0.82f, 0.75f, 1f);
+        private static readonly Color _color = new Color(0.77f, 1f, 0.34f);
 
         public bool sabotageActive;
         public static readonly byte RoleID = 105;
@@ -85,6 +84,11 @@ namespace MegaMod.Roles
             killButton.renderer.enabled = false;
         }
 
+        public void SetChatActive(HudManager instance)
+        {
+            instance.Chat.gameObject.SetActive(true);
+        }
+
         public bool ShowMarkTrapMap()
         {
             DestroyableSingleton<HudManager>.Instance.ShowMap((Action<MapBehaviour>)delegate (MapBehaviour m)
@@ -152,15 +156,23 @@ namespace MegaMod.Roles
         {
             ConsoleTools.Info($"{system} was sabotaged");
             ConsoleTools.Info($"You marked {markedSystem}");
-            ConsoleTools.Info("You marked " + (system == markedSystem ? "correctly" : "incorrectly"));
+            ConsoleTools.Info($"You marked {(system == markedSystem ? "correctly" : "incorrectly")}");
 
-            // Muss hier auch ResetTrackerMark ausgeführt werden?
+            if (system != markedSystem) return;
+            
+            TrapSuccessful();
             MessageWriter writer = GetWriter(RPC.ResetTrackerMark);
             CloseWriter(writer);
         }
 
-        public void ResetTrackerMark()
+        public void TrapSuccessful()
         {
+            if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance && !player.Data.IsDead)
+            {
+                string room = "bla";
+                DestroyableSingleton<HudManager>.Instance.Chat.AddChat(player, $"The saboteur is in {room}!");
+            }
+            
             markTrapUsed = false;
             markedSystem = null;
         }

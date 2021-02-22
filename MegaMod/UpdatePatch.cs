@@ -89,14 +89,14 @@ namespace MegaMod
                         break;
                     case Tracker tracker:
                         tracker.CheckMarkButton(__instance);
+                        tracker.SetChatActive(__instance);
                         tracker.sabotageActive = sabotageActive;
                         break;
                 }
             }
 
             if (!PlayerControl.LocalPlayer.Data.IsImpostor && (!(current is Maniac) || !showImpostorToManiac)) return;
-            
-            
+
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 if (player.Data.IsImpostor)
                 {
