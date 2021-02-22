@@ -29,6 +29,7 @@ namespace MegaMod
             Detective.SetRole(crewmates);
             Engineer.SetRole(crewmates);
             Maniac.SetRole(crewmates);
+            Seer.SetRole(crewmates);
 
             Crew.Clear();
             localPlayer = PlayerControl.LocalPlayer;

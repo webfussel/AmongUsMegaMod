@@ -42,6 +42,12 @@ namespace MegaMod
                         if (player.PlayerId == maniacId)
                             AddSpecialRole(new Maniac(player));
                     break;
+                case (byte) RPC.SetSeer:
+                    byte seerId = reader.ReadByte();
+                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                        if (player.PlayerId == seerId)
+                            AddSpecialRole(new Seer(player));
+                    break;
                 
                 // -------------- Happenings related to special roles --------------
                 
@@ -99,7 +105,7 @@ namespace MegaMod
                         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                             if (player.PlayerId == id)
                                 Crew.Add(player);
-                        break;
+                    break;
                 case (byte) RPC.SetInfected:
                     break;
                 case (byte) RPC.ResetVariables:

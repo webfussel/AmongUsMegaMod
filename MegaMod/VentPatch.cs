@@ -53,6 +53,9 @@ namespace MegaMod
         public static void Postfix(PlayerControl NMEAPOJFNKA)
         {
             PlayerVentTimeExtension.SetLastVent(NMEAPOJFNKA.PlayerId);
+
+            if(SpecialRoleIsAssigned<Seer>(out var seerKvp))
+                seerKvp.Value.SendVentMessage(Seer.MessageType.EnteredVent);
         }
     }
 
@@ -62,6 +65,9 @@ namespace MegaMod
         public static void Postfix(PlayerControl NMEAPOJFNKA)
         {
             PlayerVentTimeExtension.SetLastVent(NMEAPOJFNKA.PlayerId);
+
+            if(SpecialRoleIsAssigned<Seer>(out var seerKvp))
+                seerKvp.Value.SendVentMessage(Seer.MessageType.ExitedVent);
         }
     }
 }

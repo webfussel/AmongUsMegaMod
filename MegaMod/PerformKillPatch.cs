@@ -56,6 +56,9 @@ namespace MegaMod
                     current.Data.IsImpostor = false;
                 }
                 KilledPlayers.Add(deadPlayer);
+
+                if(SpecialRoleIsAssigned<Seer>(out var seerKvp) && target != seerKvp.Value.player)
+                    seerKvp.Value.SendChatMessage(Seer.MessageType.Died);
             }
         }
     }
