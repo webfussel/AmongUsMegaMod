@@ -18,11 +18,11 @@ namespace MegaMod
             {
                 // ---------------------- Set special roles ----------------------
                 case (byte) RPC.SetRole:
-                    byte roleid = reader.ReadByte();
-                    byte playerid = reader.ReadByte();
+                    byte roleId = reader.ReadByte();
+                    byte playerId = reader.ReadByte();
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        if (player.PlayerId == playerid)
-                            switch (roleid)
+                        if (player.PlayerId == playerId)
+                            switch (roleId)
                             {
                                 case var value when value == Detective.RoleID:
                                     AddSpecialRole(new Detective(player));
