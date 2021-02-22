@@ -12,6 +12,7 @@ namespace MegaMod
         public DeadPlayer DeadPlayer { get; set; }
         public float KillAge { get; set; }
             
+        // TODO: Add new colors from mod
         private readonly Dictionary<byte, string> _colors = new Dictionary<byte, string>()
         {
             {0, "darker"},
