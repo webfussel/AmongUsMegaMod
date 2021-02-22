@@ -8,6 +8,7 @@ namespace MegaMod.Roles
 {
     public class Doctor : Role
     {
+        public static readonly byte RoleID = 101;
     
         public PlayerControl protectedPlayer { get; set; }
         private bool shieldUsed { get; set; }
@@ -41,7 +42,8 @@ namespace MegaMod.Roles
             AddSpecialRole(doctor);
             crew.RemoveAt(random);
             
-            MessageWriter writer = GetWriter(RPC.SetDoctor);
+            MessageWriter writer = GetWriter(RPC.SetRole);
+            writer.Write(RoleID);
             writer.Write(doctor.player.PlayerId);
             CloseWriter(writer);
         }

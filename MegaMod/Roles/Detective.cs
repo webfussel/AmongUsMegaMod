@@ -7,6 +7,7 @@ namespace MegaMod.Roles
 {
     public class Detective : Role
     {
+        public static readonly byte RoleID = 100;
         private float cooldown { get; set; }
         public bool showReport { get; private set; }
 
@@ -35,7 +36,8 @@ namespace MegaMod.Roles
             AddSpecialRole(detective);
             crew.RemoveAt(random);
             
-            MessageWriter writer = GetWriter(RPC.SetDetective);
+            MessageWriter writer = GetWriter(RPC.SetRole);
+            writer.Write(RoleID);
             writer.Write(detective.player.PlayerId);
             CloseWriter(writer);
         }

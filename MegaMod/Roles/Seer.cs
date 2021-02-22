@@ -9,6 +9,8 @@ namespace MegaMod.Roles
 {
     public class Seer : Role
     {
+        public static readonly byte RoleID = 104;
+        
         public enum MessageType { EnteredVent, ExitedVent, Died }
         private readonly Dictionary<MessageType, string> messages = new Dictionary<MessageType, string>()
         {
@@ -44,7 +46,8 @@ namespace MegaMod.Roles
             AddSpecialRole(seer);
             crew.RemoveAt(random);
             
-            MessageWriter writer = GetWriter(RPC.SetSeer);
+            MessageWriter writer = GetWriter(RPC.SetRole);
+            writer.Write(RoleID);
             writer.Write(seer.player.PlayerId);
             CloseWriter(writer);
         }

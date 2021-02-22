@@ -9,6 +9,8 @@ namespace MegaMod.Roles
 {
     public class Engineer : Role
     {
+        public static readonly byte RoleID = 102;
+        
         private bool _repairUsed;
         public bool sabotageActive { get; set; }
         private readonly Sprite _specialButton;
@@ -38,7 +40,8 @@ namespace MegaMod.Roles
             AddSpecialRole(engineer);
             crew.RemoveAt(random);
             
-            MessageWriter writer = GetWriter(RPC.SetEngineer);
+            MessageWriter writer = GetWriter(RPC.SetRole);
+            writer.Write(RoleID);
             writer.Write(engineer.player.PlayerId);
             CloseWriter(writer);
         }

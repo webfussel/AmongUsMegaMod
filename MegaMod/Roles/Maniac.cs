@@ -7,6 +7,7 @@ namespace MegaMod.Roles
 {
     public class Maniac : Role
     {
+        public static readonly byte RoleID = 103;
         public bool showImpostorToManiac { get; private set; }
         public bool maniacCanDieToDetective { get; private set; }
 
@@ -30,7 +31,8 @@ namespace MegaMod.Roles
             AddSpecialRole(maniac);
             crew.RemoveAt(random);
 
-            MessageWriter writer = GetWriter(RPC.SetManiac);
+            MessageWriter writer = GetWriter(RPC.SetRole);
+            writer.Write(RoleID);
             writer.Write(maniac.player.PlayerId);
             CloseWriter(writer);
         }

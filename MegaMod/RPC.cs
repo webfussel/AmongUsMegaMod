@@ -17,38 +17,34 @@ namespace MegaMod
             switch (HKHMBLJFLMC /*Packet ID*/)
             {
                 // ---------------------- Set special roles ----------------------
-                
-                case (byte) RPC.SetDetective:
-                    byte detectiveId = reader.ReadByte();
+                case (byte) RPC.SetRole:
+                    byte roleid = reader.ReadByte();
+                    byte playerid = reader.ReadByte();
                     foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        if (player.PlayerId == detectiveId)
-                            AddSpecialRole(new Detective(player));
+                        if (player.PlayerId == playerid)
+                            switch (roleid)
+                            {
+                                case var value when value == Detective.RoleID:
+                                    AddSpecialRole(new Detective(player));
+                                    break;
+                                
+                                case var value when value == Doctor.RoleID:
+                                    AddSpecialRole(new Doctor(player));
+                                    break;
+                                
+                                case var value when value == Engineer.RoleID:
+                                    AddSpecialRole(new Engineer(player));
+                                    break;
+                                
+                                case var value when value == Maniac.RoleID:
+                                    AddSpecialRole(new Maniac(player));
+                                    break;
+                                
+                                case var value when value == Seer.RoleID:
+                                    AddSpecialRole(new Seer(player));
+                                    break;
+                            }
                     break;
-                case (byte) RPC.SetDoctor:
-                    byte doctorId = reader.ReadByte();
-                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        if (player.PlayerId == doctorId)
-                            AddSpecialRole(new Doctor(player));
-                    break;
-                case (byte) RPC.SetEngineer:
-                    byte engineerId = reader.ReadByte();
-                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        if (player.PlayerId == engineerId)
-                            AddSpecialRole(new Engineer(player));
-                    break;
-                case (byte) RPC.SetManiac:
-                    byte maniacId = reader.ReadByte();
-                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        if (player.PlayerId == maniacId)
-                            AddSpecialRole(new Maniac(player));
-                    break;
-                case (byte) RPC.SetSeer:
-                    byte seerId = reader.ReadByte();
-                    foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                        if (player.PlayerId == seerId)
-                            AddSpecialRole(new Seer(player));
-                    break;
-                
                 // -------------- Happenings related to special roles --------------
                 
                 case (byte)RPC.SetProtected:

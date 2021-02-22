@@ -47,18 +47,14 @@ namespace MegaMod
             SetTasks = 29,
             UpdateGameData = 30,
             // --- Custom RPCs ---
-            SetDoctor = 43,
+            SetRole = 42,
             SetProtected = 44,
             ShieldBreak = 45,
-            SetDetective = 46,
             DetectiveKill = 47,
-            SetEngineer = 48,
             FixLights = 49,
-            SetManiac = 50,
             ResetVariables = 51,
             SetLocalPlayers = 56,
-            ManiacWin = 57,
-            SetSeer = 58
+            ManiacWin = 57
         }
         
         public static AssetBundle bundle;
