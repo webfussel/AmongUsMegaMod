@@ -30,6 +30,12 @@ namespace MegaMod
             Engineer.SetRole(crewmates);
             Maniac.SetRole(crewmates);
             Seer.SetRole(crewmates);
+            
+            
+            List<PlayerControl> impostors = PlayerControl.AllPlayerControls.ToArray().ToList();
+            impostors.RemoveAll(x => !x.Data.IsImpostor);
+
+            Ninja.SetRole(impostors);
 
             Crew.Clear();
             localPlayer = PlayerControl.LocalPlayer;
