@@ -1,28 +1,26 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Hazel;
-using Reactor.Extensions;
 using UnityEngine;
 using static MegaMod.MegaModManager; // TODO: wtf?
+using UnhollowerBaseLib;
 
 namespace MegaMod.Roles
 {
     public class Tracker : Role
     {
-        public static readonly byte RoleID = 105;
-        
         private bool markTrapUsed;
-
         private readonly Sprite _specialButton;
+        private static readonly Color _color = new Color(0.82f, 0.75f, 1f);
 
-        private bool sabotageActive;
-
-        private SystemTypes? markedSystem;
-
+        public bool sabotageActive;
+        public static readonly byte RoleID = 105;
+        public SystemTypes? markedSystem;
         public Tracker(PlayerControl player) : base(player)
         {
-            name = "Engineer";
-            color = new Color(0.82f, 0.75f, 1f); // TODO: Give unique color
+            name = "Tracker";
+            color = _color;
             startText = "Track down the [FF0000FF]Impostors";
             _specialButton = markTrapButton;
         }
@@ -66,7 +64,7 @@ namespace MegaMod.Roles
         public void CheckMarkButton(HudManager instance)
         {
             if (player == null || player.PlayerId != PlayerControl.LocalPlayer.PlayerId ||
-                !instance.UseButton.isActiveAndEnabled || player.Data.IsDead || !sabotageActive) return;
+                !instance.UseButton.isActiveAndEnabled || player.Data.IsDead) return;
         
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(true);
@@ -85,25 +83,6 @@ namespace MegaMod.Roles
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(false);
             killButton.renderer.enabled = false;
-        }
-
-        public void SetSabotageState(bool active)
-        {
-            if(active == sabotageActive) return;
-            
-            if(active == true)
-            {
-                // Check if the tracker marked correctly
-                // If yes and the saboteur is alive, tell the tracker their name
-                // If the saboteur isn't alive, tell the tracker that
-            }
-            else
-            {
-                markTrapUsed = false;
-                markedSystem = null;
-            }
-
-            sabotageActive = active;
         }
 
         public bool ShowMarkTrapMap()
@@ -140,7 +119,8 @@ namespace MegaMod.Roles
             foreach (MapRoom room in instance.infectedOverlay.rooms)
             {
                 if (room.special == null) continue;
-                
+
+                room.special.material.color = room.room == markedSystem ? _color : Color.white;
                 room.special.material.SetFloat("_Desat", sabotageActive ? 1f : 0f);
                 room.special.enabled = true;
                 room.special.gameObject.SetActive(true);
@@ -153,64 +133,36 @@ namespace MegaMod.Roles
             return false;
         }
 
-        private bool CanMark()
+        public bool MarkSystem(SystemTypes system)
         {
-            return !markTrapUsed && sabotageActive && !player.Data.IsDead;
-        }
+            if (markTrapUsed || sabotageActive || player.Data.IsDead) return false;
 
-        public bool MarkReactor()
-        {
-            if (!CanMark()) return false;
-            
             markTrapUsed = true;
-            markedSystem = SystemTypes.Reactor;
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 16);
+            markedSystem = system;
+            ConsoleTools.Info($"Marked {system}");
+
+            MessageWriter writer = GetWriter(RPC.SetTrackerMark);
+            writer.Write((int) markedSystem);
+            CloseWriter(writer);
+
             return false;
         }
 
-        public bool MarkLight()
+        public void OnSabotageHappened(SystemTypes system, PlayerControl saboteur)
         {
-            if (!CanMark()) return false;
-            
-            markTrapUsed = true;
-            markedSystem = SystemTypes.Electrical;
-            SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
-            switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
-            WriteImmediately(RPC.FixLights);
-            return false;
+            ConsoleTools.Info($"{system} was sabotaged");
+            ConsoleTools.Info($"You marked {markedSystem}");
+            ConsoleTools.Info("You marked " + (system == markedSystem ? "correctly" : "incorrectly"));
+
+            // Muss hier auch ResetTrackerMark ausgeführt werden?
+            MessageWriter writer = GetWriter(RPC.ResetTrackerMark);
+            CloseWriter(writer);
         }
 
-        public bool MarkComms()
+        public void ResetTrackerMark()
         {
-            if (!CanMark()) return false;
-            
-            markTrapUsed = true;
-            markedSystem = SystemTypes.Comms;
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16 | 0);
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16 | 1);
-            return false;
-        }
-
-        public bool MarkOxy()
-        {
-            
-            if (!CanMark()) return false;
-            
-            markTrapUsed = true;
-            markedSystem = SystemTypes.LifeSupp;
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 0 | 64);
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 1 | 64);
-            return false;
-        }
-
-        public bool MarkSeismic()
-        {
-            if (!CanMark()) return false;
-            
-            markTrapUsed = true;
-            markedSystem = SystemTypes.Laboratory;
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Laboratory, 16);
-            return false;
+            markTrapUsed = false;
+            markedSystem = null;
         }
     }
 }

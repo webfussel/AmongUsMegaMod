@@ -44,6 +44,10 @@ namespace MegaMod
                                 case var value when value == Seer.RoleID:
                                     AddSpecialRole(new Seer(player));
                                     break;
+
+                                case var value when value == Tracker.RoleID:
+                                    AddSpecialRole(new Tracker(player));
+                                    break;
                                 
                                 case var value when value == Ninja.RoleID:
                                     AddSpecialRole(new Ninja(player));
@@ -97,9 +101,17 @@ namespace MegaMod
                     maniac.player.Data.IsDead = false;
                     maniac.player.Data.IsImpostor = true;
                     break;
-                
+                case (byte)RPC.SetTrackerMark:
+                    Tracker tracker = GetSpecialRole<Tracker>();
+                    SystemTypes system = (SystemTypes) reader.ReadInt32();
+                    tracker.markedSystem = system;
+                    break;
+                case (byte)RPC.ResetTrackerMark:
+                    GetSpecialRole<Tracker>().ResetTrackerMark();
+                    break;
+
                 // --------------------------- Other ---------------------------
-                
+
                 case (byte)RPC.FixLights:
                     SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
                     switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
