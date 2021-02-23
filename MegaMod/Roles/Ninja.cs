@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Hazel;
-using Il2CppSystem.Configuration;
 using UnityEngine;
 using static MegaMod.MegaModManager;
 
@@ -9,7 +8,7 @@ namespace MegaMod.Roles
     public class Ninja : Role
     {
         public static readonly byte RoleID = 106;
-        public bool doubleKillUsed { get; set; }
+        private bool doubleKillUsed { get; set; }
         
         public Ninja(PlayerControl player) : base(player)
         {
@@ -70,14 +69,8 @@ namespace MegaMod.Roles
             player = null;
         }
 
-        protected override void SetConfigSettings()
-        {
-            // Do nothing for now
-        }
+        protected override void SetConfigSettings() {}
 
-        public override void CheckDead(HudManager instance)
-        {
-            // Do nothing for now
-        }
+        public override void CheckDead(HudManager instance) {}
     }
 }
