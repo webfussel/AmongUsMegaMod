@@ -50,6 +50,7 @@ namespace MegaMod
             SetRole = 42,
             SetProtected = 44,
             ShieldBreak = 45,
+            AttemptShield = 46,
             DetectiveKill = 47,
             FixLights = 49,
             ResetVariables = 51,
@@ -57,9 +58,11 @@ namespace MegaMod
             ManiacWin = 57
         }
         
-        public static AssetBundle bundle;
         public static AssetBundle buttons;
-        public static AudioClip breakClip; // Still need that for the shield
+        public static AssetBundle sounds;
+        public static AudioClip shieldAttempt;
+        public static AudioClip ninjaOne;
+        public static AudioClip ninjaTwo;
         public static Sprite defaultKillButton;
         public static Sprite shieldButton;
         public static Sprite repairButton;

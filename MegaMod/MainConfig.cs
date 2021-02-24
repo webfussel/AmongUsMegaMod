@@ -85,6 +85,12 @@ namespace MegaMod
             repairButton = buttons.LoadAsset<Sprite>("repair").DontUnload();
             shieldButton = buttons.LoadAsset<Sprite>("protect").DontUnload();
 
+            sounds = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\sounds");
+            shieldAttempt = sounds.LoadAsset<AudioClip>("shield").DontUnload();
+            ninjaOne = sounds.LoadAsset<AudioClip>("ninja_1").DontUnload();
+            ninjaTwo = sounds.LoadAsset<AudioClip>("ninja_2").DontUnload();
+            
+            
             var defaultRegions = ServerManager.DefaultRegions.ToList();
             var ip = Ip.Value;
             if (Uri.CheckHostName(Ip.Value).ToString() == "Dns")

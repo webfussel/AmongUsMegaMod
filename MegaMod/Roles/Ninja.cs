@@ -53,15 +53,24 @@ namespace MegaMod.Roles
             killButton.SetTarget(PlayerTools.FindClosestTarget(player));
         }
 
-        public void CheckCooldown(KillButtonManager instance)
+        public bool CheckCooldown(KillButtonManager instance)
         {
             PlayerControl closest = PlayerTools.FindClosestTarget(player);
-            if (!instance.isCoolingDown || doubleKillUsed || closest.Data.IsImpostor) return;
             
+            if (SpecialRoleIsAssigned(out KeyValuePair<byte, Doctor> doctorKvp) && doctorKvp.Value.protectedPlayer?.PlayerId == closest.PlayerId)
+            {
+                return false; // Sound is already checked with the impostor role, so no need to play here
+            }
+
+            if (!instance.isCoolingDown) return true;
+            if (doubleKillUsed || closest.Data.IsImpostor) return false;
+            
+            SoundManager.Instance.PlaySound(ninjaTwo, false, 100f);
             doubleKillUsed = true;
             player.MurderPlayer(closest);
             player.RpcMurderPlayer(closest);
             player.SetKillTimer(player.killTimer + PlayerControl.GameOptions.KillCooldown * 2);
+            return false;
         }
 
         public override void ClearSettings()

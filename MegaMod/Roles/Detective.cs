@@ -98,7 +98,9 @@ namespace MegaMod.Roles
             if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp) && doctorKvp.Value.protectedPlayer?.PlayerId == target.PlayerId)
             {
                 // Sound effekt
+                doctorKvp.Value.AttemptKillShielded();
                 player.SetKillTimer(cooldown);
+                WriteImmediately(RPC.AttemptShield);
                 return false;
             }
             

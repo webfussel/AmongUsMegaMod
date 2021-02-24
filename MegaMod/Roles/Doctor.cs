@@ -66,6 +66,11 @@ namespace MegaMod.Roles
             player.SetKillTimer(Mathf.Max(0.0f, player.killTimer - deltaTime));
         }
 
+        public void AttemptKillShielded()
+        {
+            SoundManager.Instance.PlaySound(shieldAttempt, false, 100f);
+        }
+
         public bool SetProtectedPlayer(KillButtonManager instance)
         {
             if (protectedPlayer != null || instance.isCoolingDown) return false;
@@ -82,10 +87,9 @@ namespace MegaMod.Roles
             return protectedPlayer != null && protectedPlayer.PlayerId == playerId;
         }
     
-        public void BreakShield() 
+        public void BreakShield()
         {
             WriteImmediately(RPC.ShieldBreak);
-            
             protectedPlayer.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
             protectedPlayer.myRend.material.SetFloat("_Outline", 0f);
             protectedPlayer = null;
