@@ -100,7 +100,8 @@ namespace MegaMod.Roles
                 // Sound effekt
                 doctorKvp.Value.AttemptKillShielded();
                 player.SetKillTimer(cooldown);
-                WriteImmediately(RPC.AttemptShield);
+                if (doctorKvp.Value.shieldKillAttemptIndicator)
+                    WriteImmediately(RPC.AttemptShield);
                 return false;
             }
             

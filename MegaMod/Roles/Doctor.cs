@@ -13,7 +13,7 @@ namespace MegaMod.Roles
         public PlayerControl protectedPlayer { get; set; }
         private bool shieldUsed { get; set; }
         private int  showProtectedPlayer { get; set; }
-        private bool shieldKillAttemptIndicator { get; set; }
+        public bool shieldKillAttemptIndicator { get; private set; }
         private Sprite specialButton { get; }
 
         public Doctor(PlayerControl player) : base(player)

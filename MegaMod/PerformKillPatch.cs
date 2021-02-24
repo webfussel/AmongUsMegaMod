@@ -28,7 +28,8 @@ namespace MegaMod
                 doctorCheckProtected.Value.CheckProtectedPlayer(closest.PlayerId))
             {
                 doctorCheckProtected.Value.AttemptKillShielded();
-                WriteImmediately(RPC.AttemptShield);
+                if (doctorCheckProtected.Value.shieldKillAttemptIndicator)
+                    WriteImmediately(RPC.AttemptShield);
                 PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
             }
 
