@@ -131,45 +131,4 @@ namespace MegaMod
                 seer.SetEmergencyButtonInactive(__instance);
         }
     }
-
-    
-
-    // Use these if you want to find out what those minigames are x)
-
-    [HarmonyPatch(typeof(NavigationMinigame), nameof(NavigationMinigame.Begin))]
-    class NavigationMinigamePatch
-    {
-        static void Postfix(NavigationMinigame __instance)
-        {
-            ConsoleTools.Info("This is the Navigation minigame!");
-        }
-    }
-
-    [HarmonyPatch(typeof(PlanetSurveillanceMinigame), nameof(PlanetSurveillanceMinigame.Begin))]
-    class PlanetSurveillanceMinigamePatch
-    {
-        static void Postfix(PlanetSurveillanceMinigame __instance)
-        {
-            ConsoleTools.Info("This is the planet surveillance minigame!");
-        }
-    }
-
-    [HarmonyPatch(typeof(SurveillanceMinigame), nameof(SurveillanceMinigame.Begin))]
-    class SurveillanceMinigamePatch
-    {
-        static void Postfix(SurveillanceMinigame __instance)
-        {
-            ConsoleTools.Info("This is the surveillance minigame!");
-        }
-    }
-
-    [HarmonyPatch(typeof(MultistageMinigame), nameof(MultistageMinigame.Begin))]
-    class MultistageMinigamePatch
-    {
-        static void Postfix(MultistageMinigame __instance)
-        {
-            ConsoleTools.Info("This is the multistage minigame!");
-        }
-    }
-
 }
