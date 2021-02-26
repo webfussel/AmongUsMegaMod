@@ -11,7 +11,7 @@ namespace MegaMod
     [HarmonyPatch]
     public static class MegaModManager
     {
-        private const string VersionString = "b-1.2.1";
+        private const string VersionString = "1.3.0";
 
         public enum RPC
         {
