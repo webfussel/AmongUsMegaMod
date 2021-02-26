@@ -109,8 +109,8 @@ namespace MegaMod
                 case (byte)RPC.TrapSuccessful:
                     if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker2))
                     {
-                        string room = DestroyableSingleton<TranslationController>.Instance.GetString(currentRoomId);
-                        tracker2.TrapSuccessful(room);
+                        byte roomId = reader.ReadByte();
+                        tracker2.TrapSuccessful((SystemTypes) roomId);
                     }
                     break;
 
