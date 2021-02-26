@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using static MegaMod.MegaModManager; // TODO: wtf?
 
 namespace MegaMod
 {
@@ -7,7 +8,8 @@ namespace MegaMod
     {
         static void Postfix(RoomTracker __instance)
         {
-            ConsoleTools.Info(__instance.LastRoom.name);
+            if (PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.Data.IsImpostor && __instance.LastRoom.RoomId != currentRoomId)
+                currentRoomId = __instance.LastRoom.RoomId;
         }
     }
 }
