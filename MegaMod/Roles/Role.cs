@@ -50,7 +50,7 @@ namespace MegaMod.Roles
         {
             ImportantTextTask roleDescription = new GameObject("roleDescription").AddComponent<ImportantTextTask>();
             roleDescription.transform.SetParent(player.transform, false);
-            roleDescription.Text = $"[{colorAsHex}]You are the {name}![]\n{startText}\n---------";
+            roleDescription.Text = $"[{colorAsHex}]You are the {name}![]";
             player.myTasks.Insert(0, roleDescription);
         }
     }
