@@ -54,7 +54,7 @@ namespace MegaMod
                 if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
                     return tracker.MarkSystem(SystemTypes.Reactor);
                 if (SpecialRoleIsAssigned<Tracker>(out var trackerKvp) && PlayerControl.LocalPlayer.Data.IsImpostor)            
-                    trackerKvp.Value.OnSabotageHappened(SystemTypes.Reactor, PlayerControl.LocalPlayer);
+                    trackerKvp.Value.OnSabotageHappened(SystemTypes.Reactor);
 
                 return true;
             }
@@ -72,7 +72,7 @@ namespace MegaMod
                     return tracker.MarkSystem(SystemTypes.Electrical);
                 
                 if (SpecialRoleIsAssigned<Tracker>(out var trackerKvp) && PlayerControl.LocalPlayer.Data.IsImpostor)
-                    trackerKvp.Value.OnSabotageHappened(SystemTypes.Electrical, PlayerControl.LocalPlayer);
+                    trackerKvp.Value.OnSabotageHappened(SystemTypes.Electrical);
 
                 return true;
             }
@@ -90,7 +90,7 @@ namespace MegaMod
                     return tracker.MarkSystem(SystemTypes.Comms);
                 
                 if (SpecialRoleIsAssigned<Tracker>(out var trackerKvp) && PlayerControl.LocalPlayer.Data.IsImpostor)
-                    trackerKvp.Value.OnSabotageHappened(SystemTypes.Comms, PlayerControl.LocalPlayer);
+                    trackerKvp.Value.OnSabotageHappened(SystemTypes.Comms);
 
                 return true;
             }
@@ -106,7 +106,7 @@ namespace MegaMod
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
                     return tracker.MarkSystem(SystemTypes.LifeSupp);
                 if (SpecialRoleIsAssigned<Tracker>(out var trackerKvp) && PlayerControl.LocalPlayer.Data.IsImpostor)
-                    trackerKvp.Value.OnSabotageHappened(SystemTypes.LifeSupp, PlayerControl.LocalPlayer);
+                    trackerKvp.Value.OnSabotageHappened(SystemTypes.LifeSupp);
 
                 return true;
             }
@@ -122,7 +122,7 @@ namespace MegaMod
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
                     return tracker.MarkSystem(SystemTypes.Laboratory);
                 if (SpecialRoleIsAssigned<Tracker>(out var trackerKvp) && PlayerControl.LocalPlayer.Data.IsImpostor)
-                    trackerKvp.Value.OnSabotageHappened(SystemTypes.Laboratory, PlayerControl.LocalPlayer);
+                    trackerKvp.Value.OnSabotageHappened(SystemTypes.Laboratory);
 
                 return true;
             }

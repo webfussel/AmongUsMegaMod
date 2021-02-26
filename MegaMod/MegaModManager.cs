@@ -72,6 +72,7 @@ namespace MegaMod
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
         public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
 
+        public static SystemTypes currentRoomId;
         // Only the engineer gets added to the dictionary so far
         public static void AddSpecialRole(Role specialRole)
         {

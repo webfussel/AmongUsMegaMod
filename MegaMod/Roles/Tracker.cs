@@ -154,7 +154,7 @@ namespace MegaMod.Roles
             return false;
         }
 
-        public void OnSabotageHappened(SystemTypes system, PlayerControl saboteur)
+        public void OnSabotageHappened(SystemTypes system)
         {
             ConsoleTools.Info($"{system} was sabotaged");
             ConsoleTools.Info($"You marked {markedSystem}");
@@ -164,16 +164,16 @@ namespace MegaMod.Roles
 
             markTrapUsed = false;
             markedSystem = null;
-            TrapSuccessful();
+            string room = DestroyableSingleton<TranslationController>.Instance.GetString(currentRoomId);
+            TrapSuccessful(room);
             MessageWriter writer = GetWriter(RPC.TrapSuccessful);
             CloseWriter(writer);
         }
 
-        public void TrapSuccessful()
+        public void TrapSuccessful(string room)
         {
             if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance && !player.Data.IsDead)
             {
-                string room = "bla";
                 DestroyableSingleton<HudManager>.Instance.Chat.AddChat(player, $"The saboteur is in {room}!");
             }
             
