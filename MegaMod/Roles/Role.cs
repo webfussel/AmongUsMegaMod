@@ -7,7 +7,7 @@ namespace MegaMod.Roles
 
         public PlayerControl player;
         public string name {get; protected set;}
-        protected Color color {get; set;}
+        public Color color {get; protected set;}
         protected string colorAsHex {get; set;}
         protected Color borderColor { get; set; } = new Color(0, 0, 0, 1);
         protected string startText {get; set;}
