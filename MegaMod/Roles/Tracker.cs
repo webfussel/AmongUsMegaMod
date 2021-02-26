@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Hazel;
 using UnityEngine;
-using static MegaMod.MegaModManager; // TODO: wtf?
+using static MegaMod.MegaModManager;
+using Color = UnityEngine.Color; // TODO: wtf?
 
 namespace MegaMod.Roles
 {
@@ -20,7 +22,8 @@ namespace MegaMod.Roles
         {
             name = "Tracker";
             color = _color;
-            startText = "Track down the [FF0000FF]Impostors";
+            colorAsHex = "C4FF56FF";
+            startText = "Track down the [FF0000FF]Impostors[]";
             _specialButton = markTrapButton;
 
         }
