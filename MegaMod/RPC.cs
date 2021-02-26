@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Discord;
 using HarmonyLib;
 using Hazel;
 using MegaMod.Roles;
@@ -43,6 +44,10 @@ namespace MegaMod
                                 case var value when value == Seer.RoleID:
                                     AddSpecialRole(new Seer(player));
                                     break;
+                                
+                                case var value when value == Ninja.RoleID:
+                                    AddSpecialRole(new Ninja(player));
+                                    break;
                             }
                     break;
                 // -------------- Happenings related to special roles --------------
@@ -62,6 +67,13 @@ namespace MegaMod
                         protectedPlayer.myRend.material.SetFloat("_Outline", 0f);
                     }    
                     doctor.protectedPlayer = null;
+                    break;
+                case (byte) RPC.AttemptShield:
+                    Doctor doctorShieldAttempt = GetSpecialRole<Doctor>();
+                    if (doctorShieldAttempt.player != null)
+                    {
+                        doctorShieldAttempt.AttemptKillShielded();
+                    }
                     break;
                 case (byte) RPC.DetectiveKill:
                     var killerid = reader.ReadByte();

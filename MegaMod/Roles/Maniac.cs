@@ -16,6 +16,7 @@ namespace MegaMod.Roles
         {
             name = "Maniac";
             color = new Color(138f / 255f, 138f / 255f, 138f / 255f, 1);
+            colorAsHex = "8A8A8AFF";
             startText = "Get voted off of the ship to win";
         }
     

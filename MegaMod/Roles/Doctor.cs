@@ -13,14 +13,15 @@ namespace MegaMod.Roles
         public PlayerControl protectedPlayer { get; set; }
         private bool shieldUsed { get; set; }
         private int  showProtectedPlayer { get; set; }
-        private bool shieldKillAttemptIndicator { get; set; }
+        public bool shieldKillAttemptIndicator { get; private set; }
         private Sprite specialButton { get; }
 
         public Doctor(PlayerControl player) : base(player)
         {
             name = "Doctor";
             color = new Color(36f / 255f, 183f / 255f, 32f / 255f, 1);
-            startText = "Create a shield to protect a [8DFFFF]Crewmate";
+            colorAsHex = "24B720FF";
+            startText = "Create a shield to protect a [8DFFFF]Crewmate[]";
             specialButton = shieldButton;
             player.SetKillTimer(10f);
         }
@@ -66,6 +67,11 @@ namespace MegaMod.Roles
             player.SetKillTimer(Mathf.Max(0.0f, player.killTimer - deltaTime));
         }
 
+        public void AttemptKillShielded()
+        {
+            SoundManager.Instance.PlaySound(shieldAttempt, false, 100f);
+        }
+
         public bool SetProtectedPlayer(KillButtonManager instance)
         {
             if (protectedPlayer != null || instance.isCoolingDown) return false;
@@ -82,10 +88,9 @@ namespace MegaMod.Roles
             return protectedPlayer != null && protectedPlayer.PlayerId == playerId;
         }
     
-        public void BreakShield() 
+        public void BreakShield()
         {
             WriteImmediately(RPC.ShieldBreak);
-            
             protectedPlayer.myRend.material.SetColor("_VisorColor", Palette.VisorColor);
             protectedPlayer.myRend.material.SetFloat("_Outline", 0f);
             protectedPlayer = null;
