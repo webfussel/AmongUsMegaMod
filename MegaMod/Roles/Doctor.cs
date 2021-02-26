@@ -20,7 +20,8 @@ namespace MegaMod.Roles
         {
             name = "Doctor";
             color = new Color(36f / 255f, 183f / 255f, 32f / 255f, 1);
-            startText = "Create a shield to protect a [8DFFFF]Crewmate";
+            colorAsHex = "24B720FF";
+            startText = "Create a shield to protect a [8DFFFF]Crewmate[]";
             specialButton = shieldButton;
             player.SetKillTimer(10f);
         }

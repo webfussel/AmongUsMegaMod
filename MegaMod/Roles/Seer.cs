@@ -25,7 +25,7 @@ namespace MegaMod.Roles
         {
             name = "Seer";
             color = new Color(1f, 0.71f, 0.92f);
-            // Old message was too long
+            colorAsHex = "FFB5EAFF";
             startText = "You know things...";
         }
 

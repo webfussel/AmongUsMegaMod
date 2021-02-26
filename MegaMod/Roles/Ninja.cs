@@ -17,6 +17,7 @@ namespace MegaMod.Roles
         {
             name = "Ninja";
             color = new Color(0, 0, 0, 1);
+            colorAsHex = "000000FF";
             borderColor = new Color(1, 1, 1, 1);
             startText = "Double kill - Triple cooldown";
 
