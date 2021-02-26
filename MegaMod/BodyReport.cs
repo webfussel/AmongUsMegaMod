@@ -27,6 +27,18 @@ namespace MegaMod
             {9, "darker"},
             {10, "lighter"},
             {11, "lighter"},
+            {12, "lighter"},
+            {13, "darker"},
+            {14, "lighter"},
+            {15, "darker"},
+            {16, "darker"},
+            {17, "lighter"},
+            {18, "darker"},
+            {19, "lighter"},
+            {20, "lighter"},
+            {21, "darker"},
+            {22, "lighter"},
+            {23, "lighter"}
         };
 
         private readonly List<string> _lastWords = new List<string>()
