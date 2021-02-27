@@ -14,7 +14,7 @@ namespace MegaMod.Roles
         public Nocturnal(PlayerControl player) : base(player)
         {
             name = "Nocturnal";
-            color = new Color(1f, 0.71f, 0.92f);
+            color = new Color(0.49f, 0.8f, 1f);
             startText = "The night is your home";
         }
 
