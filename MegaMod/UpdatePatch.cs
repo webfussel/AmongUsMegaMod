@@ -137,10 +137,12 @@ namespace MegaMod
     {
         public static void Postfix(ref float __result, ShipStatus __instance, [HarmonyArgument(0)] GameData.PlayerInfo PlayerData)
         {
-            if (SpecialRoleIsAssigned<Nocturnal>(out var nocturnalKvp) && nocturnalKvp.Key == PlayerData.PlayerId)
-                foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
-                    if (task.TaskType == TaskTypes.FixLights)
-                        __result = __instance.MaxLightRadius * PlayerControl.GameOptions.CrewLightMod * MainConfig.OptNocturnalDarkVision.GetValue();
+            if (SpecialRoleIsAssigned<Nocturnal>(out var nocturnalKvp) && nocturnalKvp.Key == PlayerData.PlayerId && !nocturnalKvp.Value.player.Data.IsDead)
+            {
+                // TODO: Speicher den Wert von normalVision am Anfang des Spiels in der Nocturnal-Instanz, damit er nicht jedes Frame berechnet werden muss
+                float normalVision = __instance.MaxLightRadius * PlayerControl.GameOptions.CrewLightMod;
+                __result = normalVision * 2 - __result;
+            }
         }
     }
 }

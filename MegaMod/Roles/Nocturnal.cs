@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Hazel;
-using Reactor.Extensions;
 using UnityEngine;
 using static MegaMod.MegaModManager;
 
