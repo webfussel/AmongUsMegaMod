@@ -84,7 +84,7 @@ namespace MegaMod
             
             buttons = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\buttons");
             repairButton = buttons.LoadAsset<Sprite>("repair").DontUnload();
-            markTrapButton = buttons.LoadAsset<Sprite>("repair").DontUnload(); // TODO: Geeignete Grafik einbinden
+            markTrapButton = buttons.LoadAsset<Sprite>("mark").DontUnload();
             shieldButton = buttons.LoadAsset<Sprite>("protect").DontUnload();
 
             var defaultRegions = ServerManager.DefaultRegions.ToList();
