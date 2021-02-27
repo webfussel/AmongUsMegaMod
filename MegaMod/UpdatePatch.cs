@@ -121,4 +121,16 @@ namespace MegaMod
                 seer.SetEmergencyButtonInactive(__instance);
         }
     }
+
+    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
+    public class CalculateVisionPatch
+    {
+        public static void Postfix(ref float __result, ShipStatus __instance, [HarmonyArgument(0)] GameData.PlayerInfo PlayerData)
+        {
+            if (SpecialRoleIsAssigned<Nocturnal>(out var nocturnalKvp) && nocturnalKvp.Key == PlayerData.PlayerId)
+                foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
+                    if (task.TaskType == TaskTypes.FixLights)
+                        __result = __instance.MaxLightRadius * PlayerControl.GameOptions.CrewLightMod * MainConfig.OptNocturnalDarkVision.GetValue();
+        }
+    }
 }

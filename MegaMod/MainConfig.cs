@@ -30,7 +30,8 @@ namespace MegaMod
         public static readonly CustomNumberOption OptSeerSpawnChance = CustomOption.AddNumber("Seer Spawn Chance", 100, 0, 100, 10);
         public static readonly CustomNumberOption OptManiacSpawnChance = CustomOption.AddNumber("Maniac Spawn Chance", 100, 0, 100, 10);
         public static readonly CustomNumberOption OptTrackerSpawnChance = CustomOption.AddNumber("Tracker Spawn Chance", 100, 0, 100, 10);
-        
+        public static readonly CustomNumberOption OptNocturnalSpawnChance = CustomOption.AddNumber("Nocturnal Spawn Chance", 100, 0, 100, 10);
+
         // Detective
         public static readonly CustomNumberOption OptDetectiveKillCooldown = CustomOption.AddNumber("Detective Kill Cooldown", 30f, 10f, 60f, 2.5f);
         public static readonly CustomToggleOption OptShowDetectiveReports = CustomOption.AddToggle("Show Detective Reports", true);
@@ -41,7 +42,10 @@ namespace MegaMod
         
         // Seer
         public static readonly CustomToggleOption OptSeerCanPressEmergency = CustomOption.AddToggle("Seer can call emergency", false);
-        
+
+        // Nocturnal
+        public static readonly CustomNumberOption OptNocturnalDarkVision = CustomOption.AddNumber("Nocturnal Dark Vision", 3, 1, 3, 0.5f);
+
         // Maniac
         public static readonly CustomToggleOption OptManiacShowImpostor = CustomOption.AddToggle("Show Impostor to Maniac", false);
         public static readonly CustomToggleOption OptManiacCanDieToDetective = CustomOption.AddToggle("Maniac Can Die To Detective", true);

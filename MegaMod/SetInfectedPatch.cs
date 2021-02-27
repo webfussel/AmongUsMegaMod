@@ -31,6 +31,7 @@ namespace MegaMod
             Maniac.SetRole(crewmates);
             Seer.SetRole(crewmates);
             Tracker.SetRole(crewmates);
+            Nocturnal.SetRole(crewmates);
 
             Crew.Clear();
             localPlayer = PlayerControl.LocalPlayer;
