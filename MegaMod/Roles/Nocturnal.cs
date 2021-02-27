@@ -9,7 +9,7 @@ namespace MegaMod.Roles
 {
     public class Nocturnal : Role
     {
-        public static readonly byte RoleID = 106;
+        public static readonly byte RoleID = 107;
 
         public Nocturnal(PlayerControl player) : base(player)
         {
@@ -25,7 +25,7 @@ namespace MegaMod.Roles
         */
         public static void SetRole(List<PlayerControl> crew)
         {
-            float spawnChance = MainConfig.OptSeerSpawnChance.GetValue();
+            float spawnChance = MainConfig.OptNocturnalSpawnChance.GetValue();
             if (spawnChance < 1) return;
             bool spawnChanceAchieved = Rng.Next(1, 101) <= spawnChance;
             if ((crew.Count <= 0 || !spawnChanceAchieved)) return;
