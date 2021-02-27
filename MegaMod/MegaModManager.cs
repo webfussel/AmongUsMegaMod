@@ -11,7 +11,7 @@ namespace MegaMod
     [HarmonyPatch]
     public static class MegaModManager
     {
-        private const string VersionString = "1.3.1";
+        private const string VersionString = "1.3.2";
 
         public enum RPC
         {
@@ -55,7 +55,8 @@ namespace MegaMod
             FixLights = 49,
             ResetVariables = 51,
             SetLocalPlayers = 56,
-            ManiacWin = 57
+            ManiacWin = 57,
+            NinjaDoubleKill = 58
         }
         
         public static AssetBundle buttons;

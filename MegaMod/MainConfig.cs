@@ -53,7 +53,8 @@ namespace MegaMod
         {
             int originalPaletteCount = Palette.ShortColorNames.Count;
             int colorCount = originalPaletteCount + PalettePatch.ShortColorNames.Length;
-            string[] allNames = new string[colorCount];
+            string[] allNames = new String[colorCount];
+            string[] allShortNames = new string[colorCount];
             Color32[] allColors = new Color32[colorCount];
             Color32[] allShadows = new Color32[colorCount];
 
@@ -61,19 +62,22 @@ namespace MegaMod
             {
                 if (i < originalPaletteCount)
                 {
-                    allNames[i] = Palette.ShortColorNames[i];
+                    allNames[i] = MedScanMinigame.ColorNames[i];
+                    allShortNames[i] = Palette.ShortColorNames[i];
                     allColors[i] = Palette.PlayerColors[i];
                     allShadows[i] = Palette.ShadowColors[i];
                 }
                 else
                 {
-                    allNames[i] = PalettePatch.ShortColorNames[i - originalPaletteCount];
+                    allNames[i] = PalettePatch.ColorNames[i - originalPaletteCount];
+                    allShortNames[i] = PalettePatch.ShortColorNames[i - originalPaletteCount];
                     allColors[i] = PalettePatch.PlayerColors[i - originalPaletteCount];
                     allShadows[i] = PalettePatch.ShadowColors[i - originalPaletteCount];
                 }
             }
             
-            Palette.ShortColorNames = allNames;
+            MedScanMinigame.ColorNames = allNames;
+            Palette.ShortColorNames = allShortNames;
             Palette.PlayerColors = allColors;
             Palette.ShadowColors = allShadows;
             
