@@ -15,11 +15,12 @@ namespace MegaMod.Roles
         {
             name = "Detective";
             color = new Color(0, 40f / 255f, 198f / 255f, 1);
-            startText = "Shoot the [FF0000FF]Impostor";
+            colorAsHex = "0028C6FF";
+            startText = "Shoot the [FF0000FF]Impostor[]";
             player.SetKillTimer(10f);
-        }
-
-        /**
+        } 
+        
+    /**
      * Sets the Role if spawn chance is reached.
      * Can only set Role if crew still has space for Role.
      * Removes crew free space on successful assignment.
@@ -98,7 +99,10 @@ namespace MegaMod.Roles
             if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp) && doctorKvp.Value.protectedPlayer?.PlayerId == target.PlayerId)
             {
                 // Sound effekt
+                doctorKvp.Value.AttemptKillShielded();
                 player.SetKillTimer(cooldown);
+                if (doctorKvp.Value.shieldKillAttemptIndicator)
+                    WriteImmediately(RPC.AttemptShield);
                 return false;
             }
             

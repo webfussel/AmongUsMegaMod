@@ -1,30 +1,31 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Hazel;
-using Reactor.Extensions;
 using UnityEngine;
-using static MegaMod.MegaModManager; // TODO: wtf?
+using static MegaMod.MegaModManager;
+using Color = UnityEngine.Color; // TODO: wtf?
 
 namespace MegaMod.Roles
 {
     public class Tracker : Role
     {
-        public static readonly byte RoleID = 105;
-        
         private bool markTrapUsed;
-
         private readonly Sprite _specialButton;
+        private static readonly Color _color = new Color(0.77f, 1f, 0.34f);
 
-        private bool sabotageActive;
-
-        private SystemTypes? markedSystem;
+        public bool sabotageActive;
+        public static readonly byte RoleID = 105;
+        public SystemTypes? markedSystem;
 
         public Tracker(PlayerControl player) : base(player)
         {
-            name = "Engineer";
-            color = new Color(255f / 255f, 165f / 255f, 10f / 255f, 1); // TODO: Give unique color
-            startText = "Track down the [FF0000FF]Impostors";
+            name = "Tracker";
+            color = _color;
+            colorAsHex = "C4FF56FF";
+            startText = "Track down the [FF0000FF]Impostors[]";
             _specialButton = markTrapButton;
+
         }
 
         /**
@@ -66,7 +67,7 @@ namespace MegaMod.Roles
         public void CheckMarkButton(HudManager instance)
         {
             if (player == null || player.PlayerId != PlayerControl.LocalPlayer.PlayerId ||
-                !instance.UseButton.isActiveAndEnabled || player.Data.IsDead || !sabotageActive) return;
+                !instance.UseButton.isActiveAndEnabled || player.Data.IsDead) return;
         
             KillButtonManager killButton = instance.KillButton;
             killButton.gameObject.SetActive(true);
@@ -87,23 +88,10 @@ namespace MegaMod.Roles
             killButton.renderer.enabled = false;
         }
 
-        public void SetSabotageState(bool active)
+        public void AdjustChat(HudManager instance, bool typingEnabled)
         {
-            if(active == sabotageActive) return;
-            
-            if(active == true)
-            {
-                // Check if the tracker marked correctly
-                // If yes and the saboteur is alive, tell the tracker their name
-                // If the saboteur isn't alive, tell the tracker that
-            }
-            else
-            {
-                markTrapUsed = false;
-                markedSystem = null;
-            }
-
-            sabotageActive = active;
+            instance.Chat.gameObject.SetActive(true);
+            instance.Chat.TypingArea.gameObject.SetActive(typingEnabled);           
         }
 
         public bool ShowMarkTrapMap()
@@ -135,12 +123,13 @@ namespace MegaMod.Roles
             if (!instance.IsOpen || !instance.infectedOverlay.gameObject.active) return;
 
             instance.ColorControl.baseColor = sabotageActive ? Color.gray : color;
-            float percentage = _repairUsed ? 1f : 0f;
+            float percentage = markTrapUsed ? 1f : 0f;
             
             foreach (MapRoom room in instance.infectedOverlay.rooms)
             {
                 if (room.special == null) continue;
-                
+
+                room.special.material.color = room.room == markedSystem ? _color : Color.white;
                 room.special.material.SetFloat("_Desat", sabotageActive ? 1f : 0f);
                 room.special.enabled = true;
                 room.special.gameObject.SetActive(true);
@@ -153,64 +142,44 @@ namespace MegaMod.Roles
             return false;
         }
 
-        private bool CanMark()
+        public bool MarkSystem(SystemTypes system)
         {
-            return !markTrapUsed && sabotageActive && !player.Data.IsDead;
-        }
+            if (markTrapUsed || sabotageActive || player.Data.IsDead) return false;
 
-        public bool MarkReactor()
-        {
-            if (!CanMark()) return false;
-            
             markTrapUsed = true;
-            markedSystem = SystemTypes.Reactor;
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 16);
+            markedSystem = system;
+            ConsoleTools.Info($"Marked {system}");
+
+            MessageWriter writer = GetWriter(RPC.SetTrackerMark);
+            writer.Write((int) markedSystem);
+            CloseWriter(writer);
+
             return false;
         }
 
-        public bool MarkLight()
+        public void OnSabotageHappened(SystemTypes system)
         {
-            if (!CanMark()) return false;
+            if (system != markedSystem) return;
+
+            markTrapUsed = false;
+            markedSystem = null;
             
-            markTrapUsed = true;
-            markedSystem = SystemTypes.Electrical;
-            SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
-            switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
-            WriteImmediately(RPC.FixLights);
-            return false;
+            TrapSuccessful(SystemTypes.Admin);
+            MessageWriter writer = GetWriter(RPC.TrapSuccessful);
+            writer.Write((byte) currentRoomId);
+            CloseWriter(writer);
         }
 
-        public bool MarkComms()
+        public void TrapSuccessful(SystemTypes room)
         {
-            if (!CanMark()) return false;
+            if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance && !player.Data.IsDead)
+            {
+                string roomName = DestroyableSingleton<TranslationController>.Instance.GetString(room);
+                DestroyableSingleton<HudManager>.Instance.Chat.AddChat(player, $"The last known position of the saboteur was in {roomName}!");
+            }
             
-            markTrapUsed = true;
-            markedSystem = SystemTypes.Comms;
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16 | 0);
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16 | 1);
-            return false;
-        }
-
-        public bool MarkOxy()
-        {
-            
-            if (!CanMark()) return false;
-            
-            markTrapUsed = true;
-            markedSystem = SystemTypes.LifeSupp;
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 0 | 64);
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 1 | 64);
-            return false;
-        }
-
-        public bool MarkSeismic()
-        {
-            if (!CanMark()) return false;
-            
-            markTrapUsed = true;
-            markedSystem = SystemTypes.Laboratory;
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Laboratory, 16);
-            return false;
+            markTrapUsed = false;
+            markedSystem = null;
         }
     }
 }

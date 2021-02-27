@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Discord;
 using HarmonyLib;
 using Hazel;
 using MegaMod.Roles;
@@ -43,8 +44,13 @@ namespace MegaMod
                                 case var value when value == Seer.RoleID:
                                     AddSpecialRole(new Seer(player));
                                     break;
-                                case var value when value == Nocturnal.RoleID:
-                                    AddSpecialRole(new Nocturnal(player));
+
+                                case var value when value == Tracker.RoleID:
+                                    AddSpecialRole(new Tracker(player));
+                                    break;
+                                
+                                case var value when value == Ninja.RoleID:
+                                    AddSpecialRole(new Ninja(player));
                                     break;
                             }
                     break;
@@ -65,6 +71,13 @@ namespace MegaMod
                         protectedPlayer.myRend.material.SetFloat("_Outline", 0f);
                     }    
                     doctor.protectedPlayer = null;
+                    break;
+                case (byte) RPC.AttemptShield:
+                    Doctor doctorShieldAttempt = GetSpecialRole<Doctor>();
+                    if (doctorShieldAttempt.player != null)
+                    {
+                        doctorShieldAttempt.AttemptKillShielded();
+                    }
                     break;
                 case (byte) RPC.DetectiveKill:
                     var killerid = reader.ReadByte();
@@ -88,9 +101,21 @@ namespace MegaMod
                     maniac.player.Data.IsDead = false;
                     maniac.player.Data.IsImpostor = true;
                     break;
-                
+                case (byte)RPC.SetTrackerMark:
+                    Tracker tracker1 = GetSpecialRole<Tracker>();
+                    SystemTypes system = (SystemTypes) reader.ReadInt32();
+                    tracker1.markedSystem = system;
+                    break;
+                case (byte)RPC.TrapSuccessful:
+                    if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker2))
+                    {
+                        byte roomId = reader.ReadByte();
+                        tracker2.TrapSuccessful((SystemTypes) roomId);
+                    }
+                    break;
+
                 // --------------------------- Other ---------------------------
-                
+
                 case (byte)RPC.FixLights:
                     SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
                     switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;

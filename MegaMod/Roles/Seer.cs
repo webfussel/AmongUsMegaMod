@@ -25,7 +25,7 @@ namespace MegaMod.Roles
         {
             name = "Seer";
             color = new Color(1f, 0.71f, 0.92f);
-            // Old message was too long
+            colorAsHex = "FFB5EAFF";
             startText = "You know things...";
         }
 
@@ -52,9 +52,10 @@ namespace MegaMod.Roles
             CloseWriter(writer);
         }
 
-        public void SetChatActive(HudManager instance)
+        public void AdjustChat(HudManager instance, bool typingEnabled)
         {
             instance.Chat.gameObject.SetActive(true);
+            instance.Chat.TypingArea.gameObject.SetActive(typingEnabled);
         }
 
         public void SetEmergencyButtonInactive(EmergencyMinigame instance)

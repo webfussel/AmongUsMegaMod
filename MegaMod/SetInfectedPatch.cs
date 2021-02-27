@@ -32,6 +32,11 @@ namespace MegaMod
             Seer.SetRole(crewmates);
             Tracker.SetRole(crewmates);
             Nocturnal.SetRole(crewmates);
+            
+            List<PlayerControl> impostors = PlayerControl.AllPlayerControls.ToArray().ToList();
+            impostors.RemoveAll(x => !x.Data.IsImpostor);
+
+            Ninja.SetRole(impostors);
 
             Crew.Clear();
             localPlayer = PlayerControl.LocalPlayer;

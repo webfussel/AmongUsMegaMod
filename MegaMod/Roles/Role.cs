@@ -1,3 +1,4 @@
+using Reactor.Extensions;
 using UnityEngine;
 
 namespace MegaMod.Roles
@@ -6,7 +7,9 @@ namespace MegaMod.Roles
 
         public PlayerControl player;
         public string name {get; protected set;}
-        protected Color color {get; set;}
+        public Color color {get; protected set;}
+        protected string colorAsHex {get; set;}
+        protected Color borderColor { get; set; } = new Color(0, 0, 0, 1);
         protected string startText {get; set;}
 
         public abstract void ClearSettings();
@@ -18,6 +21,7 @@ namespace MegaMod.Roles
         {
             this.player = player;
             SetConfigSettings();
+            SetRoleDescription();
         }
 
         public void SetNameColor()
@@ -36,9 +40,18 @@ namespace MegaMod.Roles
         public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
         {
             instance.__this.Title.Text = name;
+            instance.__this.Title.render?.material?.SetColor("_OutlineColor", borderColor);
             instance.c = color;
             instance.__this.ImpostorText.Text = startText;
             instance.__this.BackgroundBar.material.color = color;
+        }
+
+        public void SetRoleDescription()
+        {
+            ImportantTextTask roleDescription = new GameObject("roleDescription").AddComponent<ImportantTextTask>();
+            roleDescription.transform.SetParent(player.transform, false);
+            roleDescription.Text = $"[{colorAsHex}]You are the {name}![]";
+            player.myTasks.Insert(0, roleDescription);
         }
     }
 }

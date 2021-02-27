@@ -16,7 +16,8 @@ namespace MegaMod
         "LVDR",
         "MARN",
         "SAND",
-        "GREY"
+        "GREY",
+        "ICE"
       };
       public static readonly Color32[] PlayerColors = {
         new Color32(0, 150, 136, byte.MaxValue),
@@ -30,7 +31,8 @@ namespace MegaMod
         new Color32(223, 214, 240, byte.MaxValue),
         new Color32(97, 29, 0, byte.MaxValue),
         new Color32(167, 134, 99, byte.MaxValue),
-        new Color32(149, 149, 149, byte.MaxValue)
+        new Color32(149, 149, 149, byte.MaxValue),
+        new Color32(166, 217, 220, byte.MaxValue)
       };
       public static readonly Color32[] ShadowColors = {
         new Color32(0, 112, 101, byte.MaxValue),
@@ -44,7 +46,8 @@ namespace MegaMod
         new Color32(160, 132, 192, byte.MaxValue),
         new Color32(61, 11, 4, byte.MaxValue),
         new Color32(111, 94, 76, byte.MaxValue),
-        new Color32(103, 103, 103, byte.MaxValue)
+        new Color32(103, 103, 103, byte.MaxValue),
+        new Color32(71, 121, 156, byte.MaxValue)
       };
     }
 }

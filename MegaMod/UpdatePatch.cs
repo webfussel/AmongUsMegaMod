@@ -20,24 +20,26 @@ namespace MegaMod
     {
         static void Postfix(HudManager __instance)
         {
+            PlayerControl localPlayer = PlayerControl.LocalPlayer;
+
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
             if (defaultKillButton == null) defaultKillButton = __instance.KillButton.renderer.sprite;
-            if (PlayerControl.LocalPlayer.Data.IsImpostor)
+            if (localPlayer.Data.IsImpostor)
             {
                 __instance.KillButton.gameObject.SetActive(true);
                 __instance.KillButton.renderer.enabled = true;
                 __instance.KillButton.renderer.sprite = defaultKillButton;
             }
-            
+
             bool lastQ = Input.GetKeyUp(KeyCode.Q);
             
-            if (!PlayerControl.LocalPlayer.Data.IsImpostor && Input.GetKeyDown(KeyCode.Q) && !lastQ && __instance.UseButton.isActiveAndEnabled)
+            if (!localPlayer.Data.IsImpostor && Input.GetKeyDown(KeyCode.Q) && !lastQ && __instance.UseButton.isActiveAndEnabled)
             {
                 PerformKillPatch.Prefix(null);
             }
 
             bool sabotageActive = false;
-            foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
+            foreach (PlayerTask task in localPlayer.myTasks)
             {
                 sabotageActive = task.TaskType switch
                 {
@@ -56,12 +58,13 @@ namespace MegaMod
             // Maniac Tasks have to be reset every frame... I don't know why but huh.
             if (SpecialRoleIsAssigned<Maniac>(out var maniacKvp))
                 maniacKvp.Value.ClearTasks();
-            
+
             if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp))
                 doctorKvp.Value.ShowShieldedPlayer();
-                
+
             bool showImpostorToManiac = false;
-            Role current = GetSpecialRole(PlayerControl.LocalPlayer.PlayerId);
+            
+            Role current = GetSpecialRole(localPlayer.PlayerId);
             if (current != null)
             {
                 current.SetNameColor();
@@ -85,29 +88,36 @@ namespace MegaMod
                         __instance.KillButton.renderer.sprite = defaultKillButton;
                         break;
                     case Seer seer:
-                        seer.SetChatActive(__instance);
+                        seer.AdjustChat(__instance, localPlayer.Data.IsDead);
                         break;
                     case Tracker tracker:
                         tracker.CheckMarkButton(__instance);
-                        tracker.SetSabotageState(sabotageActive);
+                        tracker.AdjustChat(__instance, localPlayer.Data.IsDead);
+                        tracker.sabotageActive = sabotageActive;
+                        break;
+                    case Ninja ninja:
+                        ninja.CheckKillButton(__instance);
                         break;
                 }
             }
 
-            if (!PlayerControl.LocalPlayer.Data.IsImpostor && (!(current is Maniac) || !showImpostorToManiac)) return;
-            
-            
+            if (!localPlayer.Data.IsImpostor && (!(current is Maniac) || !showImpostorToManiac)) return;
+
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                if (player.Data.IsImpostor)
+            {
+                if (!player.Data.IsImpostor) continue;
+                
+                if (MeetingHud.Instance != null)
                 {
-                    if (MeetingHud.Instance != null)
-                    {
-                        foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
-                            if (player.PlayerId == playerVote.TargetPlayerId)
-                                playerVote.NameText.Color = Palette.ImpostorRed;
-                    }
-                    player.nameText.Color = Palette.ImpostorRed;
+                    foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
+                        if (player.PlayerId == playerVote.TargetPlayerId)
+                            playerVote.NameText.Color = Palette.ImpostorRed;
                 }
+
+                player.nameText.Color = TryGetSpecialRole(player.PlayerId, out Role role)
+                    ? role.color
+                    : Palette.ImpostorRed;
+            }
         }
     }
 

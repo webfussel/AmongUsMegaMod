@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using System;
 using Il2CppSystem.Collections.Generic;
+using MegaMod.Roles;
 using static MegaMod.MegaModManager;
 
 namespace MegaMod
@@ -12,6 +13,15 @@ namespace MegaMod
         {
             GetSpecialRole(PlayerControl.LocalPlayer.PlayerId)?.SetIntro(__instance);
             return true;
+        }
+    }
+    [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginImpostor))]
+    class ImpostorText
+    {
+        static void Postfix(IntroCutscene __instance)
+        {
+            if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Role _))
+                __instance.ImpostorText.gameObject.SetActive(true);
         }
     }
 }

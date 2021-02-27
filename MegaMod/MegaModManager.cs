@@ -11,7 +11,7 @@ namespace MegaMod
     [HarmonyPatch]
     public static class MegaModManager
     {
-        private const string VersionString = "b-1.2.0";
+        private const string VersionString = "1.3.0";
 
         public enum RPC
         {
@@ -50,16 +50,21 @@ namespace MegaMod
             SetRole = 42,
             SetProtected = 44,
             ShieldBreak = 45,
+            AttemptShield = 46,
             DetectiveKill = 47,
             FixLights = 49,
             ResetVariables = 51,
             SetLocalPlayers = 56,
-            ManiacWin = 57
+            ManiacWin = 57,
+            SetTrackerMark = 58,
+            TrapSuccessful = 59
         }
         
-        public static AssetBundle bundle;
         public static AssetBundle buttons;
-        public static AudioClip breakClip; // Still need that for the shield
+        public static AssetBundle sounds;
+        public static AudioClip shieldAttempt;
+        public static AudioClip ninjaOne;
+        public static AudioClip ninjaTwo;
         public static Sprite defaultKillButton;
         public static Sprite shieldButton;
         public static Sprite repairButton;
@@ -67,6 +72,7 @@ namespace MegaMod
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
         public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
 
+        public static SystemTypes currentRoomId;
         // Only the engineer gets added to the dictionary so far
         public static void AddSpecialRole(Role specialRole)
         {

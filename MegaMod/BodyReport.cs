@@ -13,7 +13,7 @@ namespace MegaMod
         public float KillAge { get; set; }
             
         // TODO: Add new colors from mod
-        private readonly Dictionary<byte, string> _colors = new Dictionary<byte, string>()
+        private readonly Dictionary<byte, string> _colors = new Dictionary<byte, string>
         {
             {0, "darker"},
             {1, "darker"},
@@ -27,9 +27,22 @@ namespace MegaMod
             {9, "darker"},
             {10, "lighter"},
             {11, "lighter"},
+            {12, "lighter"},
+            {13, "darker"},
+            {14, "lighter"},
+            {15, "darker"},
+            {16, "darker"},
+            {17, "lighter"},
+            {18, "darker"},
+            {19, "lighter"},
+            {20, "lighter"},
+            {21, "darker"},
+            {22, "lighter"},
+            {23, "lighter"},
+            {24, "lighter"}
         };
 
-        private readonly List<string> _lastWords = new List<string>()
+        private readonly List<string> _lastWords = new List<string>
         {
             "YOLO!",
             "Oh no! It's YOU!?",
