@@ -11,7 +11,7 @@ namespace MegaMod
     [HarmonyPatch]
     public static class MegaModManager
     {
-        private const string VersionString = "1.3.2";
+        private const string VersionString = "1.4.0";
 
         public enum RPC
         {
@@ -54,9 +54,11 @@ namespace MegaMod
             DetectiveKill = 47,
             FixLights = 49,
             ResetVariables = 51,
+            NinjaDoubleKill = 54,
             SetLocalPlayers = 56,
             ManiacWin = 57,
-            NinjaDoubleKill = 58
+            SetTrackerMark = 58,
+            TrapSuccessful = 59
         }
         
         public static AssetBundle buttons;
@@ -67,9 +69,11 @@ namespace MegaMod
         public static Sprite defaultKillButton;
         public static Sprite shieldButton;
         public static Sprite repairButton;
+        public static Sprite markTrapButton;
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
         public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
 
+        public static SystemTypes currentRoomId;
         // Only the engineer gets added to the dictionary so far
         public static void AddSpecialRole(Role specialRole)
         {

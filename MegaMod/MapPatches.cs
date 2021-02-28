@@ -13,6 +13,8 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     engineer?.OpenMap(__instance);
+                else if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    tracker?.OpenMap(__instance);
             }
         }
         
@@ -23,6 +25,8 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     engineer?.UpdateMap(__instance);
+                else if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    tracker?.UpdateMap(__instance);
             }
         }
         
@@ -33,6 +37,8 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     return engineer.SetRepairButtonsActive();
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    return tracker.SetMarkButtonsActive();
 
                 return true;
             }
@@ -43,9 +49,13 @@ namespace MegaMod
         {
             static bool Prefix(MapRoom __instance)
             {
-                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
+                if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     return engineer.RepairReactor();
-                
+                if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    return tracker.MarkSystem(SystemTypes.Reactor);
+                if (SpecialRoleIsAssigned<Tracker>(out var trackerKvp) && PlayerControl.LocalPlayer.Data.IsImpostor)            
+                    trackerKvp.Value.OnSabotageHappened(SystemTypes.Reactor);
+
                 return true;
             }
         }
@@ -58,6 +68,12 @@ namespace MegaMod
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     return engineer.RepairLight();
                 
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    return tracker.MarkSystem(SystemTypes.Electrical);
+                
+                if (SpecialRoleIsAssigned<Tracker>(out var trackerKvp) && PlayerControl.LocalPlayer.Data.IsImpostor)
+                    trackerKvp.Value.OnSabotageHappened(SystemTypes.Electrical);
+
                 return true;
             }
         }
@@ -70,6 +86,12 @@ namespace MegaMod
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     return engineer.RepairComms();
                 
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    return tracker.MarkSystem(SystemTypes.Comms);
+                
+                if (SpecialRoleIsAssigned<Tracker>(out var trackerKvp) && PlayerControl.LocalPlayer.Data.IsImpostor)
+                    trackerKvp.Value.OnSabotageHappened(SystemTypes.Comms);
+
                 return true;
             }
         }
@@ -81,7 +103,11 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     return engineer.RepairOxy();
-                
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    return tracker.MarkSystem(SystemTypes.LifeSupp);
+                if (SpecialRoleIsAssigned<Tracker>(out var trackerKvp) && PlayerControl.LocalPlayer.Data.IsImpostor)
+                    trackerKvp.Value.OnSabotageHappened(SystemTypes.LifeSupp);
+
                 return true;
             }
         }
@@ -93,7 +119,11 @@ namespace MegaMod
             {
                 if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Engineer engineer))
                     return engineer.RepairSeismic();
-                
+                if(TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker))
+                    return tracker.MarkSystem(SystemTypes.Laboratory);
+                if (SpecialRoleIsAssigned<Tracker>(out var trackerKvp) && PlayerControl.LocalPlayer.Data.IsImpostor)
+                    trackerKvp.Value.OnSabotageHappened(SystemTypes.Laboratory);
+
                 return true;
             }
         }
