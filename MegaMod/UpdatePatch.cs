@@ -151,7 +151,6 @@ namespace MegaMod
 
                     foreach (var player in PlayerControl.AllPlayerControls)
                     {
-                        ConsoleTools.Info("Checking player: " + player.nameText.Text);
                         if (player != null && !player.Data.IsDead && player.PlayerId == localPlayer.PlayerId)
                         {
                             bool canPlace = true;
@@ -172,17 +171,18 @@ namespace MegaMod
                 }
 
                 // Update
-                /*
                 timeUpdate += Time.deltaTime;
                 if (timeUpdate >= interpolationPeriodUpdate)
                 {
+                    if (Pathfinder.FootPrint.allSorted == null)
+                        return;
+
                     timeUpdate -= interpolationPeriodUpdate;
 
                     foreach (List<Pathfinder.FootPrint> footprints in Pathfinder.FootPrint.allSorted.Values)
-                        foreach(Pathfinder.FootPrint footprint in footprints)
-                            footprint.Update();
+                        for (int i = footprints.Count - 1; i >= 0; i--)
+                            footprints[i].Update();
                 }
-                */
             }
         }
     }

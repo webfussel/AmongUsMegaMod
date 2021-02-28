@@ -83,7 +83,7 @@ namespace MegaMod.Roles
 
             public static void Initialize(float _lifespan, float _interval, Color _anonymousColor, bool _anonymous, Sprite _sprite)
             {
-                lifespan = _lifespan;
+                lifespan = _lifespan * 1000;
                 interval = _interval;
                 anonymousColor = _anonymousColor;
                 anonymous = _anonymous;
@@ -93,32 +93,26 @@ namespace MegaMod.Roles
 
             public FootPrint(PlayerControl _player)
             {
-                ConsoleTools.Info("Creating footprint...");
-                color = anonymous ? anonymousColor : (Color) Palette.PlayerColors[player.Data.ColorId];
-                ConsoleTools.Info("... of player " + _player.nameText.Text + "...");
                 player = _player;
+                color = anonymous ? anonymousColor : (Color)Palette.PlayerColors[player.Data.ColorId];
                 footPrintUnixTime = (int) DateTimeOffset.Now.ToUnixTimeSeconds();
 
-                footPrint = new GameObject("FootPrint");
+                footPrint = new GameObject();
                 footPrint.transform.position = footPrint.transform.localPosition = Position = player.transform.position;
-                //footPrint.transform.SetParent(player.transform.parent);
                 spriteRenderer = footPrint.AddComponent<SpriteRenderer>();
                 spriteRenderer.sprite = sprite;
                 spriteRenderer.color = color;
-                ConsoleTools.Info("...created the footprint gameObject...");
 
                 footPrint.SetActive(true);
                 AddToDictionary(this);
-                ConsoleTools.Info("...successfully!");
             }
 
             public void Update()
             {
                 int currentUnixTime = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
-                float alpha = Mathf.Max((1f - ((currentUnixTime - footPrintUnixTime) / footPrintDuration)), 0f);
+                float alpha = Map(currentUnixTime, footPrintUnixTime, footPrintUnixTime + lifespan, 0, 1);
+                ConsoleTools.Info($"Current time: {currentUnixTime}, footprint birth: {footPrintUnixTime}, footprint death: {footPrintUnixTime + lifespan}");
 
-                if (alpha < 0 || alpha > 1)
-                    alpha = 0;
 
                 spriteRenderer.color = AdjustAlpha(alpha);
 
@@ -139,6 +133,15 @@ namespace MegaMod.Roles
             }
 
             private static void RemoveFromDictionary(FootPrint fp) => allSorted[fp.player].Remove(fp);
+
+            private static float Map(float value, float from_min, float from_max, float to_min, float to_max)
+            {
+                if (value <= from_min)
+                    return to_min;
+                else if (value >= from_max)
+                    return to_max;
+                return (to_max - to_min) * ((value - from_min) / (from_max - from_min)) + to_min;
+            }
         }
     }
 }
