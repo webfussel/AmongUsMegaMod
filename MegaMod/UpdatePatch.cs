@@ -28,10 +28,11 @@ namespace MegaMod
                 __instance.KillButton.renderer.enabled = true;
                 __instance.KillButton.renderer.sprite = defaultKillButton;
             }
-            
+
             bool lastQ = Input.GetKeyUp(KeyCode.Q);
-            
-            if (!PlayerControl.LocalPlayer.Data.IsImpostor && Input.GetKeyDown(KeyCode.Q) && !lastQ && __instance.UseButton.isActiveAndEnabled)
+
+            if (!PlayerControl.LocalPlayer.Data.IsImpostor && Input.GetKeyDown(KeyCode.Q) && !lastQ &&
+                __instance.UseButton.isActiveAndEnabled)
             {
                 PerformKillPatch.Prefix(null);
             }
@@ -56,10 +57,10 @@ namespace MegaMod
             // Maniac Tasks have to be reset every frame... I don't know why but huh.
             if (SpecialRoleIsAssigned<Maniac>(out var maniacKvp))
                 maniacKvp.Value.ClearTasks();
-            
+
             if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp))
                 doctorKvp.Value.ShowShieldedPlayer();
-                
+
             bool showImpostorToManiac = false;
             Role current = GetSpecialRole(PlayerControl.LocalPlayer.PlayerId);
             if (current != null)
@@ -94,19 +95,22 @@ namespace MegaMod
             }
 
             if (!PlayerControl.LocalPlayer.Data.IsImpostor && (!(current is Maniac) || !showImpostorToManiac)) return;
-            
-            
+
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                if (player.Data.IsImpostor)
+            {
+                if (!player.Data.IsImpostor) continue;
+                
+                if (MeetingHud.Instance != null)
                 {
-                    if (MeetingHud.Instance != null)
-                    {
-                        foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
-                            if (player.PlayerId == playerVote.TargetPlayerId)
-                                playerVote.NameText.Color = Palette.ImpostorRed;
-                    }
-                    player.nameText.Color = Palette.ImpostorRed;
+                    foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
+                        if (player.PlayerId == playerVote.TargetPlayerId)
+                            playerVote.NameText.Color = Palette.ImpostorRed;
                 }
+
+                player.nameText.Color = TryGetSpecialRole(player.PlayerId, out Role role)
+                    ? role.color
+                    : Palette.ImpostorRed;
+            }
         }
     }
 

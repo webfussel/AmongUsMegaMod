@@ -82,7 +82,10 @@ namespace MegaMod.Roles
             SoundManager.Instance.PlaySound(ninjaTwo, false, 100f);
             DoubleKillUsed = true;
             player.MurderPlayer(closest);
-            player.RpcMurderPlayer(closest);
+            MessageWriter writer = GetWriter(RPC.NinjaDoubleKill);
+            writer.Write(player.PlayerId);
+            writer.Write(closest.PlayerId);
+            CloseWriter(writer);
             player.SetKillTimer(player.killTimer + PlayerControl.GameOptions.KillCooldown * 2);
             return false;
         }

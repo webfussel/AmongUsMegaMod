@@ -97,7 +97,13 @@ namespace MegaMod
                     maniac.player.Data.IsDead = false;
                     maniac.player.Data.IsImpostor = true;
                     break;
-                
+                case (byte) RPC.NinjaDoubleKill:
+                    var ninjaId = reader.ReadByte();
+                    var doubleKillId = reader.ReadByte();
+                    PlayerControl ninjaDoubleKill = PlayerTools.GetPlayerById(ninjaId);
+                    PlayerControl targetDoubleKill = PlayerTools.GetPlayerById(doubleKillId);
+                    ninjaDoubleKill.MurderPlayer(targetDoubleKill);
+                    break;
                 // --------------------------- Other ---------------------------
                 
                 case (byte)RPC.FixLights:
