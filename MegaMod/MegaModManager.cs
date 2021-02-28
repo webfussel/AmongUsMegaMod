@@ -67,10 +67,11 @@ namespace MegaMod
         public static Sprite defaultKillButton;
         public static Sprite shieldButton;
         public static Sprite repairButton;
+        public static Sprite footprintSprite;
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
         public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
 
-        // Only the engineer gets added to the dictionary so far
+
         public static void AddSpecialRole(Role specialRole)
         {
             if (AssignedSpecialRoles.ContainsKey(specialRole.player.PlayerId))

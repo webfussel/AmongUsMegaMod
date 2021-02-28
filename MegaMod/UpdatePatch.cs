@@ -2,6 +2,8 @@
 using MegaMod.Roles;
 using UnityEngine;
 using static MegaMod.MegaModManager;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace MegaMod
 {
@@ -122,6 +124,66 @@ namespace MegaMod
         {
             if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Seer seer))
                 seer.SetEmergencyButtonInactive(__instance);
+        }
+    }
+
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
+    public static class UpdatePlayerPatch
+    {
+        public static float time = 0.0f;
+        public static float interpolationPeriodNew = MainConfig.OptPathfinderFootprintInterval.GetValue();
+
+        public static float timeUpdate = 0.0f;
+        public static float interpolationPeriodUpdate = 1f;
+
+        public static void Postfix(PlayerControl __instance)
+        {
+            PlayerControl localPlayer = PlayerControl.LocalPlayer;
+
+            if (SpecialRoleIsAssigned<Pathfinder>(out var pathfinderKvp) && localPlayer.PlayerId == pathfinderKvp.Key)
+            {
+
+                // New Footprint
+                time += Time.deltaTime;
+                if (time >= interpolationPeriodNew)
+                {
+                    time -= interpolationPeriodNew;
+
+                    foreach (var player in PlayerControl.AllPlayerControls)
+                    {
+                        ConsoleTools.Info("Checking player: " + player.nameText.Text);
+                        if (player != null && !player.Data.IsDead && player.PlayerId == localPlayer.PlayerId)
+                        {
+                            bool canPlace = true;
+
+                            if (!Pathfinder.FootPrint.allSorted.ContainsKey(player))
+                                goto PlaceFootprint;
+
+                            float distanceToLastFootprint = Vector3.Distance(Pathfinder.FootPrint.allSorted[player].Last().Position, localPlayer.GetTruePosition());
+                            ConsoleTools.Info("Distance to last footprint: " + distanceToLastFootprint);
+                            if (distanceToLastFootprint < 0.5f || !player.inVent)
+                                canPlace = false;
+
+                            PlaceFootprint:
+                            if (canPlace)
+                                new Pathfinder.FootPrint(player);                               
+                        }
+                    }
+                }
+
+                // Update
+                /*
+                timeUpdate += Time.deltaTime;
+                if (timeUpdate >= interpolationPeriodUpdate)
+                {
+                    timeUpdate -= interpolationPeriodUpdate;
+
+                    foreach (List<Pathfinder.FootPrint> footprints in Pathfinder.FootPrint.allSorted.Values)
+                        foreach(Pathfinder.FootPrint footprint in footprints)
+                            footprint.Update();
+                }
+                */
+            }
         }
     }
 }

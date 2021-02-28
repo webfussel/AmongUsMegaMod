@@ -30,7 +30,8 @@ namespace MegaMod
         public static readonly CustomNumberOption OptSeerSpawnChance = CustomOption.AddNumber("Seer Spawn Chance", 100, 0, 100, 10);
         public static readonly CustomNumberOption OptManiacSpawnChance = CustomOption.AddNumber("Maniac Spawn Chance", 100, 0, 100, 10);
         public static readonly CustomNumberOption OptNinjaSpawnChance = CustomOption.AddNumber("Ninja Spawn Chance", 100, 0, 100, 10);
-        
+        public static readonly CustomNumberOption OptPathfinderSpawnChance = CustomOption.AddNumber("Pathfinder Spawn Chance", 100, 0, 100, 10);
+
         // Detective
         public static readonly CustomNumberOption OptDetectiveKillCooldown = CustomOption.AddNumber("Detective Kill Cooldown", 30f, 10f, 60f, 2.5f);
         public static readonly CustomToggleOption OptShowDetectiveReports = CustomOption.AddToggle("Show Detective Reports", true);
@@ -41,7 +42,12 @@ namespace MegaMod
         
         // Seer
         public static readonly CustomToggleOption OptSeerCanPressEmergency = CustomOption.AddToggle("Seer can call emergency", false);
-        
+
+        // Pathfinder
+        public static readonly CustomNumberOption OptPathfinderFootprintLifespan = CustomOption.AddNumber("Pathfinder footprint lifespan", 5f, 2f, 10f, 1f);
+        public static readonly CustomNumberOption OptPathfinderFootprintInterval = CustomOption.AddNumber("Pathfinder footprint interval", 0.5f, 0.2f, 0.8f, 0.1f);
+        public static readonly CustomToggleOption OptPathfinderAnonymousFootprints = CustomOption.AddToggle("Pathfinder anonymous footprints", false);
+
         // Maniac
         public static readonly CustomToggleOption OptManiacShowImpostor = CustomOption.AddToggle("Show Impostor to Maniac", false);
         public static readonly CustomToggleOption OptManiacCanDieToDetective = CustomOption.AddToggle("Maniac Can Die To Detective", true);
@@ -88,6 +94,7 @@ namespace MegaMod
             buttons = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\buttons");
             repairButton = buttons.LoadAsset<Sprite>("repair").DontUnload();
             shieldButton = buttons.LoadAsset<Sprite>("protect").DontUnload();
+            footprintSprite = buttons.LoadAsset<Sprite>("protect").DontUnload(); // TODO: Hier muss noch die richtige Grafik übergeben werden
 
             sounds = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\sounds");
             shieldAttempt = sounds.LoadAsset<AudioClip>("shield").DontUnload();
