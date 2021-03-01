@@ -43,10 +43,7 @@ namespace MegaMod
         
         // Seer
         public static readonly CustomToggleOption OptSeerCanPressEmergency = CustomOption.AddToggle("Seer can call emergency", false);
-
-        // Nocturnal
-        public static readonly CustomNumberOption OptNocturnalDarkVision = CustomOption.AddNumber("Nocturnal Dark Vision", 3, 1, 3, 0.5f);
-
+        
         // Maniac
         public static readonly CustomToggleOption OptManiacShowImpostor = CustomOption.AddToggle("Show Impostor to Maniac", false);
         public static readonly CustomToggleOption OptManiacCanDieToDetective = CustomOption.AddToggle("Maniac Can Die To Detective", true);
