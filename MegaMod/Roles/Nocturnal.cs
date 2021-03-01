@@ -15,6 +15,7 @@ namespace MegaMod.Roles
         {
             name = "Nocturnal";
             color = new Color(0.49f, 0.8f, 1f);
+            colorAsHex = "7CCCFFFF";
             startText = "The night is your home";
         }
 
@@ -58,9 +59,7 @@ namespace MegaMod.Roles
 
         public void CalculateNormalVision(ShipStatus shipStatus)
         {
-            // TODO: Wieso wird das hier 4x ausgeführt? x)
             normalVision = shipStatus.MaxLightRadius * PlayerControl.GameOptions.CrewLightMod;
-            ConsoleTools.Info(normalVision.ToString());
         }
 
         public float CalculateCurrentVision(float normalResult) => normalVision * 2 - normalResult;

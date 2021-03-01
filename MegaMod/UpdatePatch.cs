@@ -135,10 +135,14 @@ namespace MegaMod
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
     public class CalculateVisionPatch
     {
-        public static void Postfix(ref float __result, ShipStatus __instance, [HarmonyArgument(0)] GameData.PlayerInfo PlayerData)
+        public static void Postfix(ref float __result)
         {
-            if (SpecialRoleIsAssigned<Nocturnal>(out var nocturnalKvp) && nocturnalKvp.Key == PlayerData.PlayerId && !nocturnalKvp.Value.player.Data.IsDead)
-                __result = nocturnalKvp.Value.CalculateCurrentVision(__result);
+            ConsoleTools.Info("Calculating Vision!");
+            if (!TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Nocturnal nocturnal) ||
+                PlayerControl.LocalPlayer.Data.IsDead) return;
+            ConsoleTools.Info("Calculating Vision FOR NOCTURNAL!");
+            __result = nocturnal.CalculateCurrentVision(__result);
+            ConsoleTools.Info($"{__result}");
         }
     }
 }

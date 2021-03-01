@@ -8,13 +8,10 @@ namespace MegaMod
     {
         static void Postfix(RoomTracker __instance)
         {
-            if (PlayerControl.LocalPlayer == null || !PlayerControl.LocalPlayer.Data.IsImpostor ||
+            if (__instance.LastRoom == null || PlayerControl.LocalPlayer == null || !PlayerControl.LocalPlayer.Data.IsImpostor ||
                 __instance.LastRoom.RoomId == currentRoomId) return;
             
-            if (__instance.LastRoom != null)
-            {
-                currentRoomId = __instance.LastRoom.RoomId;
-            }
+            currentRoomId = __instance.LastRoom.RoomId;
         }
     }
 }

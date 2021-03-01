@@ -179,13 +179,13 @@ namespace MegaMod
             }
         }
         
-        [HarmonyPatch(typeof(ShipStatus), "GetSpawnLocation")]
+        [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
         public static class StartGamePatch
         {
             public static void Postfix(ShipStatus __instance)
             {
-                if (SpecialRoleIsAssigned<Nocturnal>(out var nocturnalKvp) && PlayerControl.LocalPlayer.PlayerId == nocturnalKvp.Key)
-                    nocturnalKvp.Value.CalculateNormalVision(__instance);
+                if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Nocturnal nocturnal))
+                    nocturnal.CalculateNormalVision(__instance);
             }
         }
     }
