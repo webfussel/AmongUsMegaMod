@@ -144,34 +144,7 @@ namespace MegaMod
             {
                 nextUpdate += interval;
 
-                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                {
-                    if (player == null || player.Data.IsDead || player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
-                        continue;
-                   
-                    List<Pathfinder.FootPrint> thisPlayersFootprints;
-
-                    // Update existing footprints of this player, if there are any. If not, create one if the player is not in a vent
-                    if (Pathfinder.FootPrint.allSorted.ContainsKey(player.PlayerId) && Pathfinder.FootPrint.allSorted[player.PlayerId].Count != 0)
-                    {
-                        thisPlayersFootprints = Pathfinder.FootPrint.allSorted[player.PlayerId];
-                        for (int i = thisPlayersFootprints.Count - 1; i >= 0; i--)
-                            thisPlayersFootprints[i].Update(interval);
-                    }
-                    else
-                    {
-                        if (!player.inVent)
-                            new Pathfinder.FootPrint(player);
-                        continue;
-                    }
-
-                    // Place new footprints for this player, if the last one isn't to close and the player is not inside a vent
-                    if (
-                        (thisPlayersFootprints.Count != 0 && Vector2.SqrMagnitude(thisPlayersFootprints.Last().Position - player.transform.position) > 0.1f && !player.inVent)
-                        || (thisPlayersFootprints.Count == 0 && !player.inVent)
-                    )
-                        new Pathfinder.FootPrint(player);
-                }
+                pathfinderKvp.Value.FixedUpdate(interval);
             }
         }
     }

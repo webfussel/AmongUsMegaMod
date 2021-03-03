@@ -90,14 +90,15 @@ namespace MegaMod
             Ip = Config.Bind("Custom", "Ipv4 or Hostname", "127.0.0.1");
             Port = Config.Bind("Custom", "Port", (ushort)22023);
             
-            buttons = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\buttons");
+            AssetBundle buttons = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\buttons");
             repairButton = buttons.LoadAsset<Sprite>("repair").DontUnload();
             shieldButton = buttons.LoadAsset<Sprite>("protect").DontUnload();
 
-            gui = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\gui");
-            footprintSprite = gui.LoadAsset<Sprite>("footsteps").DontUnload();
+            AssetBundle gui = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\gui");
+            Texture2D temp = gui.LoadAsset<Texture2D>("footsteps");
+            footprintSprite = Sprite.Create(temp, new Rect(0, 0, temp.width, temp.height), new Vector2(0.5f, 0.7f)).DontUnload();
 
-            sounds = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\sounds");
+            AssetBundle sounds = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\sounds");
             shieldAttempt = sounds.LoadAsset<AudioClip>("shield").DontUnload();
             ninjaOne = sounds.LoadAsset<AudioClip>("ninja_1").DontUnload();
             ninjaTwo = sounds.LoadAsset<AudioClip>("ninja_2").DontUnload();

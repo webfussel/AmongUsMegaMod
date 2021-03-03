@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Hazel;
 using UnityEngine;
 using static MegaMod.MegaModManager;
@@ -52,7 +51,6 @@ namespace MegaMod.Roles
             FootPrint.Initialize
             (
                 MainConfig.OptPathfinderFootprintLifespan.GetValue(),
-                new Color(0.2f, 0.2f, 0.2f, 1f),
                 MainConfig.OptPathfinderAnonymousFootprints.GetValue(),
                 footprintSprite
             );
@@ -63,29 +61,65 @@ namespace MegaMod.Roles
 
         }
 
+        public void FixedUpdate(float interval)
+        {
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            {
+                if (player == null || player.Data.IsDead || player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+                    continue;
+
+                List<FootPrint> thisPlayersFootprints;
+
+                if (FootPrint.allSorted.ContainsKey(player.PlayerId) && FootPrint.allSorted[player.PlayerId].Count != 0)
+                {
+                    thisPlayersFootprints = FootPrint.allSorted[player.PlayerId];
+                    for (int i = thisPlayersFootprints.Count - 1; i >= 0; i--)
+                        thisPlayersFootprints[i].Update(interval);
+                }
+                else
+                {
+                    CheckIfNewFootprint(player);
+                    continue;
+                }
+
+                CheckIfNewFootprint(player);
+            }
+        }
+
+        private void CheckIfNewFootprint(PlayerControl player)
+        {
+            if (Vector2.SqrMagnitude(FootPrint.lastFootprintPositions[player.PlayerId] - player.transform.position) > 0.1f && !player.inVent)
+                new FootPrint(player);
+        }
+
         public class FootPrint
         {
             private static float lifespan;
-            private static Color anonymousColor;
+            private static Color anonymousColor = new Color(0.2f, 0.2f, 0.2f, 1f);
             private static bool anonymous;
             private static Sprite sprite;
 
             public static Dictionary<byte, List<FootPrint>> allSorted;
+            public static Dictionary<byte, Vector3> lastFootprintPositions;
 
             private Color color;
             public Vector3 Position { get; private set; }
-            private GameObject footPrint;
-            private SpriteRenderer spriteRenderer;
+            private readonly GameObject footPrint;
+            private readonly SpriteRenderer spriteRenderer;
             private readonly PlayerControl player;
             private float age;
 
-            public static void Initialize(float _lifespan, Color _anonymousColor, bool _anonymous, Sprite _sprite)
+            public static void Initialize(float _lifespan, bool _anonymous, Sprite _sprite)
             {
                 lifespan = _lifespan;
-                anonymousColor = _anonymousColor;
                 anonymous = _anonymous;
                 sprite = _sprite;
-                allSorted = new Dictionary<byte, List<FootPrint>>();
+
+                allSorted = new Dictionary<byte, List<FootPrint>>(PlayerControl.AllPlayerControls.Count);
+                lastFootprintPositions = new Dictionary<byte, Vector3>(PlayerControl.AllPlayerControls.Count);
+
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                    lastFootprintPositions.Add(player.PlayerId, player.transform.position);
             }
 
             public FootPrint(PlayerControl _player)
@@ -95,13 +129,21 @@ namespace MegaMod.Roles
                 age = 0;
 
                 footPrint = new GameObject();
-                footPrint.transform.position = Position = player.transform.position;
+                footPrint.transform.position = Position = player.transform.position + Vector3.forward;
                 spriteRenderer = footPrint.AddComponent<SpriteRenderer>();
                 spriteRenderer.sprite = sprite;
                 spriteRenderer.color = color;
 
-                footPrint.SetActive(true);
-                AddToDictionary(this, player.PlayerId);
+                byte playerId = player.PlayerId;
+                if (lastFootprintPositions.ContainsKey(playerId))
+                    lastFootprintPositions[playerId] = Position;
+                else
+                    lastFootprintPositions.Add(playerId, Position);
+
+                if (allSorted.ContainsKey(playerId))
+                    allSorted[playerId].Add(this);
+                else
+                    allSorted.Add(playerId, new List<FootPrint>() { this });
             }
 
             public void Update(float ageToAdd)
@@ -113,20 +155,10 @@ namespace MegaMod.Roles
 
                 if (age >= lifespan)
                 {
-                    RemoveFromDictionary(this);
-                    UnityEngine.Object.Destroy(footPrint);
+                    allSorted[player.PlayerId].Remove(this);
+                    Object.Destroy(footPrint);
                 }
             }
-
-            private static void AddToDictionary(FootPrint fp, byte playerId)
-            {
-                if (allSorted.ContainsKey(playerId))
-                    allSorted[playerId].Add(fp);
-                else
-                    allSorted.Add(playerId, new List<FootPrint>() { fp });
-            }
-
-            private static void RemoveFromDictionary(FootPrint fp) => allSorted[fp.player.PlayerId].Remove(fp);
         }
     }
 }

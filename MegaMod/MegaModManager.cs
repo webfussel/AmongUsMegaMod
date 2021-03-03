@@ -59,9 +59,6 @@ namespace MegaMod
             NinjaDoubleKill = 58
         }
         
-        public static AssetBundle buttons;
-        public static AssetBundle gui;
-        public static AssetBundle sounds;
         public static AudioClip shieldAttempt;
         public static AudioClip ninjaOne;
         public static AudioClip ninjaTwo;
