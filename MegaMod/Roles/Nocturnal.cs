@@ -9,7 +9,7 @@ namespace MegaMod.Roles
     {
         public static readonly byte RoleID = 107;
 
-        private float normalVision;
+        private float _normalVision;
 
         public Nocturnal(PlayerControl player) : base(player)
         {
@@ -59,9 +59,9 @@ namespace MegaMod.Roles
 
         public void CalculateNormalVision(ShipStatus shipStatus)
         {
-            normalVision = shipStatus.MaxLightRadius * PlayerControl.GameOptions.CrewLightMod;
+            _normalVision = shipStatus.MaxLightRadius * PlayerControl.GameOptions.CrewLightMod;
         }
 
-        public float CalculateCurrentVision(float normalResult) => normalVision * 2 - normalResult;
+        public float CalculateCurrentVision(float normalResult) => Mathf.Abs(_normalVision * 2 - normalResult);
     }
 }

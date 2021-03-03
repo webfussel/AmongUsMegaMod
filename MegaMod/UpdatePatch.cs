@@ -137,12 +137,10 @@ namespace MegaMod
     {
         public static void Postfix(ref float __result)
         {
-            ConsoleTools.Info("Calculating Vision!");
             if (!TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Nocturnal nocturnal) ||
                 PlayerControl.LocalPlayer.Data.IsDead) return;
-            ConsoleTools.Info("Calculating Vision FOR NOCTURNAL!");
+            
             __result = nocturnal.CalculateCurrentVision(__result);
-            ConsoleTools.Info($"{__result}");
         }
     }
 }

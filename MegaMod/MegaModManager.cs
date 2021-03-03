@@ -179,7 +179,7 @@ namespace MegaMod
             }
         }
         
-        [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
+        [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.GetSpawnLocation))]
         public static class StartGamePatch
         {
             public static void Postfix(ShipStatus __instance)
