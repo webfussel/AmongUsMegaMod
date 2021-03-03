@@ -44,8 +44,8 @@ namespace MegaMod
         public static readonly CustomToggleOption OptSeerCanPressEmergency = CustomOption.AddToggle("Seer can call emergency", false);
 
         // Pathfinder
-        public static readonly CustomNumberOption OptPathfinderFootprintLifespan = CustomOption.AddNumber("Pathfinder footprint lifespan", 5f, 2f, 10f, 1f);
-        public static readonly CustomNumberOption OptPathfinderFootprintInterval = CustomOption.AddNumber("Pathfinder footprint interval", 0.5f, 0.2f, 0.8f, 0.1f);
+        public static readonly CustomNumberOption OptPathfinderFootprintLifespan = CustomOption.AddNumber("Pathfinder footprint lifespan", 4f, 1f, 8f, 1f);
+        public static readonly CustomNumberOption OptPathfinderFootprintInterval = CustomOption.AddNumber("Pathfinder footprint interval", 0.3f, 0.1f, 0.5f, 0.1f);
         public static readonly CustomToggleOption OptPathfinderAnonymousFootprints = CustomOption.AddToggle("Pathfinder anonymous footprints", false);
 
         // Maniac
@@ -89,12 +89,13 @@ namespace MegaMod
             
             Ip = Config.Bind("Custom", "Ipv4 or Hostname", "127.0.0.1");
             Port = Config.Bind("Custom", "Port", (ushort)22023);
-
             
             buttons = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\buttons");
             repairButton = buttons.LoadAsset<Sprite>("repair").DontUnload();
             shieldButton = buttons.LoadAsset<Sprite>("protect").DontUnload();
-            footprintSprite = buttons.LoadAsset<Sprite>("protect").DontUnload(); // TODO: Hier muss noch die richtige Grafik übergeben werden
+
+            gui = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\gui");
+            footprintSprite = gui.LoadAsset<Sprite>("footsteps").DontUnload();
 
             sounds = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\sounds");
             shieldAttempt = sounds.LoadAsset<AudioClip>("shield").DontUnload();

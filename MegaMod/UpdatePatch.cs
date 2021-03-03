@@ -130,58 +130,47 @@ namespace MegaMod
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
     public static class UpdatePlayerPatch
     {
-        public static float time = 0.0f;
-        public static float interpolationPeriodNew = MainConfig.OptPathfinderFootprintInterval.GetValue();
-
-        public static float timeUpdate = 0.0f;
-        public static float interpolationPeriodUpdate = 1f;
+        private static readonly float interval = MainConfig.OptPathfinderFootprintInterval.GetValue();
+        private static float time = 0;
+        private static float nextUpdate = interval;
 
         public static void Postfix(PlayerControl __instance)
         {
-            PlayerControl localPlayer = PlayerControl.LocalPlayer;
+            if (!gameIsRunning || !SpecialRoleIsAssigned<Pathfinder>(out var pathfinderKvp) || __instance.PlayerId != pathfinderKvp.Key || PlayerControl.LocalPlayer.PlayerId != pathfinderKvp.Key) return;
 
-            if (SpecialRoleIsAssigned<Pathfinder>(out var pathfinderKvp) && localPlayer.PlayerId == pathfinderKvp.Key)
+            time += Time.fixedDeltaTime;
+
+            if (time >= nextUpdate)
             {
+                nextUpdate += interval;
 
-                // New Footprint
-                time += Time.deltaTime;
-                if (time >= interpolationPeriodNew)
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 {
-                    time -= interpolationPeriodNew;
+                    if (player == null || player.Data.IsDead || player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+                        continue;
+                   
+                    List<Pathfinder.FootPrint> thisPlayersFootprints;
 
-                    foreach (var player in PlayerControl.AllPlayerControls)
+                    // Update existing footprints of this player, if there are any. If not, create one if the player is not in a vent
+                    if (Pathfinder.FootPrint.allSorted.ContainsKey(player.PlayerId) && Pathfinder.FootPrint.allSorted[player.PlayerId].Count != 0)
                     {
-                        if (player != null && !player.Data.IsDead && player.PlayerId == localPlayer.PlayerId)
-                        {
-                            bool canPlace = true;
-
-                            if (!Pathfinder.FootPrint.allSorted.ContainsKey(player))
-                                goto PlaceFootprint;
-
-                            float distanceToLastFootprint = Vector3.Distance(Pathfinder.FootPrint.allSorted[player].Last().Position, localPlayer.GetTruePosition());
-                            ConsoleTools.Info("Distance to last footprint: " + distanceToLastFootprint);
-                            if (distanceToLastFootprint < 0.5f || !player.inVent)
-                                canPlace = false;
-
-                            PlaceFootprint:
-                            if (canPlace)
-                                new Pathfinder.FootPrint(player);                               
-                        }
+                        thisPlayersFootprints = Pathfinder.FootPrint.allSorted[player.PlayerId];
+                        for (int i = thisPlayersFootprints.Count - 1; i >= 0; i--)
+                            thisPlayersFootprints[i].Update(interval);
                     }
-                }
+                    else
+                    {
+                        if (!player.inVent)
+                            new Pathfinder.FootPrint(player);
+                        continue;
+                    }
 
-                // Update
-                timeUpdate += Time.deltaTime;
-                if (timeUpdate >= interpolationPeriodUpdate)
-                {
-                    if (Pathfinder.FootPrint.allSorted == null)
-                        return;
-
-                    timeUpdate -= interpolationPeriodUpdate;
-
-                    foreach (List<Pathfinder.FootPrint> footprints in Pathfinder.FootPrint.allSorted.Values)
-                        for (int i = footprints.Count - 1; i >= 0; i--)
-                            footprints[i].Update();
+                    // Place new footprints for this player, if the last one isn't to close and the player is not inside a vent
+                    if (
+                        (thisPlayersFootprints.Count != 0 && Vector2.SqrMagnitude(thisPlayersFootprints.Last().Position - player.transform.position) > 0.1f && !player.inVent)
+                        || (thisPlayersFootprints.Count == 0 && !player.inVent)
+                    )
+                        new Pathfinder.FootPrint(player);
                 }
             }
         }

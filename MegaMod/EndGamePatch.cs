@@ -46,6 +46,8 @@ namespace MegaMod
             __instance.WinText.Text = "Defeat";
             __instance.WinText.Color = Palette.ImpostorRed;
             __instance.BackgroundBar.material.color = new Color(1, 0, 0);
+
+            gameIsRunning = false;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Hazel;
 using UnityEngine;
 using static MegaMod.MegaModManager;
+using static HelperMethods.HelperMethods;
 
 namespace MegaMod.Roles
 {
@@ -51,7 +52,6 @@ namespace MegaMod.Roles
             FootPrint.Initialize
             (
                 MainConfig.OptPathfinderFootprintLifespan.GetValue(),
-                MainConfig.OptPathfinderFootprintInterval.GetValue(),
                 new Color(0.2f, 0.2f, 0.2f, 1f),
                 MainConfig.OptPathfinderAnonymousFootprints.GetValue(),
                 footprintSprite
@@ -66,82 +66,67 @@ namespace MegaMod.Roles
         public class FootPrint
         {
             private static float lifespan;
-            private static float interval;
             private static Color anonymousColor;
             private static bool anonymous;
             private static Sprite sprite;
 
-            public static Dictionary<PlayerControl, List<FootPrint>> allSorted;
+            public static Dictionary<byte, List<FootPrint>> allSorted;
 
             private Color color;
             public Vector3 Position { get; private set; }
-            private readonly float footPrintDuration;
-            private readonly int footPrintUnixTime;
             private GameObject footPrint;
             private SpriteRenderer spriteRenderer;
             private readonly PlayerControl player;
+            private float age;
 
-            public static void Initialize(float _lifespan, float _interval, Color _anonymousColor, bool _anonymous, Sprite _sprite)
+            public static void Initialize(float _lifespan, Color _anonymousColor, bool _anonymous, Sprite _sprite)
             {
-                lifespan = _lifespan * 1000;
-                interval = _interval;
+                lifespan = _lifespan;
                 anonymousColor = _anonymousColor;
                 anonymous = _anonymous;
                 sprite = _sprite;
-                allSorted = new Dictionary<PlayerControl, List<FootPrint>>();
+                allSorted = new Dictionary<byte, List<FootPrint>>();
             }
 
             public FootPrint(PlayerControl _player)
             {
                 player = _player;
-                color = anonymous ? anonymousColor : (Color)Palette.PlayerColors[player.Data.ColorId];
-                footPrintUnixTime = (int) DateTimeOffset.Now.ToUnixTimeSeconds();
+                color = anonymous ? anonymousColor : (Color) Palette.PlayerColors[player.Data.ColorId];
+                age = 0;
 
                 footPrint = new GameObject();
-                footPrint.transform.position = footPrint.transform.localPosition = Position = player.transform.position;
+                footPrint.transform.position = Position = player.transform.position;
                 spriteRenderer = footPrint.AddComponent<SpriteRenderer>();
                 spriteRenderer.sprite = sprite;
                 spriteRenderer.color = color;
 
                 footPrint.SetActive(true);
-                AddToDictionary(this);
+                AddToDictionary(this, player.PlayerId);
             }
 
-            public void Update()
+            public void Update(float ageToAdd)
             {
-                int currentUnixTime = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
-                float alpha = Map(currentUnixTime, footPrintUnixTime, footPrintUnixTime + lifespan, 0, 1);
-                ConsoleTools.Info($"Current time: {currentUnixTime}, footprint birth: {footPrintUnixTime}, footprint death: {footPrintUnixTime + lifespan}");
+                age += ageToAdd;
 
+                float alpha = Map(age, 0, lifespan, 0, 1);
+                spriteRenderer.color = AdjustAlpha(color, 1 - alpha);
 
-                spriteRenderer.color = AdjustAlpha(alpha);
-
-                if (footPrintUnixTime + (int)footPrintDuration < currentUnixTime)
+                if (age >= lifespan)
                 {
                     RemoveFromDictionary(this);
                     UnityEngine.Object.Destroy(footPrint);
                 }
             }
 
-            private Color AdjustAlpha(float alpha) => new Color(color.r, color.g, color.b, alpha);
-
-            private static void AddToDictionary(FootPrint fp)
+            private static void AddToDictionary(FootPrint fp, byte playerId)
             {
-                if (allSorted.ContainsKey(fp.player))
-                    allSorted[fp.player].Add(fp);
-                allSorted.Add(fp.player, new List<FootPrint>() { fp });
+                if (allSorted.ContainsKey(playerId))
+                    allSorted[playerId].Add(fp);
+                else
+                    allSorted.Add(playerId, new List<FootPrint>() { fp });
             }
 
-            private static void RemoveFromDictionary(FootPrint fp) => allSorted[fp.player].Remove(fp);
-
-            private static float Map(float value, float from_min, float from_max, float to_min, float to_max)
-            {
-                if (value <= from_min)
-                    return to_min;
-                else if (value >= from_max)
-                    return to_max;
-                return (to_max - to_min) * ((value - from_min) / (from_max - from_min)) + to_min;
-            }
+            private static void RemoveFromDictionary(FootPrint fp) => allSorted[fp.player.PlayerId].Remove(fp);
         }
     }
 }

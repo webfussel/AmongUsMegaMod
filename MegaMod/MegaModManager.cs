@@ -60,6 +60,7 @@ namespace MegaMod
         }
         
         public static AssetBundle buttons;
+        public static AssetBundle gui;
         public static AssetBundle sounds;
         public static AudioClip shieldAttempt;
         public static AudioClip ninjaOne;
@@ -70,6 +71,7 @@ namespace MegaMod
         public static Sprite footprintSprite;
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
         public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
+        public static bool gameIsRunning = false;
 
 
         public static void AddSpecialRole(Role specialRole)
@@ -176,14 +178,13 @@ namespace MegaMod
             }
         }
         
-        /* Maybe we need that someday
         [HarmonyPatch(typeof(ShipStatus), "GetSpawnLocation")]
         public static class StartGamePatch
         {
             public static void Postfix(ShipStatus __instance)
             {
-                ConsoleTools.Info("Game Started!");
+                gameIsRunning = true;
             }
-        }*/
+        }
     }
 }
