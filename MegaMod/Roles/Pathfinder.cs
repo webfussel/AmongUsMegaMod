@@ -15,7 +15,7 @@ namespace MegaMod.Roles
             name = "Pathfinder";
             color = new Color(0f, 0.2f, 0f);
             colorAsHex = "003300FF";
-            startText = "Noone can hide from you";
+            startText = "No one can hide from you";
         }
 
         /*
@@ -52,7 +52,7 @@ namespace MegaMod.Roles
             (
                 MainConfig.OptPathfinderFootprintLifespan.GetValue(),
                 MainConfig.OptPathfinderAnonymousFootprints.GetValue(),
-                footprintSprite
+                footsteps
             );
         }
 
@@ -70,9 +70,9 @@ namespace MegaMod.Roles
 
                 List<FootPrint> thisPlayersFootprints;
 
-                if (FootPrint.allSorted.ContainsKey(player.PlayerId) && FootPrint.allSorted[player.PlayerId].Count != 0)
+                if (FootPrint.AllSorted.ContainsKey(player.PlayerId) && FootPrint.AllSorted[player.PlayerId].Count != 0)
                 {
-                    thisPlayersFootprints = FootPrint.allSorted[player.PlayerId];
+                    thisPlayersFootprints = FootPrint.AllSorted[player.PlayerId];
                     for (int i = thisPlayersFootprints.Count - 1; i >= 0; i--)
                         thisPlayersFootprints[i].Update(interval);
                 }
@@ -86,77 +86,77 @@ namespace MegaMod.Roles
             }
         }
 
-        private void CheckIfNewFootprint(PlayerControl player)
+        private void CheckIfNewFootprint(PlayerControl _player)
         {
-            if (Vector2.SqrMagnitude(FootPrint.lastFootprintPositions[player.PlayerId] - player.transform.position) > 0.1f && !player.inVent)
-                new FootPrint(player);
+            if (Vector2.SqrMagnitude(FootPrint.LastFootprintPositions[_player.PlayerId] - _player.transform.position) > 0.025f && !_player.inVent)
+                new FootPrint(_player);
         }
 
         public class FootPrint
         {
-            private static float lifespan;
-            private static Color anonymousColor = new Color(0.2f, 0.2f, 0.2f, 1f);
-            private static bool anonymous;
-            private static Sprite sprite;
+            private static float _lifespan;
+            private static readonly Color AnonymousColor = new Color(0.2f, 0.2f, 0.2f, 1f);
+            private static bool _anonymous;
+            private static Sprite _sprite;
 
-            public static Dictionary<byte, List<FootPrint>> allSorted;
-            public static Dictionary<byte, Vector3> lastFootprintPositions;
+            public static Dictionary<byte, List<FootPrint>> AllSorted;
+            public static Dictionary<byte, Vector3> LastFootprintPositions;
 
-            private Color color;
-            public Vector3 Position { get; private set; }
-            private readonly GameObject footPrint;
-            private readonly SpriteRenderer spriteRenderer;
-            private readonly PlayerControl player;
-            private float age;
+            private readonly Color _color;
+            private Vector3 Position { get; }
+            private readonly GameObject _footPrint;
+            private readonly SpriteRenderer _spriteRenderer;
+            private readonly PlayerControl _player;
+            private float _age;
 
-            public static void Initialize(float _lifespan, bool _anonymous, Sprite _sprite)
+            public static void Initialize(float lifespan, bool anonymous, Sprite sprite)
             {
-                lifespan = _lifespan;
-                anonymous = _anonymous;
-                sprite = _sprite;
+                _lifespan = lifespan;
+                _anonymous = anonymous;
+                _sprite = sprite;
 
-                allSorted = new Dictionary<byte, List<FootPrint>>(PlayerControl.AllPlayerControls.Count);
-                lastFootprintPositions = new Dictionary<byte, Vector3>(PlayerControl.AllPlayerControls.Count);
+                AllSorted = new Dictionary<byte, List<FootPrint>>(PlayerControl.AllPlayerControls.Count);
+                LastFootprintPositions = new Dictionary<byte, Vector3>(PlayerControl.AllPlayerControls.Count);
 
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                    lastFootprintPositions.Add(player.PlayerId, player.transform.position);
+                    LastFootprintPositions.Add(player.PlayerId, player.transform.position);
             }
 
-            public FootPrint(PlayerControl _player)
+            public FootPrint(PlayerControl player)
             {
-                player = _player;
-                color = anonymous ? anonymousColor : (Color) Palette.PlayerColors[player.Data.ColorId];
-                age = 0;
+                _player = player;
+                _color = _anonymous ? AnonymousColor : (Color) Palette.PlayerColors[_player.Data.ColorId];
+                _age = 0;
 
-                footPrint = new GameObject();
-                footPrint.transform.position = Position = player.transform.position + Vector3.forward;
-                spriteRenderer = footPrint.AddComponent<SpriteRenderer>();
-                spriteRenderer.sprite = sprite;
-                spriteRenderer.color = color;
+                _footPrint = new GameObject();
+                _footPrint.transform.position = Position = _player.transform.position + Vector3.forward;
+                _spriteRenderer = _footPrint.AddComponent<SpriteRenderer>();
+                _spriteRenderer.sprite = _sprite;
+                _spriteRenderer.color = _color;
 
-                byte playerId = player.PlayerId;
-                if (lastFootprintPositions.ContainsKey(playerId))
-                    lastFootprintPositions[playerId] = Position;
+                byte playerId = _player.PlayerId;
+                if (LastFootprintPositions.ContainsKey(playerId))
+                    LastFootprintPositions[playerId] = Position;
                 else
-                    lastFootprintPositions.Add(playerId, Position);
+                    LastFootprintPositions.Add(playerId, Position);
 
-                if (allSorted.ContainsKey(playerId))
-                    allSorted[playerId].Add(this);
+                if (AllSorted.ContainsKey(playerId))
+                    AllSorted[playerId].Add(this);
                 else
-                    allSorted.Add(playerId, new List<FootPrint>() { this });
+                    AllSorted.Add(playerId, new List<FootPrint> { this });
             }
 
             public void Update(float ageToAdd)
             {
-                age += ageToAdd;
+                _age += ageToAdd;
 
-                float alpha = Map(age, 0, lifespan, 0, 1);
-                spriteRenderer.color = AdjustAlpha(color, 1 - alpha);
+                float alpha = Map(_age, 0, _lifespan, 0, 1);
+                _spriteRenderer.color = AdjustAlpha(_color, 1 - alpha);
 
-                if (age >= lifespan)
+                if (_age >= _lifespan)
                 {
-                    allSorted[player.PlayerId].Remove(this);
-                    Object.Destroy(footPrint);
+                    AllSorted[_player.PlayerId].Remove(this);
+                    Object.Destroy(_footPrint);
                 }
             }
         }

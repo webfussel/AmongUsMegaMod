@@ -65,7 +65,7 @@ namespace MegaMod
         public static Sprite defaultKillButton;
         public static Sprite shieldButton;
         public static Sprite repairButton;
-        public static Sprite footprintSprite;
+        public static Sprite footsteps;
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
         public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
         public static bool gameIsRunning = false;

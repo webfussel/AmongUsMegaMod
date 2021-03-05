@@ -95,8 +95,8 @@ namespace MegaMod
             shieldButton = buttons.LoadAsset<Sprite>("protect").DontUnload();
 
             AssetBundle gui = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\gui");
-            Texture2D temp = gui.LoadAsset<Texture2D>("footsteps");
-            footprintSprite = Sprite.Create(temp, new Rect(0, 0, temp.width, temp.height), new Vector2(0.5f, 0.7f)).DontUnload();
+            Texture2D footstepsTemp = gui.LoadAsset<Texture2D>("footsteps");
+            footsteps = Sprite.Create(footstepsTemp, new Rect(0, 0, footstepsTemp.width, footstepsTemp.height), new Vector2(0.5f, 0.7f)).DontUnload();
 
             AssetBundle sounds = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\sounds");
             shieldAttempt = sounds.LoadAsset<AudioClip>("shield").DontUnload();
