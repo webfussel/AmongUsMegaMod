@@ -10,6 +10,8 @@ namespace MegaMod
     {
         public static bool Prefix(EndGameManager __instance)
         {
+            gameIsRunning = false;
+
             if (TempData.winners.Count > 1 && TempData.DidHumansWin(TempData.EndReason))
             {
                 TempData.winners.Clear();
@@ -21,10 +23,9 @@ namespace MegaMod
                     if (player.PlayerId != localPlayer.PlayerId)
                         orderLocalPlayers.Add(player);
                 foreach (PlayerControl winner in orderLocalPlayers)
-                {
                     TempData.winners.Add(new WinningPlayerData(winner.Data));
-                }
             }
+
             return true;
         }
 
@@ -32,22 +33,13 @@ namespace MegaMod
         {
             if (!TempData.DidHumansWin(TempData.EndReason)) return;
             
-            bool flag = true;
             foreach (PlayerControl player in Crew)
-            {
                 if (player.PlayerId == localPlayer.PlayerId)
-                {
-                    flag = false;
-                }
-            }
-
-            if (!flag) return;
+                    return;
             
             __instance.WinText.Text = "Defeat";
             __instance.WinText.Color = Palette.ImpostorRed;
             __instance.BackgroundBar.material.color = new Color(1, 0, 0);
-
-            gameIsRunning = false;
         }
     }
 }

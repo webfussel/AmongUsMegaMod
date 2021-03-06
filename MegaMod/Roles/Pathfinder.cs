@@ -68,11 +68,9 @@ namespace MegaMod.Roles
                 if (player == null || player.Data.IsDead || player.PlayerId == PlayerControl.LocalPlayer.PlayerId)
                     continue;
 
-                List<FootPrint> thisPlayersFootprints;
-
                 if (FootPrint.AllSorted.ContainsKey(player.PlayerId) && FootPrint.AllSorted[player.PlayerId].Count != 0)
                 {
-                    thisPlayersFootprints = FootPrint.AllSorted[player.PlayerId];
+                    List<FootPrint> thisPlayersFootprints = FootPrint.AllSorted[player.PlayerId];
                     for (int i = thisPlayersFootprints.Count - 1; i >= 0; i--)
                         thisPlayersFootprints[i].Update(interval);
                 }
@@ -94,26 +92,25 @@ namespace MegaMod.Roles
 
         public class FootPrint
         {
-            private static float _lifespan;
+            private static float lifespan;
             private static readonly Color AnonymousColor = new Color(0.2f, 0.2f, 0.2f, 1f);
-            private static bool _anonymous;
-            private static Sprite _sprite;
+            private static bool anonymous;
+            private static Sprite sprite;
 
             public static Dictionary<byte, List<FootPrint>> AllSorted;
             public static Dictionary<byte, Vector3> LastFootprintPositions;
 
-            private readonly Color _color;
-            private Vector3 Position { get; }
-            private readonly GameObject _footPrint;
-            private readonly SpriteRenderer _spriteRenderer;
-            private readonly PlayerControl _player;
-            private float _age;
+            private readonly Color color;
+            private readonly GameObject gameObject;
+            private readonly SpriteRenderer spriteRenderer;
+            private readonly PlayerControl player;
+            private float age;
 
-            public static void Initialize(float lifespan, bool anonymous, Sprite sprite)
+            public static void Initialize(float _lifespan, bool _anonymous, Sprite _sprite)
             {
-                _lifespan = lifespan;
-                _anonymous = anonymous;
-                _sprite = sprite;
+                lifespan = _lifespan;
+                anonymous = _anonymous;
+                sprite = _sprite;
 
                 AllSorted = new Dictionary<byte, List<FootPrint>>(PlayerControl.AllPlayerControls.Count);
                 LastFootprintPositions = new Dictionary<byte, Vector3>(PlayerControl.AllPlayerControls.Count);
@@ -122,23 +119,23 @@ namespace MegaMod.Roles
                     LastFootprintPositions.Add(player.PlayerId, player.transform.position);
             }
 
-            public FootPrint(PlayerControl player)
+            public FootPrint(PlayerControl _player)
             {
-                _player = player;
-                _color = _anonymous ? AnonymousColor : (Color) Palette.PlayerColors[_player.Data.ColorId];
-                _age = 0;
+                player = _player;
+                color = anonymous ? AnonymousColor : (Color)Palette.PlayerColors[player.Data.ColorId];
+                age = 0;
 
-                _footPrint = new GameObject();
-                _footPrint.transform.position = Position = _player.transform.position + Vector3.forward;
-                _spriteRenderer = _footPrint.AddComponent<SpriteRenderer>();
-                _spriteRenderer.sprite = _sprite;
-                _spriteRenderer.color = _color;
+                gameObject = new GameObject();
+                gameObject.transform.position = player.transform.position + Vector3.forward;
+                spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+                spriteRenderer.sprite = sprite;
+                spriteRenderer.color = color;
 
-                byte playerId = _player.PlayerId;
+                byte playerId = player.PlayerId;
                 if (LastFootprintPositions.ContainsKey(playerId))
-                    LastFootprintPositions[playerId] = Position;
+                    LastFootprintPositions[playerId] = gameObject.transform.position;
                 else
-                    LastFootprintPositions.Add(playerId, Position);
+                    LastFootprintPositions.Add(playerId, gameObject.transform.position);
 
                 if (AllSorted.ContainsKey(playerId))
                     AllSorted[playerId].Add(this);
@@ -148,15 +145,14 @@ namespace MegaMod.Roles
 
             public void Update(float ageToAdd)
             {
-                _age += ageToAdd;
+                age += ageToAdd;
 
-                float alpha = Map(_age, 0, _lifespan, 0, 1);
-                _spriteRenderer.color = AdjustAlpha(_color, 1 - alpha);
+                spriteRenderer.color = AdjustAlpha(color, Map(age, 0, lifespan, 1, 0));
 
-                if (_age >= _lifespan)
+                if (age >= lifespan)
                 {
-                    AllSorted[_player.PlayerId].Remove(this);
-                    Object.Destroy(_footPrint);
+                    AllSorted[player.PlayerId].Remove(this);
+                    Object.Destroy(gameObject);
                 }
             }
         }
