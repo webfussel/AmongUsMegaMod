@@ -16,6 +16,7 @@ namespace MegaMod.Roles
             color = new Color(0f, 0.2f, 0f);
             colorAsHex = "003300FF";
             startText = "No one can hide from you";
+            titleScale = new Vector3(0.8f, 0.8f, 0.8f);
         }
 
         /*

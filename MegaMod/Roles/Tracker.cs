@@ -25,7 +25,6 @@ namespace MegaMod.Roles
             colorAsHex = "C4FF56FF";
             startText = "Track down the [FF0000FF]Impostors[]";
             _specialButton = markTrapButton;
-
         }
 
         /**
