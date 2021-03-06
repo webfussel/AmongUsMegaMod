@@ -11,7 +11,7 @@ namespace MegaMod
     [HarmonyPatch]
     public static class MegaModManager
     {
-        private const string VersionString = "1.3.2";
+        private const string VersionString = "1.4.0";
 
         public enum RPC
         {
@@ -54,23 +54,27 @@ namespace MegaMod
             DetectiveKill = 47,
             FixLights = 49,
             ResetVariables = 51,
+            NinjaDoubleKill = 55,
             SetLocalPlayers = 56,
             ManiacWin = 57,
-            NinjaDoubleKill = 58
+            SetTrackerMark = 58,
+            TrapSuccessful = 59
         }
         
-        public static AssetBundle buttons;
-        public static AssetBundle sounds;
         public static AudioClip shieldAttempt;
         public static AudioClip ninjaOne;
         public static AudioClip ninjaTwo;
         public static Sprite defaultKillButton;
         public static Sprite shieldButton;
         public static Sprite repairButton;
+        public static Sprite footsteps;
+        public static Sprite markTrapButton;
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
         public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
+        public static bool gameIsRunning = false;
 
-        // Only the engineer gets added to the dictionary so far
+        public static SystemTypes currentRoomId;
+        
         public static void AddSpecialRole(Role specialRole)
         {
             if (AssignedSpecialRoles.ContainsKey(specialRole.player.PlayerId))
@@ -175,14 +179,16 @@ namespace MegaMod
             }
         }
         
-        /* Maybe we need that someday
-        [HarmonyPatch(typeof(ShipStatus), "GetSpawnLocation")]
+        [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.GetSpawnLocation))]
         public static class StartGamePatch
         {
             public static void Postfix(ShipStatus __instance)
             {
-                ConsoleTools.Info("Game Started!");
+                gameIsRunning = true;
+                
+                if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Nocturnal nocturnal))
+                    nocturnal.CalculateNormalVision(__instance);
             }
-        }*/
+        }
     }
 }

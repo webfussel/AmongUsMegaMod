@@ -2,6 +2,8 @@
 using MegaMod.Roles;
 using UnityEngine;
 using static MegaMod.MegaModManager;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace MegaMod
 {
@@ -20,9 +22,11 @@ namespace MegaMod
     {
         static void Postfix(HudManager __instance)
         {
+            PlayerControl localPlayer = PlayerControl.LocalPlayer;
+
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
             if (defaultKillButton == null) defaultKillButton = __instance.KillButton.renderer.sprite;
-            if (PlayerControl.LocalPlayer.Data.IsImpostor)
+            if (localPlayer.Data.IsImpostor)
             {
                 __instance.KillButton.gameObject.SetActive(true);
                 __instance.KillButton.renderer.enabled = true;
@@ -30,15 +34,14 @@ namespace MegaMod
             }
 
             bool lastQ = Input.GetKeyUp(KeyCode.Q);
-
-            if (!PlayerControl.LocalPlayer.Data.IsImpostor && Input.GetKeyDown(KeyCode.Q) && !lastQ &&
-                __instance.UseButton.isActiveAndEnabled)
+            
+            if (!localPlayer.Data.IsImpostor && Input.GetKeyDown(KeyCode.Q) && !lastQ && __instance.UseButton.isActiveAndEnabled)
             {
                 PerformKillPatch.Prefix(null);
             }
 
             bool sabotageActive = false;
-            foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
+            foreach (PlayerTask task in localPlayer.myTasks)
             {
                 sabotageActive = task.TaskType switch
                 {
@@ -62,7 +65,8 @@ namespace MegaMod
                 doctorKvp.Value.ShowShieldedPlayer();
 
             bool showImpostorToManiac = false;
-            Role current = GetSpecialRole(PlayerControl.LocalPlayer.PlayerId);
+            
+            Role current = GetSpecialRole(localPlayer.PlayerId);
             if (current != null)
             {
                 current.SetNameColor();
@@ -86,7 +90,12 @@ namespace MegaMod
                         __instance.KillButton.renderer.sprite = defaultKillButton;
                         break;
                     case Seer seer:
-                        seer.SetChatActive(__instance);
+                        seer.AdjustChat(__instance, localPlayer.Data.IsDead);
+                        break;
+                    case Tracker tracker:
+                        tracker.CheckMarkButton(__instance);
+                        tracker.AdjustChat(__instance, localPlayer.Data.IsDead);
+                        tracker.sabotageActive = sabotageActive;
                         break;
                     case Ninja ninja:
                         ninja.CheckKillButton(__instance);
@@ -94,7 +103,7 @@ namespace MegaMod
                 }
             }
 
-            if (!PlayerControl.LocalPlayer.Data.IsImpostor && (!(current is Maniac) || !showImpostorToManiac)) return;
+            if (!localPlayer.Data.IsImpostor && (!(current is Maniac) || !showImpostorToManiac)) return;
 
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
@@ -122,6 +131,40 @@ namespace MegaMod
         {
             if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Seer seer))
                 seer.SetEmergencyButtonInactive(__instance);
+        }
+    }
+
+    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
+    public class CalculateVisionPatch
+    {
+        public static void Postfix(ref float __result)
+        {
+            if (!TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Nocturnal nocturnal) ||
+                PlayerControl.LocalPlayer.Data.IsDead) return;
+            
+            __result = nocturnal.CalculateCurrentVision(__result);
+        }
+    }
+
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
+    public static class UpdatePlayerPatch
+    {
+        private static readonly float interval = MainConfig.OptPathfinderFootprintInterval.GetValue();
+        private static float time = 0;
+        private static float nextUpdate = interval;
+
+        public static void Postfix(PlayerControl __instance)
+        {
+            if (!gameIsRunning || !SpecialRoleIsAssigned<Pathfinder>(out var pathfinderKvp) || __instance.PlayerId != pathfinderKvp.Key || PlayerControl.LocalPlayer.PlayerId != pathfinderKvp.Key) return;
+
+            time += Time.fixedDeltaTime;
+
+            if (time >= nextUpdate)
+            {
+                nextUpdate += interval;
+
+                pathfinderKvp.Value.FixedUpdate(interval);
+            }
         }
     }
 }

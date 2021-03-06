@@ -44,9 +44,21 @@ namespace MegaMod
                                 case var value when value == Seer.RoleID:
                                     AddSpecialRole(new Seer(player));
                                     break;
+
+                                case var value when value == Tracker.RoleID:
+                                    AddSpecialRole(new Tracker(player));
+                                    break;
                                 
                                 case var value when value == Ninja.RoleID:
                                     AddSpecialRole(new Ninja(player));
+                                    break;
+
+                                case var value when value == Nocturnal.RoleID:
+                                    AddSpecialRole(new Nocturnal(player));
+                                    break;
+
+                                case var value when value == Pathfinder.RoleID:
+                                    AddSpecialRole(new Pathfinder(player));
                                     break;
                             }
                     break;
@@ -104,8 +116,21 @@ namespace MegaMod
                     PlayerControl targetDoubleKill = PlayerTools.GetPlayerById(doubleKillId);
                     ninjaDoubleKill.MurderPlayer(targetDoubleKill);
                     break;
+                case (byte)RPC.SetTrackerMark:
+                    Tracker tracker1 = GetSpecialRole<Tracker>();
+                    SystemTypes system = (SystemTypes) reader.ReadInt32();
+                    tracker1.markedSystem = system;
+                    break;
+                case (byte)RPC.TrapSuccessful:
+                    if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Tracker tracker2))
+                    {
+                        byte roomId = reader.ReadByte();
+                        tracker2.TrapSuccessful((SystemTypes) roomId);
+                    }
+                    break;
+
                 // --------------------------- Other ---------------------------
-                
+
                 case (byte)RPC.FixLights:
                     SwitchSystem switchSystem = ShipStatus.Instance.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
                     switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;

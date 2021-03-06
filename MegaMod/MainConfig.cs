@@ -28,9 +28,12 @@ namespace MegaMod
         public static readonly CustomNumberOption OptDetectiveSpawnChance = CustomOption.AddNumber("Detective Spawn Chance", 100, 0, 100, 10);
         public static readonly CustomNumberOption OptDoctorSpawnChance = CustomOption.AddNumber("Doctor Spawn Chance", 100, 0, 100, 10);
         public static readonly CustomNumberOption OptSeerSpawnChance = CustomOption.AddNumber("Seer Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptTrackerSpawnChance = CustomOption.AddNumber("Tracker Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptNocturnalSpawnChance = CustomOption.AddNumber("Nocturnal Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptPathfinderSpawnChance = CustomOption.AddNumber("Pathfinder Spawn Chance", 100, 0, 100, 10);
         public static readonly CustomNumberOption OptManiacSpawnChance = CustomOption.AddNumber("Maniac Spawn Chance", 100, 0, 100, 10);
         public static readonly CustomNumberOption OptNinjaSpawnChance = CustomOption.AddNumber("Ninja Spawn Chance", 100, 0, 100, 10);
-        
+
         // Detective
         public static readonly CustomNumberOption OptDetectiveKillCooldown = CustomOption.AddNumber("Detective Kill Cooldown", 30f, 10f, 60f, 2.5f);
         public static readonly CustomToggleOption OptShowDetectiveReports = CustomOption.AddToggle("Show Detective Reports", true);
@@ -41,7 +44,12 @@ namespace MegaMod
         
         // Seer
         public static readonly CustomToggleOption OptSeerCanPressEmergency = CustomOption.AddToggle("Seer can call emergency", false);
-        
+
+        // Pathfinder
+        public static readonly CustomNumberOption OptPathfinderFootprintLifespan = CustomOption.AddNumber("Pathfinder footprint lifespan", 4f, 1f, 8f, 1f);
+        public static readonly CustomNumberOption OptPathfinderFootprintInterval = CustomOption.AddNumber("Pathfinder footprint interval", 0.3f, 0.1f, 0.5f, 0.1f);
+        public static readonly CustomToggleOption OptPathfinderAnonymousFootprints = CustomOption.AddToggle("Pathfinder anonymous footprints", false);
+
         // Maniac
         public static readonly CustomToggleOption OptManiacShowImpostor = CustomOption.AddToggle("Show Impostor to Maniac", false);
         public static readonly CustomToggleOption OptManiacCanDieToDetective = CustomOption.AddToggle("Maniac Can Die To Detective", true);
@@ -83,13 +91,17 @@ namespace MegaMod
             
             Ip = Config.Bind("Custom", "Ipv4 or Hostname", "127.0.0.1");
             Port = Config.Bind("Custom", "Port", (ushort)22023);
-
             
-            buttons = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\buttons");
+            AssetBundle buttons = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\buttons");
             repairButton = buttons.LoadAsset<Sprite>("repair").DontUnload();
+            markTrapButton = buttons.LoadAsset<Sprite>("mark").DontUnload();
             shieldButton = buttons.LoadAsset<Sprite>("protect").DontUnload();
 
-            sounds = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\sounds");
+            AssetBundle gui = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\gui");
+            Texture2D footstepsTemp = gui.LoadAsset<Texture2D>("footsteps");
+            footsteps = Sprite.Create(footstepsTemp, new Rect(0, 0, footstepsTemp.width, footstepsTemp.height), new Vector2(0.5f, 0.7f)).DontUnload();
+
+            AssetBundle sounds = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\sounds");
             shieldAttempt = sounds.LoadAsset<AudioClip>("shield").DontUnload();
             ninjaOne = sounds.LoadAsset<AudioClip>("ninja_1").DontUnload();
             ninjaTwo = sounds.LoadAsset<AudioClip>("ninja_2").DontUnload();
