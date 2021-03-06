@@ -56,6 +56,10 @@ namespace MegaMod
                                 case var value when value == Nocturnal.RoleID:
                                     AddSpecialRole(new Nocturnal(player));
                                     break;
+
+                                case var value when value == Pathfinder.RoleID:
+                                    AddSpecialRole(new Pathfinder(player));
+                                    break;
                             }
                     break;
                 // -------------- Happenings related to special roles --------------

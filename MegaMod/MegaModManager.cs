@@ -61,20 +61,20 @@ namespace MegaMod
             TrapSuccessful = 59
         }
         
-        public static AssetBundle buttons;
-        public static AssetBundle sounds;
         public static AudioClip shieldAttempt;
         public static AudioClip ninjaOne;
         public static AudioClip ninjaTwo;
         public static Sprite defaultKillButton;
         public static Sprite shieldButton;
         public static Sprite repairButton;
+        public static Sprite footsteps;
         public static Sprite markTrapButton;
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
         public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
+        public static bool gameIsRunning = false;
 
         public static SystemTypes currentRoomId;
-        // Only the engineer gets added to the dictionary so far
+        
         public static void AddSpecialRole(Role specialRole)
         {
             if (AssignedSpecialRoles.ContainsKey(specialRole.player.PlayerId))
@@ -184,6 +184,8 @@ namespace MegaMod
         {
             public static void Postfix(ShipStatus __instance)
             {
+                gameIsRunning = true;
+                
                 if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Nocturnal nocturnal))
                     nocturnal.CalculateNormalVision(__instance);
             }

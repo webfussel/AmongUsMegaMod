@@ -2,6 +2,8 @@
 using MegaMod.Roles;
 using UnityEngine;
 using static MegaMod.MegaModManager;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace MegaMod
 {
@@ -141,6 +143,28 @@ namespace MegaMod
                 PlayerControl.LocalPlayer.Data.IsDead) return;
             
             __result = nocturnal.CalculateCurrentVision(__result);
+        }
+    }
+
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
+    public static class UpdatePlayerPatch
+    {
+        private static readonly float interval = MainConfig.OptPathfinderFootprintInterval.GetValue();
+        private static float time = 0;
+        private static float nextUpdate = interval;
+
+        public static void Postfix(PlayerControl __instance)
+        {
+            if (!gameIsRunning || !SpecialRoleIsAssigned<Pathfinder>(out var pathfinderKvp) || __instance.PlayerId != pathfinderKvp.Key || PlayerControl.LocalPlayer.PlayerId != pathfinderKvp.Key) return;
+
+            time += Time.fixedDeltaTime;
+
+            if (time >= nextUpdate)
+            {
+                nextUpdate += interval;
+
+                pathfinderKvp.Value.FixedUpdate(interval);
+            }
         }
     }
 }
