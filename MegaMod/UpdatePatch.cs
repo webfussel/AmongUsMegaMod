@@ -7,16 +7,6 @@ using System.Collections.Generic;
 
 namespace MegaMod
 {
-    // This is for smaller Game Settings in the beginning, so nothing vanishes off screen
-    [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.Method_24))]
-    class GameOptionsData_ToHudString
-    {
-        static void Postfix(ref string __result)
-        {
-            DestroyableSingleton<HudManager>.Instance.GameSettings.scale = 0.5f;
-        }
-    }
-
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     class HudUpdateManager
     {
@@ -58,6 +48,7 @@ namespace MegaMod
                 player.nameText.Color = Color.white;
 
             // Maniac Tasks have to be reset every frame... I don't know why but huh.
+            // Guess I goofed here. But I'll leave it in until I'll fix it. (It works.)
             if (SpecialRoleIsAssigned<Maniac>(out var maniacKvp))
                 maniacKvp.Value.ClearTasks();
 

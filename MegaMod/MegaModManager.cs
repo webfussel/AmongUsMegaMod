@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using MegaMod.Roles;
 using UnityEngine;
-using Reactor.Unstrip;
 
 namespace MegaMod
 {

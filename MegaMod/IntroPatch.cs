@@ -1,6 +1,4 @@
 ﻿using HarmonyLib;
-using System;
-using Il2CppSystem.Collections.Generic;
 using MegaMod.Roles;
 using static MegaMod.MegaModManager;
 
