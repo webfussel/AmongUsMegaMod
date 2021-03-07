@@ -24,35 +24,35 @@ namespace MegaMod
         private Harmony Harmony { get; } = new Harmony(Id);
 
         // Spawn Chances
-        public static readonly CustomNumberOption OptEngineerSpawnChance = CustomOption.AddNumber("Engineer Spawn Chance", 100, 0, 100, 10);
-        public static readonly CustomNumberOption OptDetectiveSpawnChance = CustomOption.AddNumber("Detective Spawn Chance", 100, 0, 100, 10);
-        public static readonly CustomNumberOption OptDoctorSpawnChance = CustomOption.AddNumber("Doctor Spawn Chance", 100, 0, 100, 10);
-        public static readonly CustomNumberOption OptSeerSpawnChance = CustomOption.AddNumber("Seer Spawn Chance", 100, 0, 100, 10);
-        public static readonly CustomNumberOption OptTrackerSpawnChance = CustomOption.AddNumber("Tracker Spawn Chance", 100, 0, 100, 10);
-        public static readonly CustomNumberOption OptNocturnalSpawnChance = CustomOption.AddNumber("Nocturnal Spawn Chance", 100, 0, 100, 10);
-        public static readonly CustomNumberOption OptPathfinderSpawnChance = CustomOption.AddNumber("Pathfinder Spawn Chance", 100, 0, 100, 10);
-        public static readonly CustomNumberOption OptManiacSpawnChance = CustomOption.AddNumber("Maniac Spawn Chance", 100, 0, 100, 10);
-        public static readonly CustomNumberOption OptNinjaSpawnChance = CustomOption.AddNumber("Ninja Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptEngineerSpawnChance = CustomOption.AddNumber("(Crew) Engineer: Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptDetectiveSpawnChance = CustomOption.AddNumber("(Crew) Detective: Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptDoctorSpawnChance = CustomOption.AddNumber("(Crew) Doctor: Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptSeerSpawnChance = CustomOption.AddNumber("(Crew) Seer Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptTrackerSpawnChance = CustomOption.AddNumber("(Crew) Tracker Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptNocturnalSpawnChance = CustomOption.AddNumber("(Crew) Nocturnal Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptPathfinderSpawnChance = CustomOption.AddNumber("(Crew) Pathfinder Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptManiacSpawnChance = CustomOption.AddNumber("(Solo) Maniac Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptNinjaSpawnChance = CustomOption.AddNumber("(Imps) Ninja Spawn Chance", 100, 0, 100, 10);
 
         // Detective
-        public static readonly CustomNumberOption OptDetectiveKillCooldown = CustomOption.AddNumber("Detective Kill Cooldown", 30f, 10f, 60f, 2.5f);
-        public static readonly CustomToggleOption OptShowDetectiveReports = CustomOption.AddToggle("Show Detective Reports", true);
+        public static readonly CustomNumberOption OptDetectiveKillCooldown = CustomOption.AddNumber("Detective: Kill Cooldown", 30f, 10f, 60f, 2.5f);
+        public static readonly CustomToggleOption OptShowDetectiveReports = CustomOption.AddToggle("Detective: Body Reports", true);
+        public static readonly CustomToggleOption OptManiacCanDieToDetective = CustomOption.AddToggle("Detective: Can kill Maniac", true);
         
         // Doctor
-        public static readonly CustomStringOption OptDoctorShowShieldedPlayer = CustomOption.AddString("Show Shielded Player", new[] { "Self", "Doctor", "Self+Doctor", "Everyone" });
-        public static readonly CustomToggleOption OptDoctorPlayerMurderIndicator = CustomOption.AddToggle("Murder Attempt Indicator for Shielded Player", true);
+        public static readonly CustomStringOption OptDoctorShowShieldedPlayer = CustomOption.AddString("Medic: Show Shielded Player", new[] { "Self", "Doctor", "Self+Doctor", "Everyone" });
+        public static readonly CustomToggleOption OptDoctorPlayerMurderIndicator = CustomOption.AddToggle("Medic: Shielded Player Murder Attempt Indicator", true);
         
         // Seer
-        public static readonly CustomToggleOption OptSeerCanPressEmergency = CustomOption.AddToggle("Seer can call emergency", false);
+        public static readonly CustomToggleOption OptSeerCanPressEmergency = CustomOption.AddToggle("Seer: Can call emergency", false);
 
         // Pathfinder
-        public static readonly CustomNumberOption OptPathfinderFootprintLifespan = CustomOption.AddNumber("Pathfinder footprint lifespan", 4f, 1f, 8f, 1f);
-        public static readonly CustomNumberOption OptPathfinderFootprintInterval = CustomOption.AddNumber("Pathfinder footprint interval", 0.3f, 0.1f, 0.5f, 0.1f);
-        public static readonly CustomToggleOption OptPathfinderAnonymousFootprints = CustomOption.AddToggle("Pathfinder anonymous footprints", false);
+        public static readonly CustomNumberOption OptPathfinderFootprintLifespan = CustomOption.AddNumber("Pathfinder: Footprint lifespan", 4f, 1f, 8f, 1f);
+        public static readonly CustomNumberOption OptPathfinderFootprintInterval = CustomOption.AddNumber("Pathfinder: Footprint interval", 0.3f, 0.1f, 0.5f, 0.1f);
+        public static readonly CustomToggleOption OptPathfinderAnonymousFootprints = CustomOption.AddToggle("Pathfinder: Anonymous footprints", false);
 
         // Maniac
-        public static readonly CustomToggleOption OptManiacShowImpostor = CustomOption.AddToggle("Show Impostor to Maniac", false);
-        public static readonly CustomToggleOption OptManiacCanDieToDetective = CustomOption.AddToggle("Maniac Can Die To Detective", true);
+        public static readonly CustomToggleOption OptManiacShowImpostor = CustomOption.AddToggle("Maniac: Can see all Roles", false);
 
         private ConfigEntry<string> Ip { get; set; }
         private ConfigEntry<ushort> Port { get; set; }

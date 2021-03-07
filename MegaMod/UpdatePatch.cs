@@ -64,7 +64,7 @@ namespace MegaMod
             if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp))
                 doctorKvp.Value.ShowShieldedPlayer();
 
-            bool showImpostorToManiac = false;
+            bool maniacCanSeeRoles = false;
             
             Role current = GetSpecialRole(localPlayer.PlayerId);
             if (current != null)
@@ -82,7 +82,7 @@ namespace MegaMod
                         engineer.sabotageActive = sabotageActive;
                         break;
                     case Maniac maniac:
-                        showImpostorToManiac = maniac.showImpostorToManiac;
+                        maniacCanSeeRoles = maniac.showImpostorToManiac;
                         break;
                     case Detective detective:
                         detective.CheckKillButton(__instance);
@@ -103,22 +103,39 @@ namespace MegaMod
                 }
             }
 
-            if (!localPlayer.Data.IsImpostor && (!(current is Maniac) || !showImpostorToManiac)) return;
-
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            if (current is Maniac && maniacCanSeeRoles)
             {
-                if (!player.Data.IsImpostor) continue;
-                
-                if (MeetingHud.Instance != null)
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 {
+
+                    player.nameText.Color = TryGetSpecialRole(player.PlayerId, out Role role)
+                        ? role.color
+                        : player.nameText.Color;
+
+                    if (MeetingHud.Instance == null) continue;
+                    
                     foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
                         if (player.PlayerId == playerVote.TargetPlayerId)
-                            playerVote.NameText.Color = Palette.ImpostorRed;
+                            playerVote.NameText.Color = player.nameText.Color;
                 }
+            }
+            else if (localPlayer.Data.IsImpostor)
+            {
 
-                player.nameText.Color = TryGetSpecialRole(player.PlayerId, out Role role)
-                    ? role.color
-                    : Palette.ImpostorRed;
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                {
+                    if (!player.Data.IsImpostor) continue;
+
+                    player.nameText.Color = TryGetSpecialRole(player.PlayerId, out Role role)
+                        ? role.color
+                        : Palette.ImpostorRed;
+
+                    if (MeetingHud.Instance == null) continue;
+                    
+                    foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
+                        if (player.PlayerId == playerVote.TargetPlayerId)
+                            playerVote.NameText.Color = player.nameText.Color;
+                }
             }
         }
     }

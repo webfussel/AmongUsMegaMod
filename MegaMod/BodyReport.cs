@@ -12,7 +12,6 @@ namespace MegaMod
         public DeadPlayer DeadPlayer { get; set; }
         public float KillAge { get; set; }
             
-        // TODO: Add new colors from mod
         private readonly Dictionary<byte, string> _colors = new Dictionary<byte, string>
         {
             {0, "darker"},
@@ -76,11 +75,6 @@ namespace MegaMod
                 "Well, there goes my lunch...",
                 "Urgs, a corpse!"
             };
-
-            foreach (var hint in hints)
-            {
-                ConsoleTools.Info(hint);
-            }
 
             return hints[Rng.Next(0, hints.Count)];
         }
