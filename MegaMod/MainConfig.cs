@@ -40,8 +40,8 @@ namespace MegaMod
         public static readonly CustomToggleOption OptManiacCanDieToDetective = CustomOption.AddToggle("Detective: Can kill Maniac", true);
         
         // Doctor
-        public static readonly CustomStringOption OptDoctorShowShieldedPlayer = CustomOption.AddString("Medic: Show Shielded Player", new[] { "Self", "Doctor", "Self+Doctor", "Everyone" });
-        public static readonly CustomToggleOption OptDoctorPlayerMurderIndicator = CustomOption.AddToggle("Medic: Shielded Player Murder Attempt Indicator", true);
+        public static readonly CustomStringOption OptDoctorShowShieldedPlayer = CustomOption.AddString("Doctor: Show Shielded Player", new[] { "Self", "Doctor", "Self+Doctor", "Everyone" });
+        public static readonly CustomToggleOption OptDoctorPlayerMurderIndicator = CustomOption.AddToggle("Doctor: Shielded Player Murder Attempt Indicator", true);
         
         // Seer
         public static readonly CustomToggleOption OptSeerCanPressEmergency = CustomOption.AddToggle("Seer: Can call emergency", false);
