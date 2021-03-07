@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using MegaMod.Roles;
 using UnityEngine;
-using Reactor.Unstrip;
 
 namespace MegaMod
 {
     [HarmonyPatch]
     public static class MegaModManager
     {
-        private const string VersionString = "1.4.0";
+        private const string VersionString = "1.4.1";
 
         public enum RPC
         {

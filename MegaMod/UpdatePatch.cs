@@ -7,16 +7,6 @@ using System.Collections.Generic;
 
 namespace MegaMod
 {
-    // This is for smaller Game Settings in the beginning, so nothing vanishes off screen
-    [HarmonyPatch(typeof(GameOptionsData), nameof(GameOptionsData.Method_24))]
-    class GameOptionsData_ToHudString
-    {
-        static void Postfix(ref string __result)
-        {
-            DestroyableSingleton<HudManager>.Instance.GameSettings.scale = 0.5f;
-        }
-    }
-
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     class HudUpdateManager
     {
@@ -58,13 +48,14 @@ namespace MegaMod
                 player.nameText.Color = Color.white;
 
             // Maniac Tasks have to be reset every frame... I don't know why but huh.
+            // Guess I goofed here. But I'll leave it in until I'll fix it. (It works.)
             if (SpecialRoleIsAssigned<Maniac>(out var maniacKvp))
                 maniacKvp.Value.ClearTasks();
 
             if (SpecialRoleIsAssigned<Doctor>(out var doctorKvp))
                 doctorKvp.Value.ShowShieldedPlayer();
 
-            bool showImpostorToManiac = false;
+            bool maniacCanSeeRoles = false;
             
             Role current = GetSpecialRole(localPlayer.PlayerId);
             if (current != null)
@@ -82,7 +73,7 @@ namespace MegaMod
                         engineer.sabotageActive = sabotageActive;
                         break;
                     case Maniac maniac:
-                        showImpostorToManiac = maniac.showImpostorToManiac;
+                        maniacCanSeeRoles = maniac.showImpostorToManiac;
                         break;
                     case Detective detective:
                         detective.CheckKillButton(__instance);
@@ -103,22 +94,39 @@ namespace MegaMod
                 }
             }
 
-            if (!localPlayer.Data.IsImpostor && (!(current is Maniac) || !showImpostorToManiac)) return;
-
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            if (current is Maniac && maniacCanSeeRoles)
             {
-                if (!player.Data.IsImpostor) continue;
-                
-                if (MeetingHud.Instance != null)
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 {
+
+                    player.nameText.Color = TryGetSpecialRole(player.PlayerId, out Role role)
+                        ? role.color
+                        : player.nameText.Color;
+
+                    if (MeetingHud.Instance == null) continue;
+                    
                     foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
                         if (player.PlayerId == playerVote.TargetPlayerId)
-                            playerVote.NameText.Color = Palette.ImpostorRed;
+                            playerVote.NameText.Color = player.nameText.Color;
                 }
+            }
+            else if (localPlayer.Data.IsImpostor)
+            {
 
-                player.nameText.Color = TryGetSpecialRole(player.PlayerId, out Role role)
-                    ? role.color
-                    : Palette.ImpostorRed;
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                {
+                    if (!player.Data.IsImpostor) continue;
+
+                    player.nameText.Color = TryGetSpecialRole(player.PlayerId, out Role role)
+                        ? role.color
+                        : Palette.ImpostorRed;
+
+                    if (MeetingHud.Instance == null) continue;
+                    
+                    foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
+                        if (player.PlayerId == playerVote.TargetPlayerId)
+                            playerVote.NameText.Color = player.nameText.Color;
+                }
             }
         }
     }

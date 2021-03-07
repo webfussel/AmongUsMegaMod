@@ -1,5 +1,5 @@
 ﻿using HarmonyLib;
-using static MegaMod.MegaModManager; // TODO: wtf?
+using static MegaMod.MegaModManager;
 
 namespace MegaMod
 {
