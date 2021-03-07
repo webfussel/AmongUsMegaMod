@@ -17,7 +17,9 @@ It might be possible that someone without it can join your lobby, but that happi
 ## Crewmates
 ### Engineer
 #### Description
-The Engineer can vent and fix a Sabotage immediately once per game from anywhere.  
+You've been to university all your life just to land on that god damn ship and crawl through stupid vents.  
+Maybe there will be a time you can use your expertise to solve some kind of emergency without blinking an eye?
+(The Engineer can solve one sabotage per game from anywhere on the map immediately through his "Repair"-Map.)
 
 ***Notice**: We think this is a very weak abilty, so we're going to improve that someday*
 #### Options
@@ -25,9 +27,8 @@ The Engineer currently has no extra options.
 
 ### Detective
 #### Description
-The Detective can shoot other players and see body reports of dead players, if they find the corpse.  
-But beware! If the detective kills a Crewmate they will instead commit suicide!  
-... Also, the Body Reports might not be that useful sometimes.
+You're a depressed fighter against evil. All you want is to kill that damn impostor that ate your little sister. But nearly killing a Crewmate would just drive you into suicide.  
+Whenever you inspect a dead body you try to find traces of THAT impostor, even though those reports might not always be viable.
 
 ***Notice**: We think the Detective is a bit over powered, so we're going to split the role into two seperate roles someday*
 #### Options
@@ -37,10 +38,11 @@ But beware! If the detective kills a Crewmate they will instead commit suicide!
 
 ### Doctor
 #### Description
-The Doctor has the ability to cast a shield on any other Player. If someone tries to kill that player there will be a **TING** Sound and the killer gets the set kill cooldown for their role.  
-If the Doctor dies, the shield breaks - otherwise the shield is unbreakable.  
-But beware! You might shield an enemy by accident...  
-Everyone can still die by getting thrown from the ship.
+After years of experience you finally learned how to protect anyone you love! Okay, maybe not anyone - but at least one person!  
+Create a shield and put it on someone you trust so they can never be killed... except when they get thrown into space or lava.  
+You shield is very transparent glass which makes a **TING** sound whenever it gets hit.
+
+***Notice**: This role will be renamed "Bodyguard" in the near future.*
 
 #### Options
 - Show Shielded Player: Shows the shielded player to the people set in the option
@@ -83,14 +85,25 @@ All the summers at camp are finally worth it! You can see the footsteps of all o
 - Footprint interval: How often do player leave footprints behind? (Default: **0.3**)
 - Anonymous Footprints: Finding out which animals have which footprints was never your strength... Turns footprints grey. (Default: **false**)
 
-### Pathfinder
+## Solo
+### Maniac
 #### Description
-All the summers at camp are finally worth it! You can see the footsteps of all other players in their respective color.
+Holy cow, you want to die! But you do not want to be killed off the cuff.  
+Get yourself voted from the ship to win!  
+Because you're fricking maniac you can see everyone's special role!
 
 #### Options
-- Footprint Lifespan (seconds): When will the footsteps vanish? (Default: **4**)
-- Footprint interval: How often do player leave footprints behind? (Default: **0.3**)
-- Anonymous Footprints: Finding out which animals have which footprints was never your strength... Turns footprints grey. (Default: **false**)
+- Can see all Roles: It's not like you stalked everyone before... like a maniac... (Default: **true**)
+
+## Impostors
+### Ninja
+#### Description
+DOUBLE KILL! You're a master of killing. Ones per match you can execute a kill while still on cooldown.  
+That stuff is pretty exhausting, so you will need even more resting time!  
+(That means: New Cooldown = Remaining Cooldown + Impostor Cooldown x 2)
+
+#### Options
+The Ninja currently has no extra options.
 
 # Resources
 - https://github.com/BepInEx
