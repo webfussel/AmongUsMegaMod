@@ -1,5 +1,6 @@
 # MegaMod 1.4.1
-A BepInEx Mod, that adds 9 new roles and 13 colors to Among Us.
+A BepInEx Mod, that adds 9 new roles and 13 colors to Among Us.  
+Works with `Among Us - Version 2020.12.9`
 
 # Notice
 This Mod will work on official server if everyone has the Mod installed.  
