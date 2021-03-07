@@ -16,6 +16,7 @@ It might be possible that someone without it can join your lobby, but that happi
 # New Roles
 ## Crewmates
 ### Engineer
+![Engineer](res/roles/engineer.png)
 #### Description
 You've been to university all your life just to land on that god damn ship and crawl through stupid vents.  
 Maybe there will be a time you can use your expertise to solve some kind of emergency without blinking an eye?
@@ -26,6 +27,7 @@ Maybe there will be a time you can use your expertise to solve some kind of emer
 The Engineer currently has no extra options.
 
 ### Detective
+![Detective](res/roles/detective.png)
 #### Description
 You're a depressed fighter against evil. All you want is to kill that damn impostor that ate your little sister. But nearly killing a Crewmate would just drive you into suicide.  
 Whenever you inspect a dead body you try to find traces of THAT impostor, even though those reports might not always be viable.
@@ -37,6 +39,7 @@ Whenever you inspect a dead body you try to find traces of THAT impostor, even t
 - Can Kill Maniac: Detective can kill Maniac without commiting suicide (Default: **true**)
 
 ### Doctor
+![Doctor](res/roles/doctor.png)
 #### Description
 After years of experience you finally learned how to protect anyone you love! Okay, maybe not anyone - but at least one person!  
 Create a shield and put it on someone you trust so they can never be killed... except when they get thrown into space or lava.  
@@ -53,6 +56,7 @@ You shield is very transparent glass which makes a **TING** sound whenever it ge
 - Shielded Player Murder Attempt Indicator: Shielded Player can hear the **TING** noise (Default: **true**)
 
 ### Seer
+![Seer](res/roles/seer.png)
 #### Description
 You know things... But to be exact: You get a chat message whenever someone enters a vent, exits a vent and if someone dies.  
 The problem is: If you know someone died you can not even call an emergency but have to find the corpse!
@@ -62,6 +66,7 @@ The problem is: If you know someone died you can not even call an emergency but 
 - Can call emergency: Maybe your crew isn't that stubborn after all? (Default: **false**)
 
 ### Tracker
+![Tracker](res/roles/tracker.png)
 #### Description
 Everyone is using a Tracking Blocker nowadays, but this Tracker is someone you should trust!  
 You can mark an sabotage and whenever someone applies that sabotage you get a Chat message about where the saboteur was seen lately! 
@@ -70,6 +75,7 @@ You can mark an sabotage and whenever someone applies that sabotage you get a Ch
 The Tracker currently has no extra options.
 
 ### Nocturnal
+![Nocturnal](res/roles/nocturnal.png)
 #### Description
 The night is your home. You can see much better when the lights are out! Use that ability to see killers when the lights are out.
 
@@ -77,6 +83,7 @@ The night is your home. You can see much better when the lights are out! Use tha
 The Nocturnal currently has no extra options.
 
 ### Pathfinder
+![Pathfinder](res/roles/pathfinder.png)
 #### Description
 All the summers at camp are finally worth it! You can see the footsteps of all other players in their respective color.
 
@@ -87,9 +94,10 @@ All the summers at camp are finally worth it! You can see the footsteps of all o
 
 ## Solo
 ### Maniac
+![Maniac](res/roles/maniac.png)
 #### Description
 Holy cow, you want to die! But you do not want to be killed off the cuff.  
-Get yourself voted from the ship to win!  
+Get yourself voted from the ship to win on your own!  
 Because you're fricking maniac you can see everyone's special role!
 
 #### Options
@@ -97,6 +105,7 @@ Because you're fricking maniac you can see everyone's special role!
 
 ## Impostors
 ### Ninja
+![Ninja](res/roles/ninja.png)
 #### Description
 DOUBLE KILL! You're a master of killing. Ones per match you can execute a kill while still on cooldown.  
 That stuff is pretty exhausting, so you will need even more resting time!  
