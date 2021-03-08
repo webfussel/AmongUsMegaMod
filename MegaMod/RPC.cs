@@ -59,6 +59,10 @@ namespace MegaMod
                                 case var value when value == Pathfinder.RoleID:
                                     AddSpecialRole(new Pathfinder(player));
                                     break;
+
+                                case var value when value == Glutton.RoleID:
+                                    AddSpecialRole(new Glutton(player));
+                                    break;
                             }
                     break;
                 // -------------- Happenings related to special roles --------------

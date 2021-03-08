@@ -2,8 +2,6 @@
 using MegaMod.Roles;
 using UnityEngine;
 using static MegaMod.MegaModManager;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace MegaMod
 {
@@ -12,6 +10,8 @@ namespace MegaMod
     {
         static void Postfix(HudManager __instance)
         {
+            CooldownButton.HudUpdate();
+
             PlayerControl localPlayer = PlayerControl.LocalPlayer;
 
             if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;

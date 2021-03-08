@@ -33,6 +33,7 @@ namespace MegaMod
         public static readonly CustomNumberOption OptPathfinderSpawnChance = CustomOption.AddNumber("(Crew) Pathfinder Spawn Chance", 100, 0, 100, 10);
         public static readonly CustomNumberOption OptManiacSpawnChance = CustomOption.AddNumber("(Solo) Maniac Spawn Chance", 100, 0, 100, 10);
         public static readonly CustomNumberOption OptNinjaSpawnChance = CustomOption.AddNumber("(Imps) Ninja Spawn Chance", 100, 0, 100, 10);
+        public static readonly CustomNumberOption OptGluttonSpawnChance = CustomOption.AddNumber("(Imps) Glutton Spawn Chance", 100, 0, 100, 10);
 
         // Detective
         public static readonly CustomNumberOption OptDetectiveKillCooldown = CustomOption.AddNumber("Detective: Kill Cooldown", 30f, 10f, 60f, 2.5f);
@@ -50,6 +51,9 @@ namespace MegaMod
         public static readonly CustomNumberOption OptPathfinderFootprintLifespan = CustomOption.AddNumber("Pathfinder: Footprint lifespan", 4f, 1f, 8f, 1f);
         public static readonly CustomNumberOption OptPathfinderFootprintInterval = CustomOption.AddNumber("Pathfinder: Footprint interval", 0.3f, 0.1f, 0.5f, 0.1f);
         public static readonly CustomToggleOption OptPathfinderAnonymousFootprints = CustomOption.AddToggle("Pathfinder: Anonymous footprints", false);
+
+        // Glutton
+        public static readonly CustomNumberOption OptGluttonEatingCooldown = CustomOption.AddNumber("Glutton: Eating cooldown", 80, 30, 120, 5);
 
         // Maniac
         public static readonly CustomToggleOption OptManiacShowImpostor = CustomOption.AddToggle("Maniac: Can see all Roles", false);
@@ -96,6 +100,7 @@ namespace MegaMod
             repairButton = buttons.LoadAsset<Sprite>("repair").DontUnload();
             markTrapButton = buttons.LoadAsset<Sprite>("mark").DontUnload();
             shieldButton = buttons.LoadAsset<Sprite>("protect").DontUnload();
+            eatingButton = buttons.LoadAsset<Sprite>("protect").DontUnload(); // TODO: Richtiges Sprite einbinden!!!
 
             AssetBundle gui = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\gui");
             Texture2D footstepsTemp = gui.LoadAsset<Texture2D>("footsteps");

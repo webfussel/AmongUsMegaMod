@@ -38,6 +38,7 @@ namespace MegaMod
             impostors.RemoveAll(x => !x.Data.IsImpostor);
 
             Ninja.SetRole(impostors);
+            Glutton.SetRole(impostors);
 
             Crew.Clear();
             localPlayer = PlayerControl.LocalPlayer;

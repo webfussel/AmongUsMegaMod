@@ -68,6 +68,7 @@ namespace MegaMod
         public static Sprite repairButton;
         public static Sprite footsteps;
         public static Sprite markTrapButton;
+        public static Sprite eatingButton;
         public static readonly Dictionary<byte, Role> AssignedSpecialRoles;
         public static readonly List<DeadPlayer> KilledPlayers = new List<DeadPlayer>();
         public static bool gameIsRunning = false;
@@ -187,6 +188,9 @@ namespace MegaMod
                 
                 if (TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Nocturnal nocturnal))
                     nocturnal.CalculateNormalVision(__instance);
+
+                if (SpecialRoleIsAssigned<Glutton>(out var gluttonKvp) && PlayerControl.LocalPlayer.PlayerId == gluttonKvp.Key)
+                    gluttonKvp.Value.CreateEatingButton();
             }
         }
     }
