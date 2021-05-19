@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using UnityEngine;
 
 namespace MegaMod
@@ -23,7 +24,7 @@ namespace MegaMod
             Il2CppSystem.Collections.Generic.List<GameData.PlayerInfo> allPlayers = GameData.Instance.AllPlayers;
             for (int index = 0; index < allPlayers.Count; ++index)
             {
-                GameData.PlayerInfo playerInfo = allPlayers[index];
+                GameData.PlayerInfo playerInfo = (GameData.PlayerInfo) allPlayers[(Index) index];
                 if (!playerInfo.Disconnected && playerInfo.PlayerId != currentPlayer.PlayerId && !playerInfo.IsDead)
                 {
                     PlayerControl playerControl2 = playerInfo.Object;

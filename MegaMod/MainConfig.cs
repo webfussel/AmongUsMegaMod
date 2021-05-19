@@ -2,9 +2,6 @@
 using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using HarmonyLib;
-using System;
-using System.Linq;
-using System.Net;
 using Reactor;
 using static MegaMod.MegaModManager;
 using UnityEngine;
@@ -105,26 +102,6 @@ namespace MegaMod
             ninjaOne = sounds.LoadAsset<AudioClip>("ninja_1").DontUnload();
             ninjaTwo = sounds.LoadAsset<AudioClip>("ninja_2").DontUnload();
             
-            
-            var defaultRegions = ServerManager.DefaultRegions.ToList();
-            var ip = Ip.Value;
-            if (Uri.CheckHostName(Ip.Value).ToString() == "Dns")
-            {
-                foreach (IPAddress address in Dns.GetHostAddresses(Ip.Value))
-                {
-                    if (address.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork) continue;
-                    ip = address.ToString(); break;
-                }
-            }
-
-            defaultRegions.Insert(0, new RegionInfo(
-                "Custom", ip, new[]
-                {
-                    new ServerInfo($"Custom-Server", ip, Port.Value)
-                })
-            );
-
-            ServerManager.DefaultRegions = defaultRegions.ToArray();
             Harmony.PatchAll();
         }
     }

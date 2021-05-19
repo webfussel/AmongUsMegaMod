@@ -10,7 +10,7 @@ namespace MegaMod
     [HarmonyPatch]
     public static class MegaModManager
     {
-        private const string VersionString = "1.4.1";
+        private const string VersionString = "1.5.0";
 
         public enum RPC
         {
@@ -156,7 +156,7 @@ namespace MegaMod
         {
             static void Postfix(VersionShower __instance)
             {
-                __instance.text.Text += $"    MegaMod {VersionString}";
+                __instance.text.m_text += $"    MegaMod {VersionString}";
             }
         }
 
@@ -174,11 +174,11 @@ namespace MegaMod
         {
             public static void Postfix(PingTracker __instance)
             {
-                __instance.text.Text += $"\nMegaMod {VersionString}";
+                __instance.text.m_text += $"\nMegaMod {VersionString}";
             }
         }
         
-        [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.GetSpawnLocation))]
+        [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.SpawnPlayer))]
         public static class StartGamePatch
         {
             public static void Postfix(ShipStatus __instance)

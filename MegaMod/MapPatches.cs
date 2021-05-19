@@ -30,7 +30,7 @@ namespace MegaMod
             }
         }
         
-        [HarmonyPatch(typeof(MapRoom), nameof(MapRoom.Method_41))] // SetSpecialActive
+        [HarmonyPatch(typeof(MapRoom), nameof(MapRoom.SetSpecialActive))]
         class SetSpecialActivePatch
         {
             static bool Prefix(MapRoom __instance, float DCEFKAOFGOG)

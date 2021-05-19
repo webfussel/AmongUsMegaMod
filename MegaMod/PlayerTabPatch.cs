@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using UnityEngine;
 
 namespace MegaMod
@@ -17,9 +18,9 @@ namespace MegaMod
 
             float x = xMin;
             float y = -0.05f;
-            for (int i = 0; i < __instance.ColorChips.Count; ++i)
+            for (int chipIndex = 0; chipIndex < __instance.ColorChips.Count; ++chipIndex)
             {
-                if (i % columns == 0)
+                if (chipIndex % columns == 0)
                 {
                     x = xMin;
                     y -= add;
@@ -29,7 +30,7 @@ namespace MegaMod
                     x += add;
                 }
                 
-                ColorChip chip = __instance.ColorChips[i];
+                ColorChip chip = (ColorChip) __instance.ColorChips[(Index) chipIndex];
                 chip.transform.localPosition = new Vector3(x, y, -1f);
                 chip.transform.localScale *= scale;
             }

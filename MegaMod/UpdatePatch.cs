@@ -2,8 +2,7 @@
 using MegaMod.Roles;
 using UnityEngine;
 using static MegaMod.MegaModManager;
-using System.Linq;
-using System.Collections.Generic;
+using InnerNet;
 
 namespace MegaMod
 {
@@ -45,7 +44,7 @@ namespace MegaMod
             }
 
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                player.nameText.Color = Color.white;
+                player.nameText.m_Color = Color.white;
 
             // Maniac Tasks have to be reset every frame... I don't know why but huh.
             // Guess I goofed here. But I'll leave it in until I'll fix it. (It works.)
@@ -99,15 +98,15 @@ namespace MegaMod
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 {
 
-                    player.nameText.Color = TryGetSpecialRole(player.PlayerId, out Role role)
+                    player.nameText.m_Color = TryGetSpecialRole(player.PlayerId, out Role role)
                         ? role.color
-                        : player.nameText.Color;
+                        : player.nameText.m_Color;
 
                     if (MeetingHud.Instance == null) continue;
                     
                     foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
                         if (player.PlayerId == playerVote.TargetPlayerId)
-                            playerVote.NameText.Color = player.nameText.Color;
+                            playerVote.NameText.m_Color = player.nameText.m_Color;
                 }
             }
             else if (localPlayer.Data.IsImpostor)
@@ -117,7 +116,7 @@ namespace MegaMod
                 {
                     if (!player.Data.IsImpostor) continue;
 
-                    player.nameText.Color = TryGetSpecialRole(player.PlayerId, out Role role)
+                    player.nameText.m_Color = TryGetSpecialRole(player.PlayerId, out Role role)
                         ? role.color
                         : Palette.ImpostorRed;
 
@@ -125,7 +124,7 @@ namespace MegaMod
                     
                     foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
                         if (player.PlayerId == playerVote.TargetPlayerId)
-                            playerVote.NameText.Color = player.nameText.Color;
+                            playerVote.NameText.m_Color = player.nameText.m_Color;
                 }
             }
         }
