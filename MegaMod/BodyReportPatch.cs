@@ -10,11 +10,11 @@ namespace MegaMod
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.LocalPlayer.CmdReportDeadBody))]
     class BodyReportPatch
     {
-        static void Postfix(PlayerControl __instance, GameData.PlayerInfo CAKODNGLPDF)
+        static void Postfix(PlayerControl __instance, GameData.PlayerInfo target)
         {
             if (__instance == null || PlayerControl.LocalPlayer == null || KilledPlayers.Count <= 0) return;
             
-            DeadPlayer killed = KilledPlayers?.FirstOrDefault(x => x.Victim?.PlayerId == CAKODNGLPDF?.PlayerId);
+            DeadPlayer killed = KilledPlayers?.FirstOrDefault(x => x.Victim?.PlayerId == target?.PlayerId);
             if (killed == null) return;
 
             if (!TryGetSpecialRole(PlayerControl.LocalPlayer.PlayerId, out Detective _))

@@ -6,7 +6,7 @@ using Reactor;
 using static MegaMod.MegaModManager;
 using UnityEngine;
 using System.IO;
-using Essentials.Options;
+//using Essentials.Options;
 using Reactor.Extensions;
 
 namespace MegaMod
@@ -18,6 +18,46 @@ namespace MegaMod
     {
         private const string Id = "gg.reactor.megamod";
         private Harmony Harmony { get; } = new Harmony(Id);
+
+        public abstract class CustomOption
+        {
+            public static CustomNumberOption AddNumber(string a, float b, float c, float d, float e) {
+                return new CustomNumberOption();
+            }
+
+            public static CustomToggleOption AddToggle(string a, bool b)
+            {
+                return new CustomToggleOption();
+            }
+
+            public static CustomStringOption AddString(string a, string[] b)
+            {
+                return new CustomStringOption();
+            }
+        }
+
+        public class CustomNumberOption : CustomOption
+        {
+            public float GetValue()
+            {
+                return 1.0f;
+            }
+        }
+        public class CustomToggleOption : CustomOption
+        {
+            public bool GetValue()
+            {
+                return false;
+            }
+        }
+        public class CustomStringOption : CustomOption
+        {
+            
+            public int GetValue()
+            {
+                return 0;
+            }
+        }
 
         // Spawn Chances
         public static readonly CustomNumberOption OptEngineerSpawnChance = CustomOption.AddNumber("(Crew) Engineer: Spawn Chance", 100, 0, 100, 10);
@@ -50,9 +90,6 @@ namespace MegaMod
         // Maniac
         public static readonly CustomToggleOption OptManiacShowImpostor = CustomOption.AddToggle("Maniac: Can see all Roles", false);
 
-        private ConfigEntry<string> Ip { get; set; }
-        private ConfigEntry<ushort> Port { get; set; }
-
         public override void Load()
         {
             int originalPaletteCount = Palette.ShortColorNames.Count;
@@ -84,9 +121,6 @@ namespace MegaMod
             Palette.ShortColorNames = allShortNames;
             Palette.PlayerColors = allColors;
             Palette.ShadowColors = allShadows;
-            
-            Ip = Config.Bind("Custom", "Ipv4 or Hostname", "127.0.0.1");
-            Port = Config.Bind("Custom", "Port", (ushort)22023);
             
             AssetBundle buttons = AssetBundle.LoadFromFile(Directory.GetCurrentDirectory() + "\\Assets\\buttons");
             repairButton = buttons.LoadAsset<Sprite>("repair").DontUnload();
