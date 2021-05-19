@@ -1,23 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
-        <Version>1.4.1</Version>
-        <GameVersion>2020.12.9s</GameVersion>
-        <Mappings>NuclearPowered/Mappings:0.1.2</Mappings>
+        <Version>1.5.0</Version>
+        <GameVersion>2021.5.10s</GameVersion>
+        <Mappings>DaemonBeast/Mappings:0.5.0</Mappings>
 
         <Description>A Reactor Mod with more colors, roles and more.</Description>
         <Authors>webfussel and dacendaran</Authors>
     </PropertyGroup>
 
     <ItemGroup>
-        <Deobfuscate Include="$(AmongUs)\BepInEx\plugins\Reactor-$(GameVersion).dll" />
-
-        <PackageReference Include="Reactor.OxygenFilter.MSBuild" Version="0.2.5" />
+        <Deobfuscate Include="$(AmongUs)\BepInEx\plugins\Reactor.dll" />
+        <PackageReference Include="Reactor.OxygenFilter.MSBuild" Version="0.3.0" />
     </ItemGroup>
 
     <ItemGroup>
         <Reference Include="Essentials">
-            <HintPath>$(AmongUs)\BepInEx\plugins\Essentials-$(GameVersion).dll</HintPath>
+            <HintPath>$(AmongUs)\BepInEx\plugins\Essentials.dll</HintPath>
         </Reference>
     </ItemGroup>
 

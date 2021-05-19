@@ -4,7 +4,7 @@ namespace MegaMod
 {
     public static class PalettePatch
     {
-      public static readonly string[] ColorNames =
+      public static readonly StringNames[] ColorNames =
       {
         "Aqua",
         "Navy",
@@ -21,7 +21,7 @@ namespace MegaMod
         "Ice"
       };
       
-      public static readonly string[] ShortColorNames = {
+      public static readonly StringNames[] ShortColorNames = {
         "AQUA",
         "NAVY",
         "MINT",

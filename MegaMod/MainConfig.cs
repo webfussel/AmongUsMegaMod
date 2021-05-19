@@ -7,10 +7,9 @@ using System.Linq;
 using System.Net;
 using Reactor;
 using static MegaMod.MegaModManager;
-using Reactor.Unstrip;
 using UnityEngine;
 using System.IO;
-using Essentials.CustomOptions;
+using Essentials.Options;
 using Reactor.Extensions;
 
 namespace MegaMod
@@ -61,8 +60,8 @@ namespace MegaMod
         {
             int originalPaletteCount = Palette.ShortColorNames.Count;
             int colorCount = originalPaletteCount + PalettePatch.ShortColorNames.Length;
-            string[] allNames = new String[colorCount];
-            string[] allShortNames = new string[colorCount];
+            StringNames[] allNames = new StringNames[colorCount];
+            StringNames[] allShortNames = new StringNames[colorCount];
             Color32[] allColors = new Color32[colorCount];
             Color32[] allShadows = new Color32[colorCount];
 
