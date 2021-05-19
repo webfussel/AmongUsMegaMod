@@ -68,7 +68,7 @@ namespace MegaMod
             {
                 $"The player was killed {Math.Round(KillAge / 1000)}s ago",
                 $"The killer seems to have the Letter \"{Killer.name[Rng.Next(0, Killer.name.Length)]}\" in their name.",
-                $"The Kill seems to be of a {_colors[Killer.Data.ColorId]} color",
+                $"The Kill seems to be of a {_colors[(byte) Killer.Data.ColorId]} color",
                 $"The Killer seems to have already killed {KilledPlayers.Count(x => x.Killer.PlayerId == Killer.PlayerId) - 1} other Crewmates.",
                 $"It seems like the Victim had the role \"{roleName}\"",
                 $"The last words of the Victim were: \"{_lastWords[Rng.Next(0, _lastWords.Count)]}\"",

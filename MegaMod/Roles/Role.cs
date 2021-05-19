@@ -32,20 +32,20 @@ namespace MegaMod.Roles
             {
                 foreach (PlayerVoteArea playerVote in MeetingHud.Instance.playerStates)
                     if (player.PlayerId == playerVote.TargetPlayerId)
-                        playerVote.NameText.Color = color;
+                        playerVote.NameText.m_Color = color;
             }
             else
-                player.nameText.Color = color;
+                player.nameText.m_Color = color;
         }
 
-        public virtual void SetIntro(IntroCutscene.CoBegin__d instance)
+        public virtual void SetIntro(IntroCutscene._CoBegin_d__11 instance)
         {
-            instance.__this.Title.Text = name;
-            instance.__this.Title.render?.material?.SetColor("_OutlineColor", borderColor);
-            instance.__this.Title.transform.localScale = titleScale;
-            instance.c = color;
-            instance.__this.ImpostorText.Text = startText;
-            instance.__this.BackgroundBar.material.color = color;
+            instance.__4__this.Title.m_text = name;
+            instance.__4__this.Title.m_renderer?.material?.SetColor("_OutlineColor", borderColor);
+            instance.__4__this.Title.transform.localScale = titleScale;
+            instance._c_5__2 = color;
+            instance.__4__this.ImpostorText.m_text = startText;
+            instance.__4__this.BackgroundBar.material.color = color;
         }
 
         public void SetRoleDescription()

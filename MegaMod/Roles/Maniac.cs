@@ -64,7 +64,7 @@ namespace MegaMod.Roles
         {
         }
 
-        public override void SetIntro(IntroCutscene.CoBegin__d instance)
+        public override void SetIntro(IntroCutscene._CoBegin_d__11 instance)
         {
             base.SetIntro(instance);
             var maniacTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();

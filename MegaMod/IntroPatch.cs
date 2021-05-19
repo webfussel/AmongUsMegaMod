@@ -4,10 +4,10 @@ using static MegaMod.MegaModManager;
 
 namespace MegaMod
 {
-    [HarmonyPatch(typeof(IntroCutscene.CoBegin__d), nameof(IntroCutscene.CoBegin__d.MoveNext))]
+    [HarmonyPatch(typeof(IntroCutscene._CoBegin_d__11), nameof(IntroCutscene._CoBegin_d__11.MoveNext))]
     class IntroCutscenePatch
     {
-        static bool Prefix(IntroCutscene.CoBegin__d __instance)
+        static bool Prefix(IntroCutscene._CoBegin_d__11 __instance)
         {
             GetSpecialRole(PlayerControl.LocalPlayer.PlayerId)?.SetIntro(__instance);
             return true;

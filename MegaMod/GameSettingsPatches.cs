@@ -7,7 +7,7 @@ namespace MegaMod
     class GameSettingsPatch {
         static void Postfix(HudManager __instance)
         {
-            __instance.GameSettings.scale = 0.43f;
+            __instance.GameSettings.m_fontScale = 0.43f;
         }
     }
     

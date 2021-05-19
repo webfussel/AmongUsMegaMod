@@ -37,8 +37,8 @@ namespace MegaMod
                 if (player.PlayerId == localPlayer.PlayerId)
                     return;
             
-            __instance.WinText.Text = "Defeat";
-            __instance.WinText.Color = Palette.ImpostorRed;
+            __instance.WinText.m_text = "Defeat";
+            __instance.WinText.m_Color = Palette.ImpostorRed;
             __instance.BackgroundBar.material.color = new Color(1, 0, 0);
         }
     }

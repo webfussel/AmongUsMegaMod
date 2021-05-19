@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using System;
 using System.Linq;
+using Assets.CoreScripts;
 using MegaMod.Roles;
 using static MegaMod.MegaModManager;
 

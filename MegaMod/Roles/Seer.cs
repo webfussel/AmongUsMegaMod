@@ -61,8 +61,8 @@ namespace MegaMod.Roles
         public void SetEmergencyButtonInactive(EmergencyMinigame instance)
         {
             if (canCallEmergency) return;
-            instance.StatusText.Text = "You can't call an Emergency!";
-            instance.NumberText.Text = string.Empty;
+            instance.StatusText.m_text = "You can't call an Emergency!";
+            instance.NumberText.m_text = string.Empty;
             instance.ButtonActive = false;
             instance.ClosedLid.gameObject.SetActive(true);
             instance.OpenLid.gameObject.SetActive(false);
