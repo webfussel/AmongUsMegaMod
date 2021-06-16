@@ -1,3 +1,7 @@
+# DEPRECATION NOTIVE
+This mod won't be updated until Among Us reaches its final update because this was a free time and hobby project and we simply don't have the time to keep up with the among us updates.
+## Sorry everyone!
+
 # MegaMod 1.4.1
 A BepInEx Mod, that adds 9 new roles and 13 colors to Among Us.  
 Works with `Among Us - Version 2020.12.9`
