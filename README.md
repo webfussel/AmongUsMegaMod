@@ -1,4 +1,4 @@
-# DEPRECATION NOTIVE
+# DEPRECATION NOTICE
 This mod won't be updated until Among Us reaches its final update because this was a free time and hobby project and we simply don't have the time to keep up with the among us updates.
 ## Sorry everyone!
 
